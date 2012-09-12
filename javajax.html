@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Web Dev: Javascript/AJAX Magic</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Web Dev: Javascript/AJAX Magic</h1>
+
+<h2>the history of javascript</h2>
+<p>I told you in the HTML/CSS guide that you didn't need to worry about HTML5, and you shouldn't. Javascript is a part of the HTML5 revolution. You may not need to <b>worry</b> about it, but you should know a few things.</p>
+<p>Javascript used to be <b>shunned</b> by everyone. It used to be a clunky, untrustworthy language, that would break in almost every browser.</p>
+<p>But now, thanks to a lot of cool people, Javascript is useful again! In fact, Javascript (usually referenced as the buzzword <b>AJAX</b>) has made a giant comeback.</p>
+<p>It's fun to note that technically speaking, <i>javascript itself hasn't changed at all</i>. The only things that have changed are how people think about it and how browsers support it. Developers have faith in the language.</p>
+
+<h2>yet another programming language</h2>
+<p>Like PHP, Javascript is a programming language. However, like HTML, it's on the <b>client side</b>.</p>
+<p>As I said about PHP, it's kinda dangerous to have things on the client side, but the lines are blurring. You can integrate the two worlds rather nicely, which is why I wanted you to learn PHP first. Know the two worlds, client-side and server-side, before you begin to mix them.</p>
+<p>Javascript has variables, functions, control structures, etc, just like PHP. But it lives in the browser and you can view the source. It can't go as deep as PHP can, but it can get close.</p>
+
+<h2>learning Javascript</h2>
+<p>Most people probably would've taught you Javascript before teaching you PHP, but not me. I don't think we really live in that world anymore.</p>
+<p>If HTML is the chassis, and PHP is the engine, then Javascript is all the fancy bells and whistles that make the car work and feel pretty cool. That's what Javascript has turned into by our perception.</p>
+<p>Javascript has made a huge comeback mostly because of two things: <b>reliability</b> between browsers and popular <b>libraries</b> or frameworks.</p>
+<p>Just like HTML, Javascript is now very reliable between browsers. What will work in Chrome will also work in Firefox and IE... 99% of the time. It'll also probably work on mobile phones, too.</p>
+<p>And like in PHP, Javascript now has many user-created libraries which make it far more extensible and easy-to-use.</p>
+
+<h2>Javascript vs AJAX</h2>
+<p>As I mentioned, <b>AJAX</b> is kind of a buzzword. AJAX literally means <i>Asynchronous Javascript And XML</i>, even though that's rarely how it's properly used.</p>
+<p>Really AJAX is just a fancy thing people came up with to tell people, it separated the new from the old. It's a smart marketing move: rename something to remove it's old negative connotations.</p>
+<p>I mean, AJAX definitely is a part of Javascript. But it's like referring to cake by just the colorful frosting.</p>
+<p>So really that's all there is to say. When anyone says they're some kind of AJAX guru, they're really saying they know some pieces of Javascript.</p>
+
+<h2>where does javascript go?</h2>
+<p>In any HTML page, in the <b>head</b> section, you put Javascript between some <b>script</b> tags, like so:</p>
+<code><pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;page title!&lt;/title&gt;
+&lt;script type="text/javascript"&gt;
+
+// javascript goes here!
+
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>That's it! However, like CSS, you can put it in a separate file if you want, and load it like so:</p>
+<code><pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;page title!&lt;/title&gt;
+&lt;script type="text/javascript" src="some_file.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>In that scenario, <b>some_file.js</b> would have to hold your javascript code. Put it in the same folder as your HTML file.</p>
+
+<h2>variables, functions, etc</h2>
+<p>You should know all about these concepts now if you followed the PHP guide well. Here's how they look in Javascript.</p>
+<p>Instead of having a dollar sign before the variable name, in javascript you use the keyword <b>var</b> before the variable name, like so:</p>
+<code>var some_var = 20;</code>
+<p>Note that there's the same equals sign meaning assignment, the same number data type, the same semicolon at the end of the line.</p>
+<p>The only difference is that instead of $some_var, it's <b>var some_var</b>. Technically you don't even need the <b>var</b> there, but it's useful to.</p>
+<p>Javascript is, technically, much looser than PHP. Any collection of characters without quotes around it is either a variable or a keyword...</p>
+<p>Functions look the same:</p>
+<code><pre>
+function add(a, b) {
+  var c = a + b;
+  return c;
+}
+</pre></code>
+<p>Again, no dollar signs for variables. Just <b>var</b>, if we use it at all. We could've written it without that one <b>var</b> keyword.</p>
+<p>Instead of <b>NULL</b>, javascript has <b>undefined</b>, and it means what it sounds like. If we were to ask javascript about some random variable we hadn't used yet, it would say the variable is <b>undefined</b>.</p>
+
+<h2>javascript arrays and objects</h2>
+<p>Like PHP, there are simple arrays in javascript, and they look like this:</p>
+<code>var fruits = [ 'apple', 'orange' ];</code>
+<p>However... there aren't really any associative arrays. Instead, there are straight-up raw objects. And they work pretty much the same way as associative arrays. Like so:</p>
+<code>var favorites = { color: 'red', food: 'pizza' };</code>
+<p>Instead of square brackets [ ] for a simple array, objects get curly braces { }.</p>
+<p>In PHP, the key-value pairs are denoted by the <b>=&gt;</b> assignment operator. In javascript, they're denoted by simply a colon between the key name and the value.</p>
+<p>And we can access these name-value pairs through the <b>period</b> or <b>dot</b> accessor:</p>
+<code>favorites.color</code>
+<p>That would return the string <b>red</b>. So that's how they work in Javascript. We set <b>color</b> to be a property of the <b>favorites</b> object with the string value <b>'red'</b>.</p>
+
+<h2>an objective approach</h2>
+<p>The biggest difference between PHP and Javascript is the <i>programming paradigm</i> used to write it.</p>
+<p>Javascript is far more <b>object-oriented</b> than PHP is. Most everything in Javascript is an <b>object</b> which has things that can be done upon it.</p>
+<p>In PHP, most of the programming focuses around using PHP's functions. In Javascript, most of the programming focuses on using a given object's <b>methods</b>.</p>
+<p>For example, here's how we count the length of an array in PHP versus how it's done in Javascript. First, PHP:</p>
+<code><pre>
+&lt;?php
+$an_array = array('hello', 'goodbye', 'cya');
+$array_length = count($an_array);
+?&gt;
+</pre></code>
+<p>The <b>count</b> function will give us the length of the array! Here's the same thing in Javascript:</p>
+<code><pre>
+var an_array = [ 'hello', 'goodbye', 'cya' ];
+var array_length = an_array.length;
+</pre></code>
+<p>What's the difference? It's subtle, but it's systemic. In PHP, we made the array, and then to get the amount of elements in the array, we call the <b>built-in function</b> count().</p>
+<p>In Javascript, we make the array, and then we <b>look at what its length is</b>. The array object has a built-in property called <b>length</b> that always has the array's length. It's not one that's built <i>into Javascript</i>, it's built into <i>the object</i>. Understand the difference?</p>
+<p>The way I usually think about it is that PHP takes instructions, one line at a time. Javascript takes instructions, one object at a time. I could have written the same thing as before this way:</p>
+<code><pre>
+var array_length = [ 'hello', 'goodbye', 'cya' ].length;
+</pre></code>
+<p>The <b>[ ] is an array object</b> and <b>length is its property</b> called by using the <b>period</b> to access it.</p>
+<p>It's hard to really describe until you see it a lot... because technically you could make a similar shortcut in PHP:</p>
+<code><pre>
+$array_length = count(array('hello', 'goodbye', 'cya'));
+</pre></code>
+<p>But you notice how it's presented: the javascript way puts the properties and functions <b>in</b> the objects, the PHP way performs functions <b>onto</b> the objects.</p>
+<p>It's subtle, but very important.</p>
+
+<h2>so writing javascript</h2>
+<p>... is a lot like writing PHP. Except when you read the reference documentation for javascript, you need to think about what object you're using.</p>
+<p>In PHP you can read <a href="http://php.net/manual/en/ref.strings.php" target="_blank">all the String functions</a>, but in Javascript you have to read <a href="http://www.w3schools.com/jsref/jsref_obj_string.asp" target="_blank">all the String properties and methods</a>.</p>
+<p><b>method</b> is another word for <b>function</b>, except usually you hear <b>method</b> when talking about object-oriented programming.</p>
+<p>Expressions work the same way as PHP. If and else work the same way. Operators, too. Functions, as I've said. Loops work the same way, with for and while loops.</p>
+
+<h2>libraries</h2>
+<p>The biggest difference is that with contemporary javascript, the majority of developers rely on <b>libraries</b> to do the heavy lifting.</p>
+<p>Some popular ones include <b>jQuery</b> and <b>Prototype</b>. You may have heard of them before; nearly everybody uses them. Even Google.</p>
+<p>You download and include the libraries and then build your code on top of it. This is a good thing and a bad thing...</p>
+<p>On the one hand, you don't have to worry about doing a lot of things yourself; the libraries give you shortcuts! And they're written to work <i>across browsers</i> so you don't have to worry about it.</p>
+<p>On the other hand, you are now dependent upon those libraries, ones that you didn't write yourself and may be well over your head. So they add a level of complexity on top of your code that you hopefully never realize.</p>
+<p>Libraries are worth the risk, though, especially the big ones. They're very well documented and if you have problems, there are a lot of people to ask for help. I've used Prototype and jQuery extensively myself.</p>
+
+<h2>the DOM, aka The Matrix. haha</h2>
+<p>One thing that modern browsers have accepted and become reliable on is what's known as the DOM. It's kinda like The Matrix, in that it defines the whole page and everything in it, really.</p>
+<p>DOM stands for the <b>Document Object Model</b> of a webpage's HTML and CSS. This is all a part of the <b>standard way of writing code</b> I was talking about in the HTML/CSS guide.</p>
+<p>When you write a web page in HTML correctly, all the tags inside the HTML form a <b>tree</b> or <b>hierarchy</b> of information. There are parents, children, classes, IDs, etc. Remember that? If you don't, check this out for a refresher:</p>
+<code><pre>
+&lt;html&gt;
+&lt;body&gt;
+&lt;div id="onlydiv"&gt;
+&lt;p class="redtext"&gt;hello!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>So here we have the body tag and its child is the div tag. The child of that div tag is the p tag. So the p tag's parent is the div tag. The p tag also has a class name associated with it, and the div tag has an ID associated with it. These are all a part of the page's DOM. It's just a hierarchy of information.</p>
+<p>The DOM is simply Javascript's understanding of that hierarchy so that you can use each piece of your HTML as an object! You could use Javascript to select the div with its ID and do something to it if you wanted.</p>
+<p>Again, javascript is big on <b>objects</b> and wants <b>everything to be an object</b>, including your HTML elements.</p>
+
+<h2>so let's do something</h2>
+<p>Before we even load up a library to use, let's do something to the above HTML code with plain old Javascript's built in methods.</p>
+<p>Add in a <b>head section</b> and a <b>script tag</b> like I showed you before. You can save the file as <b>jtest.html</b> if you want and open it in a browser while we edit it.</p>
+<p>Inside the script tag, let's put this javascript code:</p>
+<code><pre>
+function changeText() {
+  var thediv = document.getElementById('onlydiv');
+  thediv.innerHTML = '&lt;p&gt;replacement text!&lt;/p&gt;';
+}
+</pre></code>
+<p>So we've made a function. If you load the page, it doesn't do anything yet, because nothing is calling the function. But let's first look at what this function will do.</p>
+<p>First of all, it's called <b>changeText</b>, and it takes no arguments, as we can see because of the empty parentheses.</p>
+<p>Inside of it, it creates a variable called <b>thediv</b>, which is assigned something which looks strange. Let's break it down.</p>
+<p>First, it gets the <b>document</b> object, which represents the whole page. <b>document</b> is a DOM object.</p>
+<p>The <b>document</b> object has many methods, one of them being <b>getElementById()</b>, which takes one argument: an ID as a string.</p>
+<p>So we are asking the document object to get an HTML element that has the ID <b>'onlydiv'</b>. And we know that there's only one thing on the page that has that ID.</p>
+<p>Okay, awesome. With that element assigned to the <b>thediv</b> variable, we can now tell that object to change its <b>innerHTML</b> property. This is exactly what it sounds like.</p>
+<p>Changing the <b>innerHTML</b> property on any DOM object will change the HTML within it. In this case, we want to replace what's inside the <b>onlydiv</b> element with a new string!</p>
+<p>Do you understand what I mean? Read it again and follow along what it's saying. Don't be intimidated by all the periods and uppercase/lowercase and whatnot. Just try to read it like a sentence.</p>
+
+<h2>events drive the interface</h2>
+<p>Another thing Javascript loves almost as much as objects are <b>events</b>. Javascript, in most usage, is an event-driven language. A user clicks something, and Javascript runs a function to do something. We'll do that now.</p>
+<p>So in your HTML code, under the first div, add another div! And add this button inside that new div:</p>
+<code><pre>
+&lt;input type="button" value="do it" /&gt;
+</pre></code>
+<p>Ok so if you reload your page, you should see the <b>hello!</b> text and a <b>button</b> underneath it. Right now the button doesn't do anything, so let's add an event for javascript to watch for:</p>
+<code><pre>
+&lt;input type="button" value="do it" onclick="changeText()" /&gt;
+</pre></code>
+<p>That new button has one new attribute: the <b>onclick</b> event listener. Javascript will now listen for someone to click the button, and when someone does, it'll perform the <b>changeText()</b> function.</p>
+<p>Notice that we can't just put a call to the changeText() function inside the script tags... that's because <i>javascript can only use the DOM after the whole page has loaded</i>. You can't call the function up there at the end of the script tag because it'll execute the function before any of the body section has loaded.</p>
+<p>So it goes like this:</p>
+<ol>
+<li>Your browser requests a page</li>
+<li>Your browser reads the HEAD section of the HTML</li>
+<li>Your browser reads the BODY section of the HTML and renders it</li>
+<li>Then the browser will be ready to do anything with the DOM</li>
+</ol>
+<p>If you try to do javascript calls which affect the DOM in that second step, it'll just get confused because none of the BODY has loaded yet.</p>
+<p>In today's world these four steps happen so fast (it typically takes mere hundredths of a second) that you'd expect it to have no problem. For the most part, steps 2 and 3 happen almost simultaneously. But you can't depend upon it, it's not safe to.</p>
+<p>That's why we need to push out the actual execution of functions to depend on events. The body itself being done loading is an event!</p>
+<code><pre>
+&lt;body onload="changeText()"&gt;
+</pre></code>
+<p>You could do that if you wanted. That'll make sure that <b>as soon as the body is done loading</b> it'll perform the changeText() function, and not before.</p>
+
+<h2>mixing the worlds, again</h2>
+<p>The above example of putting the <b>onclick</b> or <b>onload</b> attribute <i>inside the HTML element</i> is a lot like when we put the CSS inside an individual HTML element's <b>style</b> attribute. Remember how I told you that doing so wasn't the best way of doing things?</p>
+<p>It's not exactly how a lot of people think you should do things with Javascript, either. I won't tell you that any which way is right or wrong, I'll just tell you how most people do things, and why it's effective. But there are a hundred ways to do this.</p>
+<p><b>jQuery</b> gained a lot of popularity because it helps <b>separate</b> the javascript from the HTML in the same way people already separate CSS from HTML.</p>
+
+<h2>jQuery, your first library</h2>
+<p>Well, first of all, jQuery is <b>just a library</b>. A library <i>builds upon the language by using the language</i>. It is not its own language, it just helps you out by doing work for you. Libraries give you shortcuts.</p>
+<p>There are many, many, many libraries for Javascript. jQuery is a popular one. Specifically, it's useful for <b>selecting things in the DOM</b> and <b>listening for events</b>. It's also very useful for <b>AJAX calls</b>, but we'll get into that later.</p>
+<p>Just for reference, the jQuery documentation is <a href="http://docs.jquery.com/Main_Page" target="_blank">here</a>. It's pretty good, but it could be better.</p>
+<p>To use jQuery, we need to load it. So head on over to <a href="http://jquery.com/" target="_blank">jQuery dot com</a> and hit the download button on the right. It'll download a .js file, put it wherever you've been keeping your test files for these guides.</p>
+<p>To load it in an HTML page, do the same you'd do to load any file, as I showed you before:</p>
+<code><pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;page title!&lt;/title&gt;
+&lt;script type="text/javascript" src="jquery-1.6.1.min.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>(At the time of this writing that's the filename for jQuery, but replace it with whatever you downloaded. The file needs to be in the same directory as this HTML file.)</p>
+<p>Ok so now we have the jquery script library loaded. For us to do things with it, let's make another script tag to put our functions and stuff in.</p>
+<p>Inside that new script tag we'll put our code, using the jquery library.</p>
+<p>jQuery uses a special function, the <b>$</b> function, to do a lot of its work. (Not to be confused with PHP's use of the dollar sign.)</p>
+<p>It's a great function. It takes one argument, which can either be a DOM object or a string. If you use a string, it'll act like a CSS selector. Wait a second - it'll act as a what!? Read this:</p>
+<code><pre>
+var loldiv = $('div#somediv');
+</pre></code>
+<p>So we have a variable called <b>loldiv</b> and it is assigned the value returned by the <b>$()</b> function. We gave that function a string that looks a lot like a CSS selector for a div with the ID 'somediv'. So the <b>loldiv</b> variable is now that element.</p>
+<p>That's pretty magical... using in Javascript something we learned in CSS. And it makes sense, too! Why not re-use something that works so well already?</p>
+<code><pre>
+var loldiv = $(document);
+</pre></code>
+<p>That'll get you the whole document. Notice how there are no quotation marks - <b>document</b> is a DOM object already, it's not a CSS selector.</p>
+<p>So actually, we'll use the document DOM object to make this work and separate the Javascript from the HTML like I talked about.</p>
+<code><pre>
+$(document).ready( function() {
+  // do whatever you want here
+});
+</pre></code>
+<p>Ok, what does this do? It might be confusing with all the parentheses and the curly braces, but just break it down a piece at a time. It waits until the <b>document</b> object is ready, and then it does whatever is inside the function.</p>
+<p>We have the $(document) object and we use the <b>ready()</b> method on it -- that'll add a listener for when the document is ready. We pass that method a function. Inside the function will be whatever we want to happen when the document is ready.</p>
+<p>We then have to close the function and then close the ready method. Hence the <b>})</b> at the end. And don't forget to finish it with a semicolon! (Because technically you could've written all of that on one line, we break it up just for readability.)</p>
+<p>Yes, that function inside the <b>ready()</b> method doesn't have a name -- but in Javascript, it doesn't need one. Javascript has what's known as <b>anonymous functions</b>, for one-time uses like this. You can't call that function directly since it has no name - but Javascript will know to use it because we wrote it into the <b>ready()</b> method.</p>
+<p>Here, we could have written it this way:</p>
+<code><pre>
+function doWhenReady() {
+  // do whatever you want here
+}
+
+$(document).ready(doWhenReady);
+</pre></code>
+<p>Notice there's no () after the function call inside the <b>ready()</b> method -- that's because it wants an object... and a function, technically, is an object. <b>Everything is.</b> At least in Javascript. It's going to call that function whenever it's ready.</p>
+<p>For the most part, this is <b>better</b> than the <b>onload</b> body attribute! Mostly because it's designed to wait until exactly when you can do anything on the page.</p>
+<p>So let's replicate that <b>onclick</b> attribute, but with jQuery. So we start with this:</p>
+<code><pre>
+$(document).ready( function() {
+  // do whatever you want here
+});
+</pre></code>
+<p>And we now add this:</p>
+<code><pre>
+$(document).ready( function() {
+  $('#thebutton').click( function() {
+    // do whatever!
+  });
+});
+</pre></code>
+<p>So what does this do? It waits until the document is ready, and then it finds an element on the page with the <b>thebutton</b> ID, and it says <i>when clicked, do this function</i>. Inside that function we could do whatever we want, and it would happen when we click on the element with that ID.</p>
+<p>That's the basics of jQuery... there are a lot of methods attached to jQuery objects, most especially AJAX ones, which I'll explain in a minute.</p>
+
+<h2>Errors in Javascript</h2>
+<p>Yes, it gets to be kind of a mess of parentheses and curly braces. You just have to make sure you follow along closely. Make sure every opening brace or parenthetical is eventually closed, or else you'll get errors. And they're not obvious like in PHP.</p>
+<p>And what's horrible about Javascript is that it's terrible at reporting errors... it usually just fails and doesn't tell you at all. This is why, in the <a href="webdevintro.html">Web Dev Intro</a>, I said you should get comfy with tools like <b>Firebug</b>. They can do that error-reporting better than the browser does.</p>
+<p>So download it! <a href="http://www.mozilla.com/en-US/firefox/fx/" target="_blank">Get Firefox</a>, if you don't have it already, and then install the <a href="http://getfirebug.com/" target="_blank">Firebug extension</a>. I'll wait.</p>
+<p>You should now have a little bug icon in the lower-right of your Firefox window. Click on it. The first thing it'll show you is the source code of the page in a fancy layout. That's pretty cool, too.</p>
+<p>It'll also show you - see the tabs along the top - the page's CSS, its javascript, etc. The important part here is the <b>Console</b>. Here is where any Javascript errors will show up!</p>
+<p>So it's useful to keep the Console open when you think there's a problem. Javascript will report errors in bright red, so you can't miss em.</p>
+
+<h2>what AJAX really is</h2>
+<p>So I told you before that AJAX is just javascript, and that's true. But AJAX commonly refers to a particular set of functions within javascript.</p>
+<p>When you use AJAX, you do so primarily to <i>load content from other pages without leaving the current page</i>. Or you can even <i>send content</i> to other pages without having to go to them. This is a big deal.</p>
+<p>However, I should tell you right now, that I don't think you should actually use the AJAX way of doing things until after you learn the non-AJAX way. I'll teach you both, but don't go running to AJAX just because it might be flashier. It's much more open to security problems and it's harder to debug.</p>
+<p>Usually things would flow like this:</p>
+<ol>
+<li>Go to a page on a website</li>
+<li>Click on a button or link on the website</li>
+<li>You go to another page or whatever, following the link or form you clicked on</li>
+</ol>
+<p>That's all well and good. It's how the internet was designed: going from one page to another, distinctly. But if you notice, while using services like Google Mail, you never seem to leave the same page. It just loads your email in the current page! That's AJAX.</p>
+<p>An AJAX-driven page might work like this:</p>
+<ol>
+<li>Go to a page on a website</li>
+<li>Click on a button or a link on the website</li>
+<li>Javascript calls for that page in the background</li>
+<li>Javascript takes the result and parses it how you want it to, like replacing the contents of a div</li>
+<li>(Your location on the internet hasn't changed! You're still on the same page.)</li>
+</ol>
+<p>AJAX's primary job is to <i>replace existing content on the page</i> with content loaded from other pages. Kinda simplistic, but mostly true.</p>
+
+<h2>an AJAX example</h2>
+<p>Here's a rough example. First of all, we have this page:</p>
+<code><pre>
+&lt;p&gt;Haha, this is some new text!&lt;/p&gt;
+</pre></code>
+<p>Save that. Don't put any html tags around it, literally save that one line as an HTML file. Call it <b>piece.html</b></p>
+<p>Ok, now on to the real file. Call this one <b>container.html</b></p>
+<code><pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;simple AJAX example&lt;/title&gt;
+&lt;script type="text/javascript" src="jquery-1.6.1.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+$(document).ready( function() {
+  $('#someButton').click( function() {
+    $.ajax({
+      url: 'piece.html',
+      success: function(data) {
+        $('#contentBox').html(data);
+      }
+    });
+  });
+});
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div&gt;
+&lt;input type="button" value="load external content" id="someButton" /&gt;
+&lt;/div&gt;
+&lt;div id="contentBox"&gt;
+&lt;p&gt;loaded content will go here&lt;/p&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>That's one hell of a loaded example, but it should work, if you have all three files (the two .html files and the jquery file) in one directory.</p>
+<p>First, let's examine the container page. In the body, we see two divs: One with a button on it, the other just has some text in it. No big deal. What's important is that the button and the second div both have <b>IDs</b>. That means we can use them easily in Javascript.</p>
+<p>The javascript is where the action is. It basically says this:</p>
+<ul>
+<li>When the document is ready and loaded, do the following...</li>
+<li>When someone clicks the element with the ID <b>someButton</b>, do the following...</li>
+<li>On the <b>$</b> (jQuery) object, call the <b>ajax()</b> method</li>
+<li>Give that <b>ajax()</b> method one argument: an object!</li>
+<li>That object has two keys: <b>url</b> and <b>success</b>.</li>
+<li><b>url</b> is the URL we want to load. in this case, <b>piece.html</b></li>
+<li><b>success</b> is what to do when the URL has loaded!</li>
+<li>when the AJAX call is successful, we want it to do a function with the data. (The data being the page we loaded, in this case <b>piece.html</b>)</li>
+<li>Ok so with that data, we want to grab the element with the ID <b>contentBox</b>. On that element, perform the <b>html()</b> method.</li>
+<li>The <b>html()</b> method merely replaces the content of the element with new content! Just like <b>innerHTML</b></li>
+</ul>
+<p>So..... what does all this add up to? When you click on the button, the browser loads <b>piece.html</b>, and replaces the contents of the <b>contentBox</b> div with whatever is inside <b>piece.html</b></p>
+<p><i>Like magic.</i></p>
+<p>How powerful is this? Extremely. It kinda turns the whole <b>linking</b> part of the internet on its head if you only need one page to hold everything, and other pages just to act as satellites for it, holding content to replace content.</p>
+<p>That was a very, very elementary example. When you combine this with PHP and databases, shit gets real crazy.</p>
+
+<h2>what to use javascript for</h2>
+<p>It's useful for driving actions. It's useful for making otherwise dull events on a website seem fancy. I won't delve much into how to do that...</p>
+<p>The developer's job is rarely to carve that out. That's why this review of javascript has kind of been lax on examples and more conceptual in nature.</p>
+<p>I wanted you to know what javascript <i>could do</i>, but not really <i>how you can immediately use it</i>.</p>
+<p>I also wanted you to realize how much Javascript is like PHP, and any other programming language. It's all the same basic concepts, with different vocabulary.</p>
+<p>It's like spoken languages... yes, there are different syntaxes, different dictionaries, but it's all just communication of ideas. In the case of programming, we're finding various ways to communicate with a computer.</p>
+
+<h2>carry on my wayward son</h2>
+<p>Learn about databases next. At the end of the web dev series, I'll provide you a grand huge awesome example of how this all ties together. Trust me.</p>
+
+
+
+
+</div>
+
+</body>
+</html>

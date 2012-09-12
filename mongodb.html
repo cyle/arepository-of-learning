@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Web Dev: Document Databases (MongoDB)</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Web Dev: Document Databases (MongoDB)</h1>
+
+<h2>an intro to nosql</h2>
+<p>You don't need to be familiar with <a href="mysql.html">traditional databases</a> to read and understand this guide, but nevertheless it is those systems that have done the most to define document-based databases.</p>
+<p>The world of NoSQL solutions is precisely that: they're written and explained in the context of how a SQL database would do it, hence they are known as <b>No SQL</b> solutions, since many of these databases directly contradict how a SQL database would do things. Databases like couchdb, mongodb, cassandra, redis, etc, were all made because traditional databases just weren't cutting it when it came to <i>sheer size or diversity of information</i>.</p>
+<p>In this guide I will be mostly focusing on the document database <b>MongoDB</b>, because I like it a lot, and I just learned it myself after using MySQL/MSSQL for most of my life. But the concepts will be similar in other NoSQL databases.</p>
+
+<h2>NoSQL vs RDBMS</h2>
+<p>Note: if you don't know anything about traditional relational databases, you don't need to read this section. It just highlights the differences between the two worlds.</p>
+<p>In a traditional RDBMS (relational database management system) you have discreet databases, tables, columns, data types, rows, indexes, views, et cetera, all being queried with an implementation of SQL.</p>
+<p>This sounds all well and good, but what happens when half your rows in a table don't use a given column? It's still using that space for the column whether you use it or not. It makes your data <i>homogeneous</i> instead of <i>dynamic</i>.</p>
+<p>Traditional databases also rely heavily on complete consistency, atomic operations, and other assurances that everything is okay. As I've described before, traditional databases are very nervous and require a lot of hand-holding.</p>
+<p>What does this mean? It's simple: when you insert a row into a table, the database system wants time to interpret that incoming data, insert it, index it, and assure you that it completed the entire transaction. And that's great! Most people would love that. Perfect for banks and stuff where data integrity is key.</p>
+<p>But wait -- that sounds like a slow, tedious process! And it damn well is! What if I have 10,000 (or 10,000,000) people all hitting my database at once, reading and writing data!? Traditional databases don't scale well to fit this kind of demand.</p>
+<p>The traditional model is to segment a database into replicated copies called <i>slaves</i> which anyone can only read from, and then have a few <i>master</i> databases that are write-able and push their updates to the slaves. So now when you insert data not only does the master have to do all that integrity checking, but it has to assure the user that it pushed all that data to all the slaves!</p>
+<p>This is where NoSQL solutions come into play. In today's world of hundreds of millions of users swarming around a dynamic website, <b>speed is king</b>. Nevermind the whole integrity-checks, just get my data in the database RIGHT NOW!</p>
+<p>Databases like Cassandra and MongoDB excel at this, but the cost is that they are <i>eventually consistent</i> as opposed to being transactional. They also don't have columns! They don't have schemas! They're willing to spread databases over as many other machines as needed instead of having a master-slave architecture.</p>
+
+<h2>so what the hell does document-based mean?</h2>
+<p>MongoDB is document-based instead of row-based and relation-based. It's broken down this way:</p>
+<ul>
+<li>databases!</li>
+<ul>
+<li>collections! these are inside a database!</li>
+<ul>
+<li>documents! these are inside collections!</li>
+<li>indexes! these help organize documents!</li>
+</ul>
+</ul>
+</ul>
+<p>Again, comparing this to a SQL database: what's missing? Users! Rows! Columns!</p>
+
+<h2>here's a simple database</h2>
+<fieldset>
+<legend>lol_db</legend>
+<div>
+<p><b>lol_collection:</b></p>
+<pre>
+{
+	'_id': ObjectId('a928aa001910000001'),
+	'name': 'cyle',
+	'job_title': 'awesome'
+}
+
+{
+	'_id': ObjectId('a928aa001910000002'),
+	'name': 'frankie',
+	'job_title': 'not as awesome',
+	'phone': '555-0291'
+}
+</pre>
+</div>
+</fieldset>
+<p><b>lol_db</b> is the database name and <b>lol_collection</b> is a collection of documents inside that database. What are those two things within the { } inside the collection? those are <b>documents</b>!</p>
+<p>You see two documents: they each have the <b>fields</b> (not columns) "_id", "name", and "job_title", but frankie has an additional "phone" field! As I said, a document database <b>has no columns or schema</b>... it's all determined at the document-level instead of at some table-level. There is no "right way" to make a document inside a collection, you could have two documents that have totally different fields. It's completely up to you to make it how you want.</p>
+<p>what real difference does that make? well, it pushes all of the normalization out of the database's hands. if speed is king, you don't want your database to worry about normalizing the data or even making sure that the data is normalized. the database doesn't care, it just wants to store your data!</p>
+<p>this makes the database a very <b>laid-back and fast</b> component. Don't get me wrong: it still does some things for you, however really the only thing it cares about is that <b>_id</b> field. You don't put anything there, you never have to insert that: it always does it for you! The only thing MongoDB is really concerned about is whether <i>every document has a unique identifier</i>. Everything else is up to you.</p>
+
+<h2>Data Types</h2>
+<p>While MongoDB doesn't care what data you put where, it does have available data types, and they are way more expansive than any traditional database.</p>
+<p>Basically you should stop thinking in terms of rows or columns or tables and instead think of the database as <b>a collection of objects</b>. Specifically, JSON objects. JSON is <b>Javascript Object Notation</b>; it's a <i>standardized way of displaying different data types in discreet ways</i>. So what that means is that every time you see square brackets like this: <b>[ ]</b>, that signifies an Array. Whenever you see curly braces, <b>{ }</b>, that signifies an Object. It's just a way of converting these abstract data types into plain old text!</p>
+<p>In MongoDB, you can have objects (also know as associative arrays or hashes), standard simple arrays, integers, floating point numbers, dates, or plain old strings. You can even have javascript code embedded as objects! Which is crazy!</p>
+<p>here's a document that exemplifies some of these data types:</p>
+<code><pre>
+{
+	'_id': ObjectId('a928abc9180001'), // &lt;--- that's of the type ObjectId
+	'name': 'cyle', // &lt;--- that's of type String
+	'age': 24, // &lt;--- that's of type Number
+	'start_date': Date('2011-01-01 03:30PM EST'), // &lt;--- that's of type Date
+	'coworkers': [ 'frankie', 'monty' ] // &lt;--- that's a simple Array!
+	'favorites': { 'color': 'red', 'food': 'chocolate' } // &lt;--- that's an Object!
+	'skills': { 'languages': [ 'php', 'ruby', 'javascript' ], 'servers': [ 'debian', 'red hat', 'windows' ] } // &lt;--- that's an object with arrays inside!
+}
+</pre></code>
+<p>So you can see... individual documents can be very simple or very complicated. And that's great!</p>
+
+<h2>Ok but how do I do relationships?</h2>
+<p>Many nerds have wondered how relationships work if there's not a built-in mechanism to handle them. lol</p>
+<p>Traditional databases have very strict relational data models available to you, which they assert for you. You can't do it that way in MongoDB; it's mostly put on the program-side. So when you write a PHP interface to MongoDB, you have to do data-checking on the PHP side instead of the database side.</p>
+<p>But that doesn't stop relational modeling, it just means you have to worry about it on a different end. Luckily MongoDB provides a unique ID for every single document, so you can share that ID across documents. You can have ObjectId references to other documents inside a document!</p>
+<p>So, for example, a blog database in MongoDB could have a collection of posts (each post being a document), but each post has a field called 'comments' that is an array of ObjectIds to comments in another collection. No big deal. You can put that information as an array directly in a document without having to make a separate way of pointing the two pools of data (the posts and the comments) at each other.</p>
+<p>So you don't need a third collection to describe the relationships between the posts and the comments: they can be built into either the posts documents, the comments documents, or both!</p>
+
+<h2>start using mongodb</h2>
+<p>you'll need to know how to connect to a server via the command line, and it'll need to <a href="http://www.mongodb.org/display/DOCS/Quickstart" target="_blank">have mongodb installed</a>. once you're in, type this:</p>
+<code>&gt; mongo</code>
+<p>(Alternatively, mongo actually has on their website a tutorial that works just like the actual shell, here: <a href="http://try.mongodb.org/" target="_blank">http://try.mongodb.org/</a>)</p>
+<p>tada! you should now be in. note that typically <b>there are no users</b> in mongodb. security is instead based on the architecture <i>around the server</i> rather than within the database service. so, for example, you'd want to make sure that <i>only specified machines can access your database</i> or if you put the mongodb database on the same server as your application and limit mongodb only to accept local connections.</p>
+<p>so mongo has its own prompt, just like mysql, and you start off in the "test" database, as it tells you.</p>
+
+<h2>mongo queries (anything but SQL)</h2>
+<p>In traditional databases, you use a language called SQL to access things. In MongoDB, you use an altogether different method. In fact, if you've used javascript, it looks a lot like javascript!</p>
+<p>Remember that a document-based database is made up of collections and objects rather than tables and rows. The way to get and put in information reflects this. Here's an example of a "query" to select documents; you'd write this in mongo's command line shell:</p>
+<code>&gt; db.things.find({'name':'cyle'})</code>
+<p>What does that do? It tries to find all the entries in the <b>things</b> collection that have the field <b>'name'</b> set to <b>'cyle'</b>. To be even more specific, it's running the <b>find()</b> method on the things collection-object, and the argument for that find() command is the object <span class="mono">{'name': 'cyle'}</span>. Notice that this is a JSON object.</p>
+<p>What's even cooler is that this is very flexible in the way Mongo interprets it... for example, if the 'name' field was a string in most cases, but in other cases it was an array, mongo is smart enough to see if the value 'cyle' <i>is within the arrays if it encounters one</i>. So the documents themselves can be flexible, and querying for information will be similarly flexible.</p>
+<p>Here's how you add a document to a collection:</p>
+<code>&gt; db.things.insert({ 'name': 'monty', 'likes': ['books', 'carrots', 'dolphins'] })</code>
+<p>It's as simple as that... you're just putting an object into the collection. Mongo doesn't care about whether that document fits into any kind of schema, because there is no schema! It only cares that the object is a valid JSON object.</p>
+<p>Furthermore, you never need to create a collection the way you create a table; mongo will automatically create the collection the first time you put a document in it! So there was no "CREATE COLLECTION things" before adding documents to it. (You could explicitly create it, but you don't have to.)</p>
+
+<h2>mongo's considerations</h2>
+<p>As I said, mongo is very laid-back. It's very relaxed, yet it's very fast. It is also important to remember that it is used to handling large amounts of data, so the stance it takes to selecting and updating documents is one of <i>very few assumptions</i>. Let me tell you what I mean.</p>
+<p>In a traditional database, if I were to run this SQL statement:</p>
+<code>UPDATE some_table SET what='hahaha';</code>
+<p>That command would update <i>every single row in some_table</i> with the new value for that column. A sweeping change that could take a long time if there are a lot of rows. Let's see that same command in mongo's langauge:</p>
+<code>&gt; db.things.update({}, {'what': 'hahaha'})</code>
+<p>What does that do? It finds the <b>first</b> thing that matches the criteria (the empty {}, which means <b>anything</b>) and then <i>changes the entire object</i> to be { 'what': 'hahaha' }. So whatever object was there is now entirely replaced. It updates <b>on the document level</b> as opposed to on <b>the field level</b>.</p>
+<p>You might have expected it to find <i>all the records in the collection</i> and <i>update the <b>'what'</b> field</i> to be the value 'hahaha' on all of them. But that's not how mongodb works, and that's a good and bad thing. You have to be a bit more explicit, because mongo is so laid-back and unassuming about what you want.</p>
+<p>Here's what it would actually have to look like:</p>
+<code>&gt; db.things.update({}, { $set: {'what': 'hahaha'} }, null, true)</code>
+<p>Oh boy, that just got a little more complicated. That's okay, let's break this down step by step.</p>
+<p>You're running the <b>update()</b> method on the <b>things</b> collection. The update() method can take <i>up to</i> four arguments.</p>
+<ul>
+<li>The first argument is the <b>criteria</b>, or "what do I update?" you can think of it like a "where" clause in a SQL statement. the blank object, { }, means <i>any document</i>.</li>
+<li>The second argument is <b>what to do</b>. in this case, we want it to <b>$set</b> the 'what' field to 'hahaha'. The explicit "set" is needed if you don't want to replace the whole document; instead, it will find the "what" field if it exists and replace whats there with "hahaha", or if the document does not already have a "what" field, it'll add it!</li>
+<li>The third argument is <b>upserting</b>, which sounds strange, but it's <i>awesome</i>. if this is set to TRUE, it will insert this object if it doesn't exist! so it's essentially saying "if the criteria isn't met, then there's nothing to update, but we want this information in the database, so make a new document with it inside!" this can be incredibly powerful as it replaces potentially three queries with only one.</li>
+<li>The fourth argument, if true, means <b>do this for every single document that fits the criteria</b>. this is <i>implicit</i> in a SQL statement; it needs to be <b>explicit</b> in a mongo command.</li>
+</ul>
+<p>Along this same vein of <i>no assumptions</i>, when you are querying for documents in a collection, mongo technically does not give you those records immediately: it gives you a cursor, or reference, to them. When you use the SELECT SQL command, it dumps all those rows on you. Mongo just gives you a pointer for them. This saves memory!</p>
+<p>So when you run this command to find all documents in a collection:</p>
+<code>&gt; db.things.find({})</code>
+<p>It's actually just returning a cursor to those documents which you can capture and then sort, limit, and offset. In a traditional database, it actually grabs all those rows and makes you perform actions on the whole chunk of them. Take a look at this:</p>
+<code>&gt; db.things.find({}).sort({'name':1}).limit(10)</code>
+<p>See how mongo wants you to <i>daisy-chain commands on top of each other</i> like in javascript or other object-oriented langauges?</p>
+<p>It's essentially saying this: in the <b>things</b> collection, find every document. With every document, <b>sort</b> it by the <b>name</b> field. With that sorted list, <b>limit</b> it to the top 10. You haven't actually touched or retrieved any documents yet; it's only been using lightweight references to the possible collection.</p>
+<p>And out of that comes a cursor which <i>represents those documents</i>! Not the actual documents! You then need to iterate with the cursor to go through each individual document.</p>
+<p>That way, only one document is processed at a time, which conserves memory on the server.</p>
+
+<h2>practical example</h2>
+<p>Like MySQL, and all databases, it's not just about what mongo wants you to do - but how the programming languages you use interface with the database. The mongo shell might want you to use the commands I described above, but the PHP API for MongoDB does things differently (albeit very similarly). This example shows how PHP would talk to MongoDB.</p>
+<p>Note that you need to have PHP 5, PECL, and the <a href="http://pecl.php.net/package/mongo" target="_blank">MongoDB PECL extension</a> installed.</p>
+<code><pre>
+&lt;?php
+
+// this gets 5 documents sorted by the "name" field from a collection
+
+$m = new Mongo(); // initialize the MongoDB driver
+$db = $m->lol_db; // select which database within our MongoDB server to use
+$things = $db->things; // select a collection within that database
+
+$thing_cursor = $things->find()->sort(array('name'=>1))->limit(5); // do the "query" which returns a cursor
+
+foreach ($thing_cursor as $thing) {
+	echo '&lt;div&gt;&lt;pre&gt;';
+	print_r($thing); // show us what's in the fetched document!
+	echo '&lt;/pre&gt;&lt;/div&gt;';
+}
+
+?&gt;
+</pre></code>
+<p>You can see how this line in PHP:</p>
+<code>$thing_cursor = $things->find()->sort(array('name'=>1))->limit(5);</code>
+<p>Would look like this line in the mongo shell:</p>
+<code>var thing_cursor = db.things.find({}).sort({'name':1}).limit(5)</code>
+<p>The vast majority of mongo's shell-functions are written this way in the programming languages which interface with it.</p>
+<p>Also note how we use a <b>foreach</b> loop to go through the documents given to us by the cursor. It'll only give us <i>one document at a time</i> unless we actually want it to dump all of them on us.</p>
+<p>Similarly, inserting data through PHP looks like this:</p>
+<code><pre>
+&lt;?php
+
+$m = new Mongo(); // initialize the MongoDB driver
+$db = $m->lol_db; // select which database within our MongoDB server to use
+$things = $db->things; // select a collection within that database
+
+// the PHP associative array which will be "translated" into a document:
+$new_thing = array('name' => 'bryce', 'age' => 27, 'fav_colors' => array('green', 'brown')); 
+
+$things->insert($new_thing); // that's it!
+
+?&gt;
+</pre></code>
+<p>Here you can see that we create a new associative array called <b>$new_thing</b> and we pass it to MongoDB to store. The MongoDB-PHP API does the translating for us; it turns PHP's associative array into a JSON object.</p>
+<p><a href="http://www.php.net/manual/en/book.mongo.php">Check out MongoDB's PHP docs for more info!</a></p>
+
+<h2>one more consideration</h2>
+<p>The true power of laid-back document-based databases really shines when you enter an <b>asynchronous world</b>, like the one provided by fast platforms like node.js.</p>
+<p>This is because MongoDB wants to <i>just do it!</i> as fast as possible, but even if that's <i>not fast enough</i>, it wants you to keep working and trust that the data will be saved eventually.</p>
+<p>What do I mean by asynchronously? Well, look at synchronous (aka "blocking") programming like PHP: it executes the script <b>one line at a time</b> and waits for the functions on the line to be done before moving on.</p>
+<p>This means that PHP will wait for MySQL to insert the row before doing <i>anything else</i>. That's <b>blocking</b>. The inverse of this is one that just keeps going and trusts that MySQL will insert that row.</p>
+<p>Think of it this way: you're on a basketball team and you have the ball and you're dribbling down court with it. A blocking scripting language wants you to take that ball all the way to the basket as if you were the only one playing, busting through anyone opposing you, no matter how long it takes. On the inverse, an async language is perfectly willing to pass the ball (your data) to another player <i>and let them worry about it</i> so that you can run up ahead unimpeded. While that other player has the ball, you can do whatever you want! You could go have tea! You could read a book! Or do nothing at all and be idle! Then when that other player wants to throw you the ball, you've been busy doing whatever else you had to do to use your time most efficiently. Does that make sense? I hope so.</p>
+<p>But I'll cover async stuff in my node.js guide. It's a crazy paradigm-shift that is now happening in a big way.</p>
+
+<h2>in concluuuusion!</h2>
+<p>MongoDB and other document-based databases are very powerful and have a lot of potential. They're extremely useful in high-end scalable massive data stores.</p>
+<p><b>They're not right for every project</b>... sometimes a transactional atomic traditional MySQL database is the right way to go. Sometimes not. MongoDB is just another tool in your belt.</p>
+<p>As always, email me if you have any suggestions/comments for this guide. cyle_gage@emerson.edu</p>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Systems Stuff: building a simple web server</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Systems Stuff: building a simple web server</h1>
+
+<h2>first of all</h2>
+<p>this builds on top of the <a href="linux.html">linux guide</a>. you should read that first, really. you should have a good grasp of the following:</p>
+<ul>
+<li>the initial server setup</li>
+<li>comfortable with the command line</li>
+<li>installing packages with apt-get</li>
+<li>editing text files with nano or vi</li>
+<li>reading logs with less</li>
+<li>managing services with scripts inside /etc/init.d/</li>
+</ul>
+
+<h2>actually set up the server</h2>
+<p>primarily, you need to set up the box. the server. the machine. whether it's virtual or physical. I recommend virtual, but if you have a spare computer just sitting around, go ahead and use that.</p>
+<p>and contrary to the popular belief, a web server really doesn't have to be a powerful computer. some web servers are old IBM boxes running in peoples' basements. the whole point of using linux is that it can run on <b>pretty much anything</b> and be stable. it doesn't take up a lot of resources.</p>
+<p>a good, stable web server might be a 1GHz Pentium 4 with 512MB of RAM and a 20GB hard drive. Actually, that's probably a mid-range web server. You could do a lot worse. You're probably not going to be doing anything that requires more than that.</p>
+<p>if you don't remember how to to do the initial setup of a linux machine, you're actually going to have to go back to the linux guide and do a few steps from there, haha. I won't repeat myself here.</p>
+<p><a href="linux.html">here's the guide</a>. if you don't remember how to set up a server, follow the sections <b>before anything, you need a server</b> and <b>ok so you have a server, cool</b> and then come back here</p>
+
+<h2>i love LAMP</h2>
+<p>the packages we're going to install on the server to make up our web host are commonly referred to as a <b>LAMP server</b>. well, that's one option anyway.</p>
+<p>LAMP stands for <i>Linux, Apache, MySQL, and PHP</i>. So you have Linux as the OS, Apache as the actual web service, MySQL as the database, and PHP as the scripting language.</p>
+<p>This is how the vast, vast majority of web servers are set up. But I think it's outdated. Honestly, I think Apache is the part that's outdated. Apache was great back in the day... but now it's kind of bloated compared to others.</p>
+<p>Almost every chance I get, I use <b>lighttpd</b> instead of Apache. <a href="http://www.lighttpd.net/" target="_blank">lighttpd</a> (pronounced "lighty") is a newer, fresher approach. it's an extremely lightweight web server, focused on an <b>asynchronous</b> environment.</p>
+<p>I'll teach you how to do both... use either Apache or lighttpd -- I mean honestly the difference is just which packages you install. you should seriously consider lighttpd when you have thousands upon thousands of users, maybe.</p>
+<p>So the next two sections, choose one of them. You can't do both. (Well you can but it's messy and I won't teach you that yet.)</p>
+
+<h2>Going with Apache with the PHP module</h2>
+<p>If you go with Apache, you install PHP as a <b>module of apache</b>, so the two are linked. you'll see what i mean.</p>
+<p>first, let's install apache. specifically, we use apache version 2.2, which is listed as the <b>apache2</b> package.</p>
+<code>&gt; apt-get install apache2</code>
+<p>Once that's done, open a browser, any browser. you should be able to paste in the IP of your server into the address bar, hit enter, and... bam! You should see a page! That's the default apache page.</p>
+<p>Congrats, you now have a simple web server. That's all it took! If you put files in <b>/var/www</b> (the <b>web root</b>) they'll be accessible via a browser.</p>
+<p>But it can't do any PHP yet... it can't do any scripting languages. It just <b>serves files</b> when asked for them.</p>
+<p>Let's demonstrate this. Go to /var/www</p>
+<code>&gt; cd /var/www</code>
+<p>Now let's make an HTML page</p>
+<code>&gt; nano what.html</code>
+<p>in there write whatever you want. some HTML if you want. doesn't matter. save it by pressing CTRL+O and then exit nano by pressing CTRL+X.</p>
+<p>now in your browser, add /what.html after the IP of the server! Tada! Magic.</p>
+<p>So now let's get PHP running. Here's what you need to do:</p>
+<code>&gt; apt-get install libapache2-mod-php5</code>
+<p>That's it! You now have PHP installed and you can access it through apache.</p>
+<p>the configuration files for Apache live in this directory: <span class="mono">/etc/apache2</span> and there's a few of them. The important ones are <b>apache2.conf</b> and the files in the <b>sites-enabled</b> directory. take a look at them if you want.</p>
+<p>And remember that if you make any changes, you have to reload or restart apache to make the changes stick, like so:</p>
+<code>&gt; /etc/init.d/apache2 reload</code>
+<p>Let's test it out. (Skip the lighttpd section.)</p>
+
+
+<h2>going lighttpd with PHP CGI</h2>
+<p>if you go with lighttpd, you install PHP separately as its own thing, in this case a <b>CGI</b> process. CGI stands for <b>Common Gateway Interface</b> and it has been around for a very long time.</p>
+<p>as I said, lighttpd is much lighter and faster, but it requires a little more work to get it running how you want. apache and its php module are really easy to install, it's just two packages.</p>
+<p>first, let's install lighttpd.</p>
+<code>&gt; apt-get install lighttpd</code>
+<p>That's it. Now you have a web server! It'll serve whatever files are within <b>/var/www</b> and if you go to the server's IP address in a browser, it should show a placeholder page!</p>
+<p>So if you go to /var/www and put your own HTML file in there, you can access it in your browser, as you would any other page! Magic.</p>
+<p>The configuration file for lighttpd is here: <span class="mono">/etc/lighttpd/lighttpd.conf</span></p>
+<p>You have to enable some modules to get PHP to work, but first, let's install it.</p>
+<p>Right now all lighttpd does is serve files. You ask for one via the URL, and it gives it to your browser. We need to add PHP as a <b>CGI</b> process in order for it to process PHP for you.</p>
+<p>So we install this package:</p>
+<code>&gt; apt-get install php5-cgi</code>
+<p>After that's done installing, we now have lighttpd serving files and PHP willing to work as a CGI interface. But how do we connect the two? Apache's PHP Module does that work for us, but in lighttpd we need to enable the FastCGI module ourselves.</p>
+<p>How do we do that? Well, first go to lighttpd's configuration directory:</p>
+<code>&gt; cd /etc/lighttpd</code>
+<p>if you run the <span class="mono">ls -la</span> command you'll see the <b>conf-available</b> and <b>conf-enabled</b> directories. One holds configuration files you could load (the <b>available</b> one) and the other holds the ones you've chosen to load (the <b>enabled</b> directory). Pretty straightforward.</p>
+<p>So look inside the available modules:</p>
+<code>&gt; ls -l conf-available/</code>
+<p>That'll return the list of configuration files available for you to use. There are a lot. We are only interested in two of them. <b>10-fastcgi.conf</b> and <b>15-fastcgi-php.conf</b></p>
+<p>The first file will tell lighttpd to use FastCGI. This is a way of it using any CGI interface. The second file tells lighttpd to use PHP, specifically.</p>
+<p>To enable them, simply copy or soft-link the files into the <b>conf-enabled</b> folder. You can do it this way:</p>
+<code><pre>
+&gt; cd conf-enabled/
+&gt; ln -s ../conf-available/10-fastcgi.conf 10-fastcgi.conf
+&gt; ln -s ../conf-available/15-fastcgi-php.conf 15-fastcgi-php.conf
+</pre></code>
+<p>What did we just do there? We went into the conf-enabled directory and created two soft links (shortcuts) to the conf files in conf-available.</p>
+<p>We could've just as easily copied them. Probably should have copied them. Oh well. Moving on.</p>
+<p>Make sure you reload the lighttpd service to make it save the changes to the config:</p>
+<code>&gt; /etc/init.d/lighttpd reload</code>
+<p>(And make sure you do that every time you change any configuration options or files.)</p>
+<p>That's all you need to do to get php working with lighttpd!</p>
+
+
+<h2>test out php!</h2>
+<p>Now go to /var/www and make a file called <b>info.php</b> with nano and put in the following:</p>
+<code><pre>
+&lt;?php
+phpinfo();
+?&gt;
+</pre></code>
+<p>Save that and close nano. The <b>phpinfo()</b> function is a built-in PHP function that displays a lot of information about the current PHP install. Try going to info.php in your browser.</p>
+<p>(Note: if your browser downloads info.php instead of actually showing you anything, you probably need to restart apache or lighttpd by typing this into the console: <span class="mono">/etc/init.d/apache2 restart</span> or <span class="mono">/etc/init.d/lighttpd restart</span> )</p>
+<p>You should see a long page with a lot of information. This is a huge list of information regarding PHP and the libraries it has loaded. You'll see things like the <b>dom</b> and <b>json</b> and <b>SimpleXML</b> libraries.</p>
+<p><b>if you are using apache,</b> the config file for php lives here: <span class="mono">/etc/php5/apache2/php.ini</span> and it's just a text file.</p>
+<p><b>if you are using lighttpd,</b> the config file for php lives here: <span class="mono">/etc/php5/cgi/php.ini</span> and it's just a text file.</p>
+<p>PHP now works with your web server. Now you can move on to installing MySQL.</p>
+
+<h2>MySQL!</h2>
+<p>installing MySQL works the same way regardless of what web service you choose. it's pretty simple:</p>
+<code>&gt; apt-get install mysql-server</code>
+<p>That's it... it'll take you through a lot of options, like setting the MySQL root user's password. that's important, don't forget it.</p>
+<p>Seriously, it's that simple. When it's done installing, mysql should be running. You can check by typing:</p>
+<code>&gt; mysql --version</code>
+<p>which will print out the current version of mysql running on your server. if you want to go into mysql and start running SQL commands, do this:</p>
+<code>&gt; mysql -u root -p</code>
+<p>and enter your mysql root password when asked. now you're in the mysql shell! kind of like the linux shell, except you live inside mysql instead of a file system. type <b>exit</b> to leave and go back to the linux shell. pretty cool, huh?</p>
+
+<h2>getting PHP to work with MySQL</h2>
+<p>So once again we have two pieces and now we need a way for them to work together! If you noticed in your <b>info.php</b> page, there probably isn't a <b>MySQL</b> section. we need to install that, too.</p>
+<p>thankfully it's pretty easy!</p>
+<code>&gt; apt-get install php5-mysql</code>
+<p>(There are a lot of php5 libraries available, if you search with this command: <span class="mono">apt-cache search php5</span> and hit enter, you'll see a list of available libs.)</p>
+<p>Now to actually make that new library available, you need to <b>reload</b> the web service again! You should know how to do that by now, so go ahead.</p>
+<p>After it reloads, check your <b>info.php</b> page again. It should now have a <b>mysql</b> section. Now your install of PHP has all the mysql functions! How wonderful.</p>
+
+<h2>if something breaks</h2>
+<p>Sometimes PHP won't tell you when it breaks, or lighttpd won't either... for this, check the logs!</p>
+<p>If you go to <b>/var/log</b> there'll be a folder for <b>apache2</b> or <b>lighttpd</b>, with error and access logs within. PHP errors are typically reported in there, too.</p>
+<p>mysql errors could be in <b>/var/log/mysql.err</b> or in the <b>/var/log/mysql/</b> directory.</p>
+<p>read the files with the <b>less</b> command! they're just text.</p>
+
+<h2>that's pretty much it.</h2>
+<p>You now have either a LAMP or LLMP server set up. congratulations! you now have the perfect web development environment to test things out and play!</p>
+<p>I have one more tip though, to make things cooler. you really don't need to do the following stuff, the guide for making a simple web server is over.</p>
+<p>however, with your server as it's set up right now, you need to access it via IP in a browser. what if you wanted to access it via a cool domain name?</p>
+
+<h2>forget your IP / what is DNS</h2>
+<p>get the IP of the server you just set up. (you probably already have it if you're already SSH'd into it.) you access it via a browser by using that IP.</p>
+<p>however, if you want to actually give your server a <b>DNS name</b> that looks a lot cooler, i'll help you out here. well, what is a DNS name? it's a fancy way of saying <b>domain name</b>.</p>
+<p><b>google.com</b> is a DNS/domain name. DNS just stands for <i>Domain Name System</i>, and it's a part of the backbone of the internet. all it does is translate <b>google.com</b> into an IP for a server. seriously, that's it!</p>
+<p>when you go to Google, the <b>very first thing</b> your computer does is ask: <i>wait, where is google.com?</i> Your computer sends out a <b>DNS request</b> for the name google.com</p>
+<p>think of it this way: my apartment might be known as "cyle's awesome apartment", but to get there you probably need the actual address. DNS is the same. google.com is just a name, the actual address is an IP, like 74.125.115.99</p>
+<p>try it, actually. in the prompt, type this:</p>
+<code>&gt; host google.com</code>
+<p>That shows you the actual IPs of the servers of google.com... wouldn't it be cool if we could have a domain name for our little web server?</p>
+
+<h2>hosts files</h2>
+<p>DNS is a system that's run on almost every computer, but certain servers on the web are <b>authoritative</b> DNS servers and actually hold most of the keys.</p>
+<p>however, on every computer you can <b>override</b> and <b>write your own</b> DNS shortcuts. this is done on the operating system's <b>hosts</b> file.</p>
+<p>on Windows, this file is located in this directory: C:\windows\system32\drivers\etc</p>
+<p>on Mac, this file is located in this directory: /etc (which you can't get to through Finder, you have to go through Terminal)</p>
+<p>You'll notice that the file has no extension, but it's just a plain text file.</p>
+<p>on Mac I'd suggest you just use the free app <a href="http://www.clockwise.ee/gasmask/" target="_blank">Gas Mask</a> to edit your hosts file.</p>
+<p>on PC you'll have to open Notepad <b>as administrator</b> (right-click on notepad and Run As Administrator) and then open the file manually.</p>
+<p>Inside the hosts file should be nothing but maybe some commented-out text about what the file does.</p>
+<p>At the bottom, make a new line, and put in this:</p>
+<code><pre>
+10.10.10.10  whatever.com
+</pre></code>
+<p>well, replace 10.10.10.10 with the IP of your server. replace whatever.com with whatever you want your server's domain name to be. it can be anything.</p>
+<p>now you need to <b>flush your DNS cache</b> so that your computer accepts these changes. with Gas Mask on Mac, I think it'll do this automatically.</p>
+<p>on Windows, you need to open a command line window (go to Start > Run and type <b>cmd</b> and then enter) and type <span class="mono">ipconfig /flushdns</span> then enter into the Windows prompt. give it a second.</p>
+<p>Now if you go to a web browser and type in that domain name, your server should pop up.</p>
+<p>Please note: <b>this will only work on your computer!</b> you edited your own hosts file. it won't work across computers; you'd need to edit their hosts file, too.</p>
+<p>setting up your own DNS server and shit is way more complicated than I'm going to get into.</p>
+<p>but doing this on your own computer might make life a little easier if you don't want to have to remember the server's IP.</p>
+
+<h2>the end</h2>
+<p>that's how you set up a simple web server! wow!</p>
+<p>I make one like all the damn time to test stuff out on. I like virtual machines because they're <b>easily disposable</b> and I can have a bunch running at once.</p>
+<p>You could even get crazier and make it a node.js server, too......</p>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Web Dev: PHP to power it</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Web Dev: PHP to power it</h1>
+
+<h2>what we're really talking about</h2>
+<p>First of all, where are we right now in this process?</p>
+<p>If we're building a car, you should already know how to make the chassis. HTML/CSS is the chassis of the car. It's what people look at.</p>
+<p>PHP will be the engine that makes the car <i>go.</i> I mean, you can definitely have a nice car with wheels and it looks great, but it kinda sucks when you have to move it yourself with your own feet Flinstones-style.</p>
+<p>(Honestly though, you can make a great website using just HTML/CSS and nothing more complex than that. These guides are written entirely by hand in HTML, I'm not doing this in a database with PHP or anything.)</p>
+<p>However, PHP is just one possible thing you could use for an engine. You could use Ruby on Rails if you wanted. Or Python. Or Perl. Or Java. Well, don't use Java.</p>
+<p>But I'm going to teach you PHP because it's pretty ubiquitous among the major players on the web, and honestly I think it's a good way to start. (Because it's how I started.)</p>
+<p>Really, I'm going to kind of shape this guide with broad concepts that apply to many programming languages, with PHP as the example language.</p>
+<p>This is a <b>loonnnggg</b> guide. Because there's a lot to learn. Let's take a journey together...</p>
+
+<h2>what is PHP, exactly?</h2>
+<p>PHP stands for <i>PHP Hypertext Preprocessor</i>. A recursive title. Hilarious. Nerds.</p>
+<p>Anyway, it's a language, kind of like how HTML is a langauge, but different. (Of course it's different; every language is different.) HTML is a <i>markup language</i> whereas PHP is a <i>processing language</i>. Both need to be interpreted and read by a computer before they do anything.</p>
+<p>What's important is that PHP lives on the <b>server side</b> of things, whereas HTML lives on the <b>client side</b>. What that means is that when you write HTML and put it on the web, <i>anyone can read it</i>. That's why you can right-click on this page and view the Source code.</p>
+<p>But for languages that live on the server-side, you never see that code. It goes like this:</p>
+<ol>
+<li>You type in http://www.whatever.com/something.php</li>
+<li>The server <b>whatever.com</b> says "OK, they want something.php, I'll <b>do that script</b>"</li>
+<li>The server reads the instructions in something.php <b>and does it</b>.</li>
+<li>In the browser, you see the result of that. The server does the script and hands the result to your browser.</li>
+</ol>
+<p>If you were to View Source on that page, you wouldn't see any of the instructions in the php file, you'd just see the results of them. Just like how when you're viewing an HTML file in your browser, you don't see any of the tags, you just see the result of them!</p>
+<p><b>But why use this?</b> is a good question, mostly. For one thing, you may be asking the website for secure data, so it doesn't trust you to just go in there yourself. How would you like it if someone walked into your home unannounced and just started going through your things? PHP wants to go in there and get what you want without actually giving you access to what's behind the scenes.</p>
+<p>The server may also be doing very complicated things that your browser just couldn't do. This is becoming less and less the case as time goes on, but sometimes it's still true. Generally it's safer to do it yourself on the server-side.</p>
+
+<h2>what for?</h2>
+<p>A server-side scripting language can be extremely useful. The #1 reason is typically attributed to the fact that you can have a magically <b>dynamic website</b>. What does that mean?</p>
+<p>Well if you wanted to make a blog with just HTML and CSS, you'd need to make individual HTML files for every individual blog post! So if you have 30 blog posts, you'd probably have 30 HTML files.</p>
+<p>What if you could make <b>just one page</b> that could display each of those blog posts depending on which one the user wanted? That's what they mean by <b>dynamic</b>. One page does many things depending on what the user wants or what data is available.</p>
+<p>So using just HTML and CSS, for a blog, you'd need 30 blog post HTML files, an index file that has a list of the blogs, and you'd need to update all of them manually every time something changed.</p>
+<p>With PHP, you could have just two files and a database: one file to display the index of all blog posts, one file to display individual posts, and a database of the actual posts.</p>
+<p>That's what for.</p>
+
+<h2>what do we need to use PHP?</h2>
+<p>You need a server that supports PHP. Support for it isn't typically built into Windows or Mac. You can't really right-click on a PHP file and have it open in a browser and see it the same way you can with an HTML file.</p>
+<p>So you have a few options:</p>
+<ul>
+<li>Use some space available to you for free if you're a student or staff or faculty member at Emerson College! <a href="http://newmedia.emerson.edu/docs/">The NEWMEDIA SERVER!</a> (I built that.)</li>
+<li>If you're on windows you can <a href="http://www.ricocheting.com/how-to-install-on-windows/apache" target="_blank">install Apache</a> and then <a href="http://blogs.sitepoint.com/how-to-install-php-on-windows/" target="_blank">install PHP</a> pretty easily, I guess.</li>
+<li>If you're on a mac you can <a href="http://georgebutler.com/blog/setting-up-local-web-server-on-os-x-snow-leopard-10-6/" target="_blank">enable its built-in web server</a>.</li>
+<li>You can use my <a href="linux.html">linux guide</a> and <a href="webserver.html">web server guide</a> to build your own server, but it might be tough.</li>
+<li>If you'd rather just spend money, you can buy hosting at a web hosting company to hold your files. <a href="http://www.mediatemple.net/go/order/?refdom=arepository.com" target="_blank">MediaTemple</a> has been pretty good to me so far, even if they're pricey.</li>
+</ul>
+<p>So you have a way to host and view PHP files? Great. To actually write PHP scripts, you just need a plain text editor. Awesome, right? Just like HTML. So open NotePad or TextEdit again, same as before.</p>
+<p>After you have that squared away, we can try this out with our first test file!</p>
+
+<h2>HELLO WORLD!</h2>
+<p>As is common with learning a new language, the first thing you learn is how to say "hello world". Well, it looks like this in PHP:</p>
+<code><pre>
+&lt;?php
+
+echo 'HELLO WORLD!';
+
+?&gt;
+</pre></code>
+<p>That's it. Save it as <b>haha.php</b>, put it on your server, and then open it in a browser. All you should see are the words <b>HELLO WORLD!</b></p>
+<p>Just like in HTML, you can immediately see a similarity: you need to start the file by saying that it's going to be PHP with a PHP tag! It looks a little different than HTML though.</p>
+<p>Every PHP file starts with <b>&lt;?php</b> and ends with <b>?&gt;</b> (I'm not going to write them in every example; you need to remember to do so yourself.)</p>
+<p>In between those tags, wherever they are, the server will understand that it needs to do whatever is between them before giving the file to your browser.</p>
+<p>In this case, all we've written is that it needs to <b>echo</b> the string 'HELLO WORLD!'</p>
+<p>This line ends with a semicolon, as almost every line should! <b>Semicolons end statements. All of them.</b> Remember that! There are some things you won't need to end with a semicolon, but I'll clearly highlight them.</p>
+
+<h2>We're deep in it now</h2>
+<p>It's all uphill from here. This is where you need to start learning concepts that may hurt your brain if you've never ever written any kind of programming language before. It's simply a matter of defining our universe by our own writing. We need to cover the following:</p>
+<ul>
+<li>Expressions</li>
+<li>Variables</li>
+<li>Data types</li>
+<li>Operators</li>
+<li>Control/logic structures</li>
+<li>Functions</li>
+<li>Loops</li>
+</ul>
+<p>And there's probably more I'm forgetting. However, what's wonderful about this is that these are concepts that apply generally to the vast majority of programming languages. Once you learn one, you've laid the foundation to learn more! How exciting.</p>
+<p>We'll cover them one at a time. Let's start with something simple.</p>
+
+<h2>Express yourself</h2>
+<p>One of the most basic concepts of all programming is that of <b>expressions</b>. It's so basic, you won't even think about it after you learn it.</p>
+<p>Here's an expression:</p>
+<code>4 + 10</code>
+<p>Hahahaha... yeah it's that simple. An expression is <i>any statement that will return a result!</i></p>
+<p>4 + 10 returns 14. Let's break this down a little further... yes, it can be broken down further.</p>
+<p><b>4</b> is an object. It's a number, to be specific. There are things you can do with a number, like <b>add</b> or <b>multiply</b> it to another number.</p>
+<p>So in that above expression, we have the number 4, and we are performing an addition upon it, with <b>10</b> as the number to be added.</p>
+<p>It will return the number <b>14</b>, of course. But in the above expression, we're not capturing that result. It just happens, and then escapes into the ether between CPU cycles. But what if we want to do something with the result?</p>
+
+<h2>Life is a series of variables</h2>
+<p>We use <b>variables</b> to capture the results of expressions. Think of a variable as a <b>reference</b> or a <b>symbol</b> or just a holding area for something else. Here, let me show you:</p>
+<code>$lol = 4 + 10;</code>
+<p>The <b>$lol</b> part is a variable! In PHP, the dollar sign <b>$</b> before a series of letters and numbers (no spaces) denotes a variable name. In this case, we've named the variable <b>lol</b>. Very apt.</p>
+<p>So what does the variable do? It holds the result of <b>4 + 10</b>. We use the equal sign <b>=</b> to <b>assign</b> the variable a value, or piece of data. So if you were to ask $lol what its value is, it would say <b>14</b>.</p>
+<p>What the most important thing you should learn right now is that, unlike math, <b>the equal sign is used to assign values</b>. Writing <i>4 + 10 = 14</i> in PHP doesn't mean anything. It'll actually throw an error, I think.</p>
+<p>Notice that the $lol variable is <b>on the left</b>. The computer will read instructions from left to right, so it'll read the above expression as: <i>with the variable $lol, assign it the result of 4 + 10</i>. You couldn't write it any other way.</p>
+<p>Remember: you're writing for a computer. It only knows how to do things in certain ways.</p>
+
+<h2>Data types define variables</h2>
+<p>With PHP, you don't need to worry about data types too much, since PHP kinda lets you do whatever. However, you will still need to know how they work.</p>
+<p>Data types are simply <i>how you define a piece of data</i>. In the above example, we were using <b>numbers</b>. A number is a data type!</p>
+<p>Specifically, 4 would be defined as an <b>integer</b>, or <b>int</b>. It's a solid number, positive or negative. <b>3.2</b> would be a floating-point number; one with a decimal point.</p>
+<p>Other data types in PHP, and across most programming languages:</p>
+<p>A <b>Boolean</b> is either true or false. That's it. (Trust me, it's an important data type.)</p>
+<p><b>String</b>. Think of it this way: "a" is a single character. "apple" is <i>a string of individual characters</i>. Hence, string. In PHP, you surround a string with single- or double-quotes to denote it as such, like so:</p>
+<code>$lol = "hello!";</code>
+<p>When you would ask $lol what it is, it doesn't include the quotation marks, but you needed to use them to denote it as a string. The quotation marks simply tell the computer, "Hey! This is a string!"</p>
+<p>An <b>Array</b> is a collection of values, typically denoted by a comma-separated list inside the <b>array()</b> function, like so:</p>
+<code>$fruits = array( "apple", "banana", "strawberry" );</code>
+<p>In the above example, the variable $fruits contains three values: the strings <b>apple</b>, <b>banana</b>, and <b>strawberry</b>. You could put more in there if you wanted to.</p>
+<p>Many would say that an array is a <b>complex data type</b> because it is a collection of other data types. This wouldn't be far off, but it's kind of irrelevant. The above array has three values, each is a string. You could have them be anything though, and however many you want.</p>
+<code><pre>
+$something = "la la la";
+$lotsa_stuff = array( "a word", 24, 'delicious!', 2819.291, $something );
+</pre></code>
+<p>That array holds a lot of different types. Notice that you can use either single- or double-quotes to denote a string. Notice you can also put a variable in there! Crazy, right? Arrays just hold lots of stuff.</p>
+<p><b>NULL</b> is its own data type, too, even though it denotes <i>nothingness</i>. Haha, kinda existential, right? But it's very important. If a variable were to not yet have been set a value, it'd be considered <b>NULL</b>.</p>
+<code><pre>
+$var;
+</pre></code>
+<p>See? $var exists, we just told the computer it exists, but it hasn't been set to anything yet. So if we'd ask the computer what it was, it'd say <b>NULL</b>. NULL doesn't have any quotes around it, it's not a string. It's simply NULL.</p>
+<p>One crazy thing about PHP is that it lets you re-assign a variable at will. This will work just fine:</p>
+<code><pre>
+$lol = 2000;
+$lol = "2000";
+</pre></code>
+<p>Now we never told $lol that it was going to be a number, we just set it to 2000. Then we immediately changed it to be a string. (Even though there's a number within the quotation marks, the computer thinks it's a string because that's how it understands the quotation marks!)</p>
+<p>Many languages wouldn't let you do that kind of variable data type changing, but PHP doesn't care. This is useful, but you have to keep it in mind. It means that sometimes you might have to first check and make sure a variable is a number before you perform number functions on it! You certainly can't perform a multiply on a string, that doesn't make sense.</p>
+
+<h2>a little more about strings</h2>
+<p>Strings are just a collection of characters. But there are a few important things to know about how we actually construct strings...</p>
+<p>As I said, you can hold a string in <b>single</b> or <b>double quotes</b>, like so:</p>
+<code><pre>
+$a = 'hello';
+$b = "hello";
+</pre></code>
+<p>What's the difference? In those two strings, there's no difference. However, <b>double quotes</b> allow you to do more. But first, what if we do this:</p>
+<code><pre>
+$a = 'I'm happy to see you.';
+$b = "She said, "hello there!"";
+</pre></code>
+<p><i>Single quotes inside single quotes</i> and <i>double quotes inside double quotes</i> cause PHP to panic and crash, haha. Technically, PHP will see $a as just <b>I</b>, since it's between single quotes. The rest of that line, it'll just be confused and crash.</p>
+<p>Sooo how do you put a single quote inside a single-quoted string? Two options:</p>
+<ol>
+<li>Change it to be double-quotes! <span class="mono">$a = "I'm happy to see you.";</span></li>
+<li>Escape the single-quote! <span class="mono">$a = 'I\'m happy to see you.';</span></li>
+</ol>
+<p>the first one is obvious, but the second one is much more important. What does <b>escaping</b> mean? Escaping uses this character <b>\</b> to tell PHP that <b>the next character is special.</b></p>
+<p>Inside single quotes, the only thing you can escape is a single quote. So PHP reads that string, encounters the \ character, and knows that the next one (which is a single quote) is special. In this case, it ignores the single quote, and keeps reading the string.</p>
+<p>If you were to print out the value of $a, it wouldn't have that slash in it. That's taken out automatically.</p>
+<p>As I said before, <b>double quotes are more powerful</b>, but obey the same rules. You'd need to escape a double quote inside a double-quoted string, like so:</p>
+<code>$b = "She said, \"hello there!\"";</code>
+<p>That'll make PHP happy. But with double quotes, there are other special escape characters! Stuff like <b>\n</b> and <b>\t</b></p>
+<p><b>\n</b> means <b>new line</b>, and <b>\t</b> means tab. Think about it - how would you write <b>new line</b> into a string? Or hitting the tab key? With PHP, you use these escape characters.</p>
+<code>$c = "One line,\nAnd another.";</code>
+<p>If you were to print that out, PHP interprets the <b>\n</b> as where a new line should begin! Similar to HTML's line break &lt;br /&gt; tag. This wouldn't work within single quotes.</p>
+<p>One more thing: with double quotes, you can put variables inside quotes! Check this out:</p>
+<code><pre>
+$a = 'hello';
+$b = "$a world!";
+</pre></code>
+<p>That's just magical. In the second string, PHP will insert whatever the value of $a is into the string!</p>
+<p>Typically I stick with single quotes unless I really need the power of double quotes.</p>
+
+<h2>a little more about arrays</h2>
+<p>briefly, i should mention this. arrays come in two varieties: simple and associative. i've already shown you a simple array, it looks like this:</p>
+<code>$an_array = array( 'hello', 'caio', 'hola' );</code>
+<p>But how do I get a specific entry out of the array? Here's how:</p>
+<code>echo $an_array[0];</code>
+<p>That returns the first item. The square brackets immediately following the variable name <b>accesses</b> what's within the array. Arrays are <b>zero-indexed</b>, meaning the first element is 0, the second is 1, and so on. That'll take a little getting used to, I know.</p>
+<p>So in the array, the 0 is the <b>key</b> that unlocks a certain <b>value</b> within the array, in this case the first value, which is <b>hello</b>.</p>
+<p>What if we don't want to use numbers? What if we want to name the keys ourselves? Well, we can use an <b>associative</b> array:</p>
+<code>$an_array = array( 'lol' => 'laugh out loud', 'lmao' => 'laughing my ass off' );</code>
+<p>In this new array, there are only two items, and they're pairs of a key name and a value. <b>lol</b> is the key that unlocks <b>laugh out loud</b>. So if we try to access it, like this:</p>
+<code>echo $an_array['lol'];</code>
+<p>It'll return <b>laugh out loud</b>! So we are associating the key <b>lol</b> with the value <b>laugh out loud</b> by using the <b>=&gt;</b> between the key name and the value within an array. Get it?</p>
+<p>Simple or associative, both are useful.</p>
+<p>To add to the end of a simple array, you'd do so like this:</p>
+<code>$an_array[] = 'bonjour';</code>
+<p>Without putting a key between the brackets [ ], it'll assume you mean to assign the value to the <b>next slot</b>. So if the array has three items in it already, the above code will put the new value in the fourth slot.</p>
+<p>With an associative array, you need to specify the key the new value will fit in, like so:</p>
+<code>$an_array['rofl'] = 'roll on floor laughing';</code>
+<p>We specified we want to add a value to the array <b>$an_array</b> under the key name <b>'rofl'</b> with the value <b>'roll on floor laughing'</b>.</p>
+
+<h2>Secret Agent Operators</h2>
+<p>Check this out and think about it... if the equal sign doesn't mean equals, like it does in math, what does? Again, think in terms of expressions:</p>
+<code>100 == 100</code>
+<p>That's an expression, but what does it result? We know that <b>4 + 10</b> would result in <b>14</b>, but what does <b>100 == 100</b> return?</p>
+<p>Quite simply, it returns <b>true</b>! It's totally true that 100 equals 100. However, you can't capture that in a variable the same way a + or - would. Instead, we use the == operator as a <b>comparison operator</b>.</p>
+<p>You've probably seen other comparison operators before: &lt; and &gt; are also comparisons. They mean <i>less than</i> and <i>greater than</i>, respectively. Is 5 &lt; 4? False. 5 &gt; 4? True.</p>
+<p>While <b>==</b> means equals, it's just as important to know that <b>!=</b> means <b>not equals</b>! So what does this return:</p>
+<code>5 != 4</code>
+<p>It returns <b>true</b>! Because it's totally true that 5 does not equal 4. Likewise,</p>
+<code>5 == 4</code>
+<p>would return <b>false</b>, because 5 definitely does not equal 4. Get it?</p>
+<p>So just to recap... in PHP, one equals sign acts to <b>assign</b> things. Double equal signs act to <b>compare the equality</b> of two things.</p>
+<p>How would we use these, though?</p>
+
+<h2>Logic controls everything!</h2>
+<p>We use comparison operators with <b>logic structures</b>. That sounds intimidating... but it's not. Whenever you encounter something that sounds intimidating while you're learning programming, remember that <i>it's probably not</i>. You just need to break it down to understand it.</p>
+<p>Here's a logic structure:</p>
+<code><pre>
+if (10 == 10) {
+  echo "hello world!";
+}
+</pre></code>
+<p>Oh boy! Our first flow control structure. What does it do? Well, read it! Try to read it like a sentence, ignoring the punctuation. it's pretty simple. <i>If 10 equals 10, print out the string <b>hello world!</b></i> That's all.</p>
+<p>But what exactly do we have here?</p>
+<p>First of all, we have the keyword <b>if</b>, then we have an expression within parentheses. Next, we have curly braces which open { and close }. This basically means, to the computer, <i>if whatever is within the ( ) is true, do whatever is in the { }</i></p>
+<p>So if we wrote this:</p>
+<code><pre>
+if (5 > 10) {
+  echo "we live in a crazy world.";
+}
+</pre></code>
+<p>We wouldn't see any text, because 5 is definitely not bigger than 10. We could also make the expression more complicated:</p>
+<code><pre>
+if (5 + 4 > 10) {
+  echo "a crazier world, still";
+}
+</pre></code>
+<p>This works because the <b>if</b> statement will try to evaluate whatever is between the parentheses and see if it's true. In this case, it still isn't true! Haha. What if we want it to do something in case it isn't true? It's pretty simple:</p>
+<code><pre>
+if (5 + 4 > 10) {
+  echo "a crazier world, still";
+} else {
+  echo "the world seems sane.";
+}
+</pre></code>
+<p>We attach the <b>else</b> right after the first set of instructions and add more stuff between new curly braces, which signify what the computer should do <i>in case the if statement is false.</i></p>
+<p>So if we ran that code, we would see <b>the world seems sane.</b> because the expression within the if statement is false, hence the computer knows to do whatever is within the else statement.</p>
+
+<h2>Let's take a break...</h2>
+<p><iframe width="560" height="349" src="http://www.youtube.com/embed/nuOb9x_0n-c" frameborder="0" allowfullscreen></iframe></p>
+
+<h2>Anyway, FUNCTIONS!</h2>
+<p>So far we've gone through many constructs of a programming language. We've been talking about <b>syntax</b> (like the use of parentheses and curly braces) and <b>keywords</b> (like <i>if</i> and <i>else</i>) and so forth.</p>
+<p>Next we need to learn about <b>functions</b> and what they do and how we can use them. I'll throw this out at you:</p>
+<code><pre>
+function lol() {
+  echo 4 + 10;
+}
+</pre></code>
+<p>That's a lot to digest, but try to stay calm. Don't be panicked by how it looks, we'll work through it together. Let's pick it apart.</p>
+<p>First of all, understand that a function merely <b>does something</b>, and can possibly <b>return a value</b> after doing whatever it does, the same way an expression returns a value. A function merely <i>incapsulates instructions into one place</i>, usually so you don't need to re-write things you do a lot.</p>
+<p>At the beginning of that snippet, we have the keyword <b>function</b>. That tells the computer to expect a function name, the same way the keyword <b>if</b> tells the computer to expect an expression to see if it's true.</p>
+<p>Next we have the <b>name of the function</b>, in this case <b>lol</b>. You can call it whatever you like as long as there are no spaces in the name.</p>
+<p>The parentheses next to the name allows arguments to be passed to the function. Don't worry about that yet, we'll get to it. But you need the parentheses there regardless, even if they're empty.</p>
+<p>After that, once again, we see some <b>curly braces</b>. Between these are what we want the function to do!</p>
+<p>Within the above function, it prints out the result of 4 + 10 by itself if we were to call upon it to do so. That's one way of doing things. Here's another:</p>
+<code><pre>
+function lol() {
+  return 4 + 10;
+}
+
+echo lol();
+</pre></code>
+<p>Within this new function, we have the keyword <b>return</b> and then the same expression. We know that it would return 14.</p>
+<p>The return keyword means <i>give whatever called the function the result of the following expression</i>. In this case, 14.</p>
+<p>So what <b>called the function?</b> The echo did! And it'll get 14, and print it out for us to see. Let's go deeper:</p>
+<code><pre>
+function add($a, $b) {
+  $c = $a + $b;
+  return $c;
+}
+
+echo add(3, 5);
+echo add(8, 111);
+</pre></code>
+<p>Oh dear! What does this mean? Again, don't panic, let's work through this.</p>
+<p>We've made a function called <b>add</b> and it takes two arguments. (The arguments are comma-separated.) Within the function, these arguments are represented by the variables <b>$a</b> and <b>$b</b>. What we do with those variables is up to us, we need to write the instructions within the function.</p>
+<p>In the case of the <b>add</b> function, we want it to add the two variables together and assign the result to the new variable <b>$c</b>.</p>
+<p>Next, we want it to spit out the value of $c to whatever called the function.</p>
+<p>In the next lines, we see the actual execution of the function a couple times! First, we see it pass the arguments <b>3</b> and <b>5</b>. So what will our function do? Add them and spit out the result!</p>
+<p>So the first one will print out the number 8 and the second one will print out the number 119. Likewise, you could do this:</p>
+<code><pre>
+function add($a, $b) {
+  $c = $a + $b;
+  return $c;
+}
+
+$omg = add(3, 5);
+
+if ($omg > 7) {
+  echo add($omg, 111);
+}
+</pre></code>
+<p>Now we're just getting crazy, huh? Read it like it they're just sentences. Try reading it how a computer would.</p>
+<ol>
+<li>We have a function that adds two variables. The function returns the result.</li>
+<li>We have a variable that gets assigned the result of adding <b>3</b> and <b>5</b> with the function.</li>
+<li>If that variable is <b>greater than 7</b>, it does whatever is within the <b>if</b> statement.</li>
+<li>Within the <b>if</b> clause, it echoes out the result of another call to the add function.</li>
+<li>That add function call even uses the <b>$omg</b> variable! And why not?</li>
+</ol>
+<p>If you can understand all that, then you've conquered the hard part. Seriously, you have. If you can think through that like a computer would, then you're good so far.</p>
+<p>If you don't understand it yet, go back and read the past few sections until you do. Try to remember to <b>break things down</b> into pieces as I've described. Try to think the way a computer would.</p>
+
+<h2>PHP will tell you when it's broken</h2>
+<p>If you haven't already caused an error, then congrats. But I'm sure you might've already. PHP will definitely tell you when there's an error. Instead of running, it'll error out, and you'll see a warning page.</p>
+<p>Nine times outta ten, it's probably because you forgot to put a semicolon somewhere. Or you forgot to close a parentheses or a curly brace. So make sure you go back through your code and make sure that's not the case.</p>
+<p>Otherwise, <b>google it!</b></p>
+
+<h2>Loops like rollercoasters, but not really</h2>
+<p>Another important concept in programming is <b>loops</b>, or <b>iterators</b>. They do something until told not to anymore, or whenever they run out of things to do! They've important.</p>
+<p>Here's a loop example, it does something very simple:</p>
+<code><pre>
+for ($what = 1; $what &lt; 10; $what = $what + 1) {
+  echo $what;
+}
+</pre></code>
+<p>Try it! Put it in a php document and run it. It'll simply print out all the numbers between 1 and 10 (not including 10). Again, let's break this down.</p>
+<p>First of all, we have the <b>for</b> keyword, which tells the computer to expect some instructions on what to do. Like the <b>if</b> statement, it requires instructions inside parentheses.</p>
+<p>However, unlike <b>if</b>, the <b>for</b> keyword uses <i>three expressions</i> instead of one. They are separated by semicolons.</p>
+<p>The first one is this: <span class="mono">$what = 1</span> and it signifies where the loop should <b>start</b>. It starts with $what equalling 1.</p>
+<p>The next expression is this: <span class="mono">$what &lt; 10</span> and it signifies where the loop should <b>stop</b>. When that expression is false, stop! So <i>as long as $what is less than 10, keep going.</i></p>
+<p>The final one is: <span class="mono">$what = $what + 1</span> and it tells the computer what to do <i>after every statement</i>.</p>
+<p>So it goes like this...</p>
+<ol>
+<li>start off with the variable $what equalling 1</li>
+<li>keep going until ($what &lt; 10) is false</li>
+<li>every time the computer does whatever is inside the curly braces, add 1 to $what</li>
+<li>for each iteration in the loop, echo whatever $what currently is</li>
+</ol>
+<p>Instead of writing out <b>$what = $what + 1</b> you could simply write <b>$what++</b></p>
+<p>The <b>++</b> is an increment; it simply adds 1 to the variable. It's a shortcut, which is why most loops will look like this:</p>
+<code><pre>
+for ($what = 1; $what &lt; 10; $what++) {
+  echo $what;
+}
+</pre></code>
+<p>You could write it another way, too! So many ways to do the same thing.</p>
+<code><pre>
+$what = 1;
+
+while ($what &lt; 10) {
+  echo $what;
+  $what++;
+}
+</pre></code>
+<p>That does the same thing as before, but more explicitly. We start off by setting the $what variable to 1.</p>
+<p>Next, we use the keyword <b>while</b>, and we say <i>while $what is less than 10, do the following</i>.</p>
+<p>Inside the curly braces we put our statement. It's important that you have to add a way for $what to no longer be less than 10, or else the while loop will <b>go on forever!</b></p>
+<p>That's why we include the <b>$what++</b> inside the while loop as the last line. Every time it goes through the loop, make sure you increment the $what by 1.</p>
+<p>The most important lesson to learn from this is that there are a lot of ways to do loops, each with their own benefits and drawbacks.</p>
+
+<h2>that's kinda it</h2>
+<p>I mean, those are the fundamentals. Those are the basics. Where do you go from here? Well, you apply the basics to problems. Next, I'll explain some more important stuff that they don't really teach you elsewhere.</p>
+<p>Most guides teach you these basics of <b>syntax</b> and <b>structure</b> and then forget to teach you <b>what to do with it</b> or what else is available.</p>
+
+<h2>things built in to PHP</h2>
+<p>You notice that <b>echo</b> was used throughout this, but I've never really explained what it is. Only what it does.</p>
+<p><b>echo</b> just outputs the result of an expression. It's just a function <b>built into PHP</b>. You could write <b>echo</b> two ways:</p>
+<code><pre>
+echo "hello";
+echo("hello");
+</pre></code>
+<p>For <b>echo</b>, either is the same. You see in the second example, however, how much it's like our previous <b>add</b> function. <b>echo</b> takes one argument and then prints out the result for us to see.</p>
+<p>Like echo, there are <b>tons of functions</b> built in to PHP. Like, really, <b>tons</b>.</p>
+<p>Just look at <a href="http://www.gotapi.com/php" target="_blank">this list of function libraries on the left</a>. The functions built in to PHP come in <b>libraries</b>. Some of the come with almost every install of PHP, some of them you need to add manually.</p>
+<p>What's built into PHP? Libraries that let you <b>access databases</b> that store information, or other libraries that <b>get contents of other files</b> to either use as data or run more PHP.</p>
+<p>There's whole boatloads of functions that do things to the basic data types! For example, the <b>trim</b> function removes white-space from the beginning or end of a string, like so:</p>
+<code><pre>echo trim("   hello!        ");</pre></code>
+<p>That would print out <b>hello!</b> without all those spaces around it. The <b>count</b> function returns the amount of items in an array, like so:</p>
+<code><pre>
+$stuff = array( 'flower', 'apple', 'razor' );
+echo count($stuff);
+</pre></code>
+<p>That would print out <b>3</b>, because that's how many items are within the $stuff array.</p>
+<p>I mean, just look at <a href="http://php.net/manual/en/ref.strings.php" target="_blank">all these String functions!</a> There's a lot you can do with what is already available to you by default in PHP.</p>
+
+<h2>a few more comments</h2>
+<p>Honestly I don't know why I didn't tell you this before, but then again I don't really know where I would've fitted it in.</p>
+<p>First of all, <b>comments</b> let you insert text into your code without actually having it do anything. For example:</p>
+<code><pre>
+$what = 20;
+// ok but this line doesn't do anything
+</pre></code>
+<p>That second line really doesn't do anything because it has the double slashes before it. This is called a <b>commented-out line</b>. The computer will ignore it.</p>
+<p>You could also write it this way:</p>
+<code><pre>
+$what = 20;
+/*
+anything between that weird combo of characters and the next pair
+will totally be ignored
+
+i can do whatever between them and the computer will ignore it!
+*/
+</pre></code>
+<p>So everything between <b>/*</b> and <b>*/</b> is ignored. That's for multi-line comments, in case you don't want to write <b>//</b> before every line.</p>
+<p>Commenting-out lines is especially useful when you're trying to figure out what's broken in your code... you can selectively disable parts of it without having to delete anything. Get it?</p>
+<code><pre>
+$what = 20;
+// $what = "hello!";
+</pre></code>
+<p>The computer will ignore the second line, hence keeping the value of $what at 20.</p>
+
+<h2>Mixing PHP and HTML</h2>
+<p>PHP is great because it can be easily mixed with HTML... check this out, it's a complete file:</p>
+<code><pre>
+&lt;html&gt;
+&lt;body&gt;
+&lt;div&gt;
+
+&lt;?php
+
+for ($i = 0; $i &lt; 10; $i++) {
+  echo '&lt;p&gt;';
+  echo $i;
+  echo '&lt;/p&gt;';
+}
+
+?&gt;
+
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>That's <b>PHP code within an HTML page!</b> If you save this as <b>whatevs.php</b>, put it on your server, and then go to it, you'll see the numbers 0 through 9.</p>
+<p>If you look at the source of the page, all you'll see is 10 sets of <b>p</b> tags with the numbers 0 through 9 inside them.</p>
+<p>This clearly illustrates how <i>the server takes the PHP file</i> and then <i>does whatever is within the <b>php</b> tags</i> and then <i>shows you the result in your browser.</i></p>
+<p>That's what I mean when I say <b>PHP is the engine</b> and <b>HTML is the chassis</b>.</p>
+
+<h2>dynamism!</h2>
+<p>More things to know about! Oh there's just too much knowledge, too little time...</p>
+<p>There are <b>variables built in to PHP</b> the same way a ton of functions are. They are called <b>superglobals</b>, in that they work anywhere, really.</p>
+<p>Here's one of the most useful ones, at least until you figure out the rest of them:</p>
+<code><pre>
+echo $_GET['what'];
+</pre></code>
+<p>Now save that as gettt.php, upload it, and load it up in a browser. Yup, you won't see anything. But try this: in your browser, add <span class="mono">?what=hello</span> to the end of it!</p>
+<p>The filename should now look like this: <span class="mono">gettt.php?what=hello</span> If you hit enter, you'll now see <b>hello</b> on the page. AMAZING. What did we just do!?</p>
+<p>The question mark in the URL denotes a <b>query string</b>, specifically of the <b>GET</b> variety. It means, as a question mark often does, that you're asking for something.</p>
+<p>Inside a query string are <b>name-value pairs</b>. The name of the GET variable here is <b>what</b> and its value is <b>hello</b>.</p>
+<p>The <b>$_GET</b> variable allows you to access that query string, exactly the same as an associative array. The keys of the array will be the names in the name-value pairs.</p>
+<p>You can add more by using the ampersand <b>&amp;</b> character, like so:</p>
+<code>gettt.php?what=hello&lol=wut</code>
+<p>So in that situation, there would be two keys inside the $_GET array: one is <b>what</b>, one is <b>lol</b>.</p>
+<p>Similarly, when you start using forms in pages, you'll probably access the results of them through the <b>$_POST</b> variable.</p>
+<p>And if you want to save a variable on the user's browser, like Google does, you can use cookies with the <b>$_COOKIE</b> variable!</p>
+<p>I know this might all sound crazy... but it'll get easier with time. You just need to start doing things.</p>
+
+<h2>continuing on...</h2>
+<p>Oh lawd, this has been <b>one long guide</b>... I think I need a separate guide just to show you examples!</p>
+<p>I will show you a big huge working example after you read the rest of the web dev guides. But here are some exercises you can do on your own if you wish:</p>
+<ul>
+<li>Make an array of stuff and use a GET variable to retrieve something from it.</li>
+<li>Make functions to replace math stuff! Define your own math functions like we did with <b>add()</b></li>
+<li>Look up how to count the number of letters in a string and then make a function to get a random character!</li>
+</ul>
+
+
+
+
+</div>
+
+</body>
+</html>

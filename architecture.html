@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Systems Stuff: so what is systems architecture?</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Systems Stuff: so what is systems architecture?</h1>
+
+<h2>good question</h2>
+<p>and I'd like to think I could answer it, but the answer is rather subjective. I'll give you my interpretation, as specifically as I can give it, but you should realize that I'm still young, and I've only been doing this for a few years.</p>
+
+<h2>first word: systems</h2>
+<p>haha! what is a system, anyway? and why are there <i>more than one of them?</i> This is important. There's a slight difference between someone whose job it is to architect single systems and those who must architect many. let me explain.</p>
+<p>One system could easily be described as a server. That's a very simple system. It's probably linux, it's probably running a LAMP environment, it might have node.js installed and running. If you went through my web server guide, you can say that you've taken your first steps into system architecture.</p>
+<p>However, typically you don't hire a guy to just build web servers, you hire a systems architect who knows how to build a <i>farm of them</i> which work together seamlessly. One system could be one server, or one system could be 1,000 servers <i>that look like one server</i> to the outside observer. One system could also be a collection of servers, databases, and services that manage employee records, accounts payable, and so forth, in a unified fashion.</p>
+<p>You begin to enter <i>systems</i> (plural) architecture when you come to work one day and get an email like this:</p>
+<code><pre>
+dear buddy,
+
+we would like to be able to open the door to our office by sending 
+a picture message of a cat from our phones, or by sending an email, 
+or by using Twitter.
+
+love, 
+
+everybody else in the office
+</pre></code>
+<p>Yes, your life as a systems architect, and as a certified magician, has truly begun.</p>
+<p><i>Because you should be able to do what they're asking.</i></p>
+<p>But the important part: let's analyze their request seriously. What they're asking for is the interaction of various systems behind-the-scenes in a nonstandard way. "Nonstandard" meaning there isn't some software package you could install to do this for you. You have to figure it out on your own. Architect it, if you will.</p>
+<p>So what would it take to fulfill their request? First, you'd need a server that could intercept picture messages (I think <a href="http://www.asterisk.org/" target="_blank">Asterisk</a> can do this?), analyze them to figure out if they're a picture of a cat (that would be tough, but you could probably do it by manipulating some face detection scripts), an automated email reader (easy to do in Ruby, PHP, Python, etc), a Twitter bot (also easy to do), and some kind of remote door access system (<a href="http://universities.cbord.com/products/product.asp?id=269" target="_blank">these exist</a> or <a href="http://www.youtube.com/watch?v=lvQLgVTqibw" target="_blank">you could build your own</a>).</p>
+<p>Those would each be independent systems. You hire developers to make the specialized pieces like that. These become disparate parts waiting to be made into an interoperable collection of systems.</p>
+
+<h2>second word: architecture</h2>
+<p>Your fun begins when you have to build that interoperability once the individual systems have been built! That's where the architecture comes in.</p>
+<p>(And, as an aside, here's where a little contention comes in: I myself am both a developer and an architect, so I do all this work, but I understand where my role as a developer stops and architect begins. But in some work environments, the architect would act more to orchestrate, organize, and plan this stuff and do minimal development work.)</p>
+<p>The architect would need to find ways to make the Asterisk server send the picture to an analysis script which would then notify the remote door access system. If they're on two or three separate servers, how are they going to talk to each other? Using some kind of HTTP request system? Or directly, using sockets, via Java or node.js or any other solution? Or maybe a shared database?</p>
+<p>The job of the architect is to make sure it works and that it works well. What's more important, I think, is making sure it <i>works on its own forever</i>. Whenever I try to architect systems, I only consider my job truly done if I could walk away from it and never have to return. A good building should be able to stand forever.</p>
+<p>That is, of course, a bit unrealistic. But it's the ultimate goal, and it's the same goal any good developer should also have for their individual pieces of the overall whole.</p>
+<p>What I find which generally separates a <i>developer</i> from an <i>architect</i> is that the architect must design solutions that include the following ingredients:</p>
+<ul>
+<li>At least one purchased<sup>1</sup> enterprise-level<sup>2</sup> system</li>
+<li>At least one home-grown in-house system<sup>3</sup>, whether it's a windows or linux server</li>
+<li>At least two abstraction layers<sup>4</sup> in different programming languages, i.e. a Ruby script that sends stuff to a Java service on another server</li>
+</ul>
+<p>Notes on the above three statements:</p>
+<p>1. when you're working in a corporate or semi-corporate (see: wannabe-corporate) environment, purchasing power is big. The reason why a business buys a software solution instead of hiring someone to build it from scratch is not only to follow potential industry standards, but to have a support contract with that third party and be able to blame/offload work on them when it breaks. There's nothing easier for a person to do than hide behind a support ticket, there's also nothing more torturing. startups are typically the exact opposite environment, unless you're a startup building something on top of a Facebook API or something, in which case your whole company is technically a slave to that system.</p>
+<p>2. Enterprise-level systems are ones that are hugely complex and pretty much get "guaranteed not to fail"... which I find to be very similar to the American economy's "too big to fail" approach to problems. Yes, enterprise-level systems are very robust and built very well, but they're <i>still</i> prone to failure. Not only are they prone to failure, but often they are so huge and complex that finding where the failure occurred is an impossible task in and of itself. Be careful that your own systems don't become so huge that this becomes a problem.</p>
+<p>3. An in-house system that hopefully you built or you know who built it. Not to say that you can't pick up where someone else left off, but that can be a big challenge. Sometimes starting fresh is better. But remember, whenever you're building something, please write it as if someone else with no familiarity with it is going to read it sometime after you're gone. The smallest bits of commented code and documentation is better than none at all.</p>
+<p>4. Abstraction layers are important because they can either be utilized or gone-around. For example, if you're dealing with a system that has a Java service that interprets input and maintains a database, you have the choice of either utilizing that Java service (which is an abstraction layer) or programming around it to go straight into its database. It's tricky, but that's part of being an architect.</p>
+<p>A lot of the "architecture" is mixing these together, writing custom code around existing systems, crafting the interoperability between systems (whether you built the individual systems or not, you are building their interaction) and making it accessible to the end-users (if they need a front-end to it).</p>
+<p>Honestly I can't tell you what entrypoint is easiest to get into systems architecture. My first time doing real basic "architecture work" was building my own system to regulate and automate a Microsoft Active Directory (see: enterprise-level LDAP) environment, and create more accessible interfaces for users to interact with it. However, I know people who think building simple interoperability between existing systems to be the easiest way to get into systems architecture, because it minimizes custom work and instead places emphasis on <i>understanding</i> systems so they can be reinterpreted.</p>
+
+<h2>example: median's video transcode farm</h2>
+<p>here's a great example that I built from scratch. <a href="http://median.emerson.edu/" target="_blank">median</a> is a media content uploading and delivery site that I made and maintain for Emerson College. the important part is that it deals with <b>a lot of videos</b>, and a lot of the time, those videos aren't ready for streaming on the web.</p>
+<p>so before they're viewable on the site, they need to be transcoded from whatever format they're in to a streaming-friendly one. but how do you do that quickly? efficiently? can it correct for any errors that come up? this is the same thing that YouTube and Vimeo do whenever you upload something, but they have teams of engineers and thousands of computers in their transcode farms.</p>
+<p>I'm just one man with eight nodes to put in a farm. and I don't want to spend money on any software to do this, so I had to either use open source tools or software that my department already had purchased.</p>
+<p>The ultimate plan, as I originally designed it, was the following:</p>
+<ol>
+<li>new video gets uploaded, the median site "tells" the farm about the new video to be transcoded by placing it in some kind of queue</li>
+<li>some centralized service picks a node to do the job, and sends it to the node</li>
+<li>the node has the median file system mounted, does the job with HandbrakeCLI, with the output file going directly where it needs to go</li>
+<li>on to the next job</li>
+</ol>
+<p>A pretty simple centralized job-queue system. The first iteration of this was built with Windows nodes running third-party job queue software (which was also being used to manage 3D projects on a render farm) and the HandbrakeCLI. Median's file system was mounted via a Samba connection.</p>
+<p>It worked decently, but it took a lot of custom tooling. I had to write <i>around</i> the queue software because it could only be customized so much. And Windows sucks, and samba sucks, so often the nodes would get disconnected and need manual management from me. Furthermore, the queue software had no way for me to really log what was going on, so if a job failed I needed to figure out ways to monitor it myself.</p>
+<p>All in all, it <i>worked</i>, but it was inelegant and MacGyver-ish. I determined to do a much better job, and make something far more autonomous and reliable. Learn from your mistakes, and realize what was the cause of problems. First thing I decided to do was throw out Windows from the equation. So I chose totally open-source options for the nodes themselves: Debian, HandbrakeCLI, and node.js.</p>
+<p>To diminish the possibility of a whole node becoming useless due to a lost connection to median's filesystem, I found it was better to not bother trying to keep a persistent link open. Instead, the nodes would simply send a heartbeat to the server every five minutes or so, and grab/drop files from median as needed.</p>
+<p>And I ditched the third-party queueing system entirely and replaced it with a simple push-pull of information using median's existing database. Really, the only piece that stayed the same was HandbrakeCLI, which still works fabulously.</p>
+<p>Finally, node.js provided a very simple way to move job management from a centralized server to the individual nodes themselves. The node.js script asks for new jobs, handles the HandbrakeCLI process itself, checks its output in realtime for errors, and grabs/drops files to median using scp. For this reason, the number of nodes and their ability to communicate with each other becomes irrelevant, as they'll manage their own jobs independently.</p>
+<p>So here's the transcode farm, version 2.0:</p>
+<ol>
+<li>new video gets uploaded, and with it a job-entry is inserted into median's database</li>
+<li>the individual transcode nodes ask, once every 60 seconds, whether there's any jobs available to do</li>
+<li>if there is, the first node who asks for it, gets it. the node downloads the file using scp to their local filesystem.</li>
+<li>the node then opens a HandbrakeCLI process and transcodes the file. if it encounters errors, it reports them, and either tries again or marks the job as error'd and needing attention (and moves on to another job)</li>
+<li>when the file is done transcoding, the node drops it back on the server. it then starts asking for new jobs again.</li>
+</ol>
+<p>Because the whole thing was built by me, I can control every piece of it. I even have a <a href="http://median.emerson.edu/farming.php" target="_blank">public status page</a> for the whole thing. I have a much bigger and more detailed one in the backend. Right now I'm working on creating a Linux Live CD so I can make new transcode nodes out of anything whenever I need them.</p>
+<p>The point of this example is that this whole system is architected from a collection of disparate systems. Median itself is running Debian with lighttpd and PHP, using a Microsoft SQL Cluster as its core database. The individual transcode nodes are old Dell desktop computers running Debian with node.js and Handbrake. The interaction between median and its nodes is mostly sent via JSON-encoded messages, generated by PHP on one end and interpreted by node.js on the other.</p>
+<p>On the median job management end, that's mostly web development work, with three primary parts: the database itself, a mechanism for getting new jobs, and a mechanism for updating jobs. The database schema is pretty simple, so are the retrieval and updating of job entries inside it. It's just PHP taking requests and encoding/decoding JSON.</p>
+<p>On the transcode node end, that's mostly systems development, with one core component: the node.js script that does all the heavy-lifting, from using HTTP requests, to running the Handbrake and scp processes. But since it's just one core script, it's important to extensively test it and make it as airtight as possible.</p>
+<p>Making both pieces work together seamlessly is the architecture. Knowing how to format the JSON messages, making sure they're on the same trusted network subnet, building the nodes themselves, making sure that if a node fails it doesn't disturb the whole system, is all architecture.</p>
+
+<h2>how real is an architect?</h2>
+<p>honestly, becoming a systems architect is just an evolutionary step beyond being a developer. for me, becoming a confident architect just meant exposing myself to a lot of different systems as a developer, and eventually having to make them all work together.</p>
+<p>and getting a lot of crazy requests that required heavy systems interoperability.</p>
+<p>there's nothing really special about it, but I don't think it's something you can go to school for. you can learn the fundamentals of it, but it takes real-world experience to wrangle some systems into your comfort zone. I haven't really done any work with anything that has a ton of perilous consequences, but imagine the guys who are systems architects for banks and stock market trading. there's a reason they're paid so much.</p>
+<p>a <i>real</i> architect, like a real developer, is just someone who can reliably and efficiently accomplish complex goals. the stakes and the breadth of knowledge required just increases.</p>
+
+<h2>staying ahead and filling your batman utility belt</h2>
+<p>the most serious point I can make is that being a good architect, even more so than being a good developer, is having a strong set of tools at your disposal. tools you've worn down, along with some shiny new hotness tools.</p>
+<p>those tools are your experiences with platforms, languages, devices, systems, etc. your ability to effectively create elegant solutions to complex problems is entirely dependent on this.</p>
+<p>don't stop being excited, or at least interested, in new languages and platforms. use your experience to judge them, but do not overtly <i>dismiss</i> anything based solely on experience.</p>
+<p>for example, I routinely reject any Java-based solution, because the overwhelming majority of my experience with Java reveals that it causes more headaches than it solves problems.</p>
+<p>however, should I ignore Scala, a relatively new niche language built for scalability, just because it's built for the Java Virtual Machine? probably not.</p>
+<p>staying near the bleeding edge solutions-wise is what allows you to keep your magician's hat. knowing what languages you know, which ones are worth looking at, and which ones are useless, is your reliability.</p>
+<p>But the biggest piece of advice I can give you is to use any excitement you ever have as a great excuse to do a project using your new interest. The reason I built the above example, the median transcode farm, was based mostly on my excitement about node.js. And it got me pretty far. Let that kind of ambition drive your experience, and you'll learn a lot.</p>
+
+</div>
+
+</body>
+</html>

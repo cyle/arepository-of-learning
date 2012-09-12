@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Web Dev: HTML and CSS, the basics</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Web Dev: HTML and CSS, the basics</h1>
+
+<h2>view source</h2>
+<p>HTML and CSS are the basics. The basic basics. The very basics.</p>
+<p>Right-click on this page right now and click on <b>View Source</b> or <b>View page source</b> or whatever. Just do it and take a look at that. I'll wait. Come back to me when you're confused enough.</p>
+
+<h2>what is this nonsense with the &lt;s and the &gt;s</h2>
+<p>excellent question! you're on the right track. we'll start out with HTML and worry about CSS later.</p>
+<p>HTML, if you care, is <i>HyperText Markup Language</i>. That's neat; you should get used to acronyms and abbreviations. It's a standardized way of <b>building something for display</b> in a browser.</p>
+<p>And the beautiful thing is that it's all actually just plain text! Nothing special about it. Just text. That's why you can right-click on this page and view the HTML source.</p>
+<p>Right now you're in a <b>web browser</b> viewing this page, whether it's Firefox or Chrome or Safari (let's hope not IE). All those browsers really do is <b>render HTML</b>.</p>
+<p>What does that mean? <b>Rendering HTML?</b> It means your browser takes this page, which is just a text file, reads it, and constructs the page as it is described with the HTML. The HTML is a set of instructions that the browser follows.</p>
+<p>it's like a cooking recipe that only the browser understands. think of all those things between the &lt; &gt;s as ingredients! when the browser is done following the instructions, it shows you the webpage.</p>
+<p><b>This text is bold</b> because it has &lt;b&gt; tags around it. You don't see those tags because they were interpreted by the browser and taken out. All you see is the bold text, not the tags. But you can see the tags when you view source.</p>
+<p>Try to find this text right here you're reading right now in the Source for the page. DO IT! (but come back when you have.)</p>
+
+<h2>HTML is tags</h2>
+<p>The letters/words you see between those &lt; &gt; are called <b>tags</b>. Here are some tags:</p>
+<ul>
+<li>&lt;p&gt; means paragraph!</li>
+<li>&lt;i&gt; means italic!</li>
+<li>&lt;h1&gt; means "header size 1"</li>
+<li>&lt;ol&gt; means "ordered list"</li>
+</ul>
+<p><a href="http://www.w3schools.com/tags/default.asp" target="_blank">There are a lot of tags</a> and each is interpreted differently by a browser.</p>
+<p>Tags <b>surround that which they work upon</b>. What does that mean? Here's an example:</p>
+<code>&lt;b&gt;This text is bold.&lt;/b&gt;</code>
+<p>The <span class="mono">&lt;b&gt;</span> tags surround the text that will be bold! There is a <i>starting tag</i>, <span class="mono">&lt;b&gt;</span>, to tell the browser where the boldness should begin, and there is a <i>closing tag</i>, <span class="mono">&lt;/b&gt;</span>, where the boldness should end.</p>
+<p>It's really that simple at the foundational level.</p>
+
+<h2>Make Something</h2>
+<p>All you need to make a web page is a plain text editor and a web browser.</p>
+<p>Open up a text editor. If you're on a PC, NotePad will work great. If you're on a Mac, TextEdit will work great. (However, in TextEdit, make sure when starting a new document that you go to the Format menu and select <b>Make Plain Text</b>.)</p>
+<p>Before you now is the simple, blank canvas of HTML. All of it will be here. There are no secrets. It's all just text! You're going to write the recipe that the browser will follow to make your page.</p>
+<p>So to start an HTML document, you must remember that <i>this will be read by a browser</i>, so you're writing something for a machine to understand.</p>
+<p>The first thing it needs to know is that <i>this is HTML!</i> Put this into the text file:</p>
+<code><pre>
+&lt;html&gt;
+
+&lt;/html&gt;
+</pre></code>
+<p>Hah! Congrats, that'll tell the browser that everything between the <b>html tags</b> is html! Pretty straightforward so far. Everything from now on will be written <b>between the html tags</b>.</p>
+<p>There are <b>two main sections</b> of any HTML document. They are the <b>head</b> and the <b>body</b>. When you look at a webpage in a browser, you are looking at the body. The head section is for the browser to worry about. Take a look at this simple example:</p>
+<code><pre>
+&lt;html&gt;
+
+&lt;head&gt;
+&lt;title&gt;this is where the page title would go!&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;p&gt;this is just a paragraph on the page&lt;/p&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</pre></code>
+<p>Notice the following, just to be clear:</p>
+<ul>
+<li>The whole thing starts with an opening html tag and ends with a closing html tag.</li>
+<li>There is a <b>head</b> section contained within an opening head tag and a closing head tag</li>
+<li>There is a <b>body</b> section contained within an opening body tag and a closing body tag</li>
+</ul>
+<p>Inside the <b>head section</b> you would put things like the page's title, any javascript you want to load, and the CSS style for the page. But don't worry about that yet; just understand that the head section contains things that nobody will really see but the browser.</p>
+<p>Inside the <b>body section</b> you would put the things you actually want a person to see when they open this HTML page. Actually, try it! Save this document to your desktop or wherever as <i>awesome.html</i> and then right-click on it and open it with Safari or Firefox or whatever. You should see just the paragraph text.</p>
+<p>You should also see that the title of the page in the browser window is what's within the <b>title tags</b>. Magic!</p>
+
+<h2>CSS makes this thing look gooood</h2>
+<p>We are really early in the game in terms of learning HTML, but I want to inject you with some more knowledge while the iron is hot.</p>
+<p>HTML tells the browser <i>how to show you things</i>... CSS tells the browser <i>what style those things should have</i>.</p>
+<p>CSS stands for <i>Cascading Style Sheets</i>, or it'll frequently just be called the page's <i>style</i>. It typically will exist inside the HTML page's <b>head tag</b>. Let's put some simple CSS into the basic page you just made:</p>
+<code><pre>
+&lt;html&gt;
+
+&lt;head&gt;
+&lt;title&gt;this is where the page title would go!&lt;/title&gt;
+&lt;style&gt;
+p {
+  color: blue;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;p&gt;this is just a paragraph on the page&lt;/p&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</pre></code>
+<p>Don't panic! All we did was add another section, within the <b>style</b> tags, inside the head section. And between the style tags we put some CSS instructions.</p>
+<p>Can you guess what it does? I'll just tell you: It tells the browser that the text inside the <b>p</b> tag should be colored blue! If you save this file and open it in a browser, you'll see that I'm so totally right.</p>
+<p>Here's the syntax, as it's called. You first have a <b>selector</b>, in this case the tag name <b>p</b>. Then you have some curly braces { }. Inside those curly braces you put the description of how you want that selected item to look! After each attribute and value (the <b>color</b> is an attribute with <b>blue</b> as its value) you <b>need to put a semicolon!</b></p>
+<p>And that rule we wrote will apply <i>to every <b>p</b> tag we put in this HTML document</i>... unless we say otherwise. First let's demonstrate this. I'm not going to show you the code; I'm going to tell you to do this and I want you to do it.</p>
+<p>Add another paragraph to the page inside the page's body. It can say whatever you want. Save the file, open it in a browser, and make sure you now have two lines of text.</p>
+<p>Did you figure that out? I hope so.</p>
+<p>You should notice that <b>both paragraphs are blue</b>! How do we make only one of them blue? How do we color other parts? What other parts are there to add!?</p>
+
+<h2>more about HTML</h2>
+<p>HTML is made up of tags; you know this now. But that's just the first step. There's more to HTML than just that.</p>
+<p>Tags can have <b>attributes</b> in them. For example, take a look at this:</p>
+<code>&lt;p style="color:red;"&gt;this will be a red paragraph&lt;/p&gt;</code>
+<p>The only thing new here is that <span class="mono">style="color:red;"</span> part. What does that mean? Well, that's an <b>attribute</b> and a <b>value</b>.</p>
+<p><b>style</b> is the attribute name and <b>color:red;</b> is its value!</p>
+<p>If you add this to your HTML file in the body section, you'll notice that the paragraph will indeed be red.</p>
+<p>Almost every tag has attributes you can use. The best example of this is making a link on a page. This is how you make a link:</p>
+<code>&lt;a href="http://www.google.com/"&gt;clicking this text will take you to google&lt;/a&gt;</code>
+<p>The <b>a</b> tag means link! (Really, it means anchor, but that's outdated.) But it needs the <b>href</b> attribute to know where to go.</p>
+<p>All attributes go within the &lt; &gt; of the opening tag. Check this out:</p>
+<code>&lt;a href="http://www.google.com/" target="_blank"&gt;clicking this text will take you to google&lt;/a&gt;</code>
+<p>That link has <b>two attributes</b>, the first being <i>where the link goes</i> and the second being <i>how to open the link</i>. The <b>target</b> attribute, when set to <b>_blank</b>, opens the link in a new window or tab.</p>
+
+<h2>HTML and CSS standards: classing up the joint</h2>
+<p>So now you should have a good grasp of basic HTML and basic CSS and how they work together. You know the grammar of it; you just need to learn some more vocabulary, and you'll be fluent in no time!</p>
+<p>An important development of the last five to ten years has been the idea that there are <i>web standards</i> everyone should conform to, or at least do their best to conform to. There are technically a huge number of ways you can write a webpage in HTML, but there are a few best practices I'll teach you at the get-go.</p>
+<p>One of the most important ones is that <b>HTML makes up the structure</b> and <b>CSS tells the browser the look of that structure</b>. So you'll always have HTML in one place and CSS in another, never really mixing together.</p>
+<p>So all your CSS will be in between those <b>style</b> tags instead of being in the HTML tag's attributes as I showed you above. I'll explain this by showing you two HTML pages that do the same thing, but in different ways.</p>
+<p>Let's say we want every <b>p</b> tag to be blue. Here's one way:</p>
+<code><pre>
+&lt;html&gt;
+
+&lt;head&gt;
+&lt;title&gt;this is where the page title would go!&lt;/title&gt;
+&lt;style&gt;
+p {
+  color: blue;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;p&gt;this is just a paragraph on the page&lt;/p&gt;
+&lt;p&gt;this is just another paragraph on the page&lt;/p&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</pre></code>
+<p>That's the way I showed you before, and it's the <b>standard</b> way of doing it. Here's another way:</p>
+<code><pre>
+&lt;html&gt;
+
+&lt;head&gt;
+&lt;title&gt;this is where the page title would go!&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;p style="color:blue;"&gt;this is just a paragraph on the page&lt;/p&gt;
+&lt;p style="color:blue;"&gt;this is just another paragraph on the page&lt;/p&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</pre></code>
+<p>First of all, it's entirely valid to do it this way, and sometimes you might want to. But you'll have to keep adding those style attributes to every p tag if you want them all to be blue. Very inefficient.</p>
+<p>The reason the standard exists is to <b>reduce repeating yourself</b> and to <b>separate structure from style</b>. Two things to keep in mind.</p>
+<p>But what if we want one paragraph to be another color? Say we have three, like this:</p>
+<code><pre>
+&lt;html&gt;
+
+&lt;head&gt;
+&lt;title&gt;this is where the page title would go!&lt;/title&gt;
+&lt;style&gt;
+p {
+  color: blue;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;p&gt;this is just a paragraph on the page&lt;/p&gt;
+&lt;p&gt;this is just another paragraph on the page&lt;/p&gt;
+&lt;p&gt;a third paragraph. insanity!&lt;/p&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</pre></code>
+<p>We want the second paragraph to be red! How do we do that in a <i>standards-friendly way?</i> Well, the answer is to <b>give it a class</b>. Check it out:</p>
+<code><pre>
+&lt;html&gt;
+
+&lt;head&gt;
+&lt;title&gt;this is where the page title would go!&lt;/title&gt;
+&lt;style&gt;
+p {
+  color: blue;
+}
+.redtext {
+  color: red;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;p&gt;this is just a paragraph on the page&lt;/p&gt;
+&lt;p class="redtext"&gt;this is just another paragraph on the page&lt;/p&gt;
+&lt;p&gt;a third paragraph. insanity!&lt;/p&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</pre></code>
+<p>See what I did there? We did two things: added the <b>class</b> attribute to the second p tag and set it to <b>redtext</b>. Next, in the CSS, we added a <b>selector</b> aimed at <b>anything that is the redtext class</b>.</p>
+<p>The period is a special character within CSS. When you put it before something, in this case <b>redtext</b>, it denotes that the text after the period is a <b>class</b> name. If there was no period there, the browser would assume it's a tag name, but no such tag name (redtext) exists. So it just wouldn't do anything and the browser would ignore it.</p>
+<p>The pound character (#) is also special within CSS. It means <b>id</b>, which is another HTML attribute. The difference between a class and an id is that <b>ids are unique</b>. There can only be one HTML tag with a certain ID. So if you wanted to, you could also write the above problem this way:</p>
+<code><pre>
+&lt;html&gt;
+
+&lt;head&gt;
+&lt;title&gt;this is where the page title would go!&lt;/title&gt;
+&lt;style&gt;
+p {
+  color: blue;
+}
+#redtext {
+  color: red;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;p&gt;this is just a paragraph on the page&lt;/p&gt;
+&lt;p id="redtext"&gt;this is just another paragraph on the page&lt;/p&gt;
+&lt;p&gt;a third paragraph. insanity!&lt;/p&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</pre></code>
+<p>But in that case, you can't use the <b>redtext</b> id again anywhere else! A class you can use over and over, so if you want to make just a couple paragraphs red, you can apply the redtext class where you see fit.</p>
+<p>However, just as a teaser, the id attribute is one commonly used by javascript. So don't dismiss it just yet.</p>
+
+<h2>where oh where do we go from here?</h2>
+<p>Honestly, you now have the basics of HTML and CSS. You should have a good understanding of the <b>syntax</b> of HTML and CSS. I'll give you a few more tips here, but this is now your best resource:</p>
+<ul>
+<li><a href="http://www.gotapi.com/html" target="_blank">http://www.gotapi.com/html</a> has every goddamn HTML tag</li>
+<li><a href="http://www.gotapi.com/css" target="_blank">http://www.gotapi.com/css</a> has every goddamn CSS option</li>
+</ul>
+
+<h2>the coolest HTML tags</h2>
+<ul>
+<li><b>a</b> - makes links!</li>
+<li><b>p</b> and <b>div</b> - makes blocks/containers of whatever, text or otherwise</li>
+<li><b>img</b> - makes images!</li>
+<li><b>span</b> - can change text inline, so if you want a section of text within a p tag a different color, use this!</li>
+<li><b>input</b> - makes text fields and stuff!</li>
+<li><b>h1</b> through <b>h6</b> - making headers</li>
+<li><b>script</b> - you'll learn a lot about this one, or rather, what it will contain</li>
+</ul>
+
+<h2>a quick but important note</h2>
+<p>So I told you that <b>all tags have a starting and ending tag</b>... well that was kind of a lie.</p>
+<p>Some tags <b>close themselves!</b> Images are the best example. An image, in HTML, you'd think would be added to a page this way:</p>
+<code>
+&lt;img src="some_image.jpg"&gt; &lt;/img&gt;
+</code>
+<p>But it's actually done this way:</p>
+<code>
+&lt;img src="some_image.jpg" /&gt;
+</code>
+<p>That's it! But see, it doesn't have a closing <b>img</b> tag. It just closes itself. Why is it this way? I don't really know. Probably because <i>what could you put inside an image tag?</i></p>
+<p>Anyway, that's important to remember, but only a few tags do this. When you look them up in a reference guide, it'll let you know if it's a self-closing tag. Most are not.</p>
+
+<h2>the coolest CSS tips</h2>
+<ul>
+<li><b>selectors can get complicated</b>... for example:</li>
+<ul>
+<li><b>div p</b> means <i>all the <b>p</b> tags within a <b>div</b>.</i></li>
+<li><b>div.redtext</b> means <i>all the div tags with the class name "redtext"</i></li>
+<li><b>body > div</b> means <i>all the div tags that are direct children of the body tag</i></li>
+</ul>
+<li>wait, <b>children?</b> think of it this way:</li>
+</ul>
+<code><pre>
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div&gt;
+      &lt;p&gt;hello!&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+</pre></code>
+<p>I've indented it to make it a little easier to see. There's a body tag that holds a div tag. That div tag holds another div tag. That div tag holds a p tag. This is a tree of information! It's a hierarchy.</p>
+<p>The first div is a <b>child</b> of the body tag. The body tag is the <b>parent</b> of the first div tag. The second div tag is a child of the first div tag.</p>
+<p>So, in CSS, if you wanted to select <i>just the first div tag</i> and make its text red, you could write this: <b>body > div { color: red; }</b>. That would select <i>all div children of the body tag</i>. Get it?</p>
+<p>Anyway...</p>
+<ul>
+<li>There are <b>a lot</b> of styling options in CSS, from where elements are positioned in the window to what color they are to what font they use, etc.</li>
+<li>The latest CSS (revision 3) even offers <b>animations</b> and <i>3D transformations!</i> It's crazy. All within that same easy syntax you saw before.</li>
+</ul>
+
+<h2>colors! #FFFFFFFFFFFuuuuuu</h2>
+<p>Yes, so far, I've been using keywords for colors. In CSS, you can indeed say <b>red</b> and it'll be valid. But what about a darker shade of red? You can't write <b>darker red</b> in CSS.</p>
+<p>You should know right now about <b>hexadecimal color notation</b>... seems strange, but let me explain. It looks like this: <b>#00FF00</b>. That's a hex color. It's a basic way color is described in HTML and CSS.</p>
+<p>It's made up of six characters which can be 0-9 and A-F... that makes up hexadecimal stuff. Think of the A-F as if they're numbers beyond 9. Count with me:</p>
+<p>0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F</p>
+<p>That's the hex number scale. The lowest value is 0 and the highest value is F.</p>
+<p>Okay so let's bring that back to colors.</p>
+<p>Hex colors in HTML/CSS are broken up into <b>three bits of two-digit values</b>, signifying red-green-blue. Let's look at the example I just gave you: <b>#00FF00</b>.</p>
+<ul>
+<li>The pound symbol designates this value as hex.</li>
+<li>The first two digits, <b>00</b>, are for the <i>red channel</i>. In this case, there is no red! Both values are zero, the lowest possible value. The highest it could be is FF.</li>
+<li>The second two digits, <b>FF</b>, are for the <i>green channel</i>. In this case, they're maxed out! Put in <i>all the green!</i></li>
+<li>The third two digits, <b>00</b>, are for the <i>blue channel</i>. In this case, there is no blue! Same as red!</li>
+</ul>
+<p>So you put all that together and what do you get? Just green. Bright neon green. Here's how you'd use it in CSS:</p>
+<code><pre>
+&lt;style&gt;
+p.greentext {
+  color: #00FF00;
+}
+&lt;/style&gt;
+</pre></code>
+<p>That code would make every p tag with the greentext class have gaudy green text.</p>
+<p>This hex-based color representation is a red-green-blue additive color model. You start at #000000 (black) and end at #FFFFFF (white). In between, to create individual colors, you have to add red green and blue in different amounts.</p>
+<p><a href="http://www.ficml.org/jemimap/style/color/wheel.html" target="_blank">Here's a good hex color wheel</a> to help you get the feel for it. I use that all the time.</p>
+<p><b>NOTE!</b> You may notice a lot of places talk about "web-safe" hex color codes. This is definitely something you should keep in mind. <i>Every computer and browser renders color differently!</i> Even though it can be very subtle, it's true. A very specific shade of green may look a little different in firefox over safari. There are certain web safe colors which work 99.9% of the time across all browsers. For the most part you don't have to worry about it, though.</p>
+
+<h2>a bigger example</h2>
+<code><pre>
+&lt;html&gt;
+
+&lt;head&gt;
+&lt;title&gt;this is where the page title would go!&lt;/title&gt;
+&lt;style&gt;
+body {
+  background-color: #000000;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: white;
+}
+h1 {
+  font-size: 2em;
+}
+a:hover {
+  color: #cccccc;
+}
+p {
+  color: blue;
+}
+.redtext {
+  color: red;
+}
+p.redtext {
+  width: 100px;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;h1&gt;a header!&lt;/h1&gt;
+&lt;p&gt;this is just a paragraph on the page&lt;/p&gt;
+&lt;p class="redtext"&gt;this is just another paragraph on the page&lt;/p&gt;
+&lt;p&gt;a third paragraph. insanity! &lt;a href="http://google.com"&gt;with a link!&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</pre></code>
+<p>Save that in your text editor and open it with a web browser and have a look.</p>
+<p>Notes about this example:</p>
+<ul>
+<li>It's ugly, I know.</li>
+<li>The <b>body</b> tag controls the whole window, so setting up a background color or font-family here affects the whole page. Every descendant of the body tag will inherit these things.</li>
+<li>The <b>font-family</b> controls what font is used. It can have more than one value, as you can see. The browser will try to use them in order. If it can't find the first one, it moves on to the second one. </li>
+<ul>
+<li><b>serif</b>, <b>sans-serif</b>, and <b>monospace</b> are keywords for font-family that mean <i>use whatever font fits this description</i>... so if you use "monospace", the browser will pick whatever monospace font it prefers.</li>
+</ul>
+<li><b>font-size</b> dictates just that. but you can use either <i>absolute</i> or <i>relative</i> values. <b>px</b> means pixels. So by default on this page, fonts will be 14 pixels high.</li>
+<ul>
+<li>The <b>em</b> is a <i>relative scale</i>. 2em under the h1 tag means <i>the font will be 2 times as big!</i></li>
+</ul>
+<li>There are special <i>pseudo-selectors</i> like <b>:hover</b> you can attach to selectors. In this case, a:hover means <i>when hovering your mouse over an a tag, do the following</i>. In this case, it's turning all link text a grey color when it's hovered over with the mouse.</li>
+<li>There are <b>two .redtext CSS stylings</b> in there. One for <i>all instances of the redtext class</i> and a second one for <i>all p tags with the redtext class</i>. This is where the "cascading" part of CSS comes in. Everything of class redtext will get the general properties, and anything more specific will add to or override those properties.</li>
+<li>You can size most block elements with CSS stylings <b>width</b> and <b>height</b>. What are <b>block</b> elements? Well, some examples are <b>div</b> and <b>p</b> tags. Generally, things can either be <i>inline</i> or <i>block</i> elements. Inline elements won't break the flow of the page; block elements will. A p tag is a block; a span tag is in-line.</li>
+</ul>
+<p>The <b>most important note</b> is that this example clearly illustrates the separation of <i>style</i> from <i>structure</i>. You have your CSS up top and your HTML down below. They don't mix as long as they don't need to.</p>
+
+<h2>Removing the CSS even further</h2>
+<p>While I've been showing you how CSS should live in the <b>head</b> tag, in practice we actually remove it even further.</p>
+<p>Most of the time in an actual webpage, you'll see this:</p>
+<code><pre>
+&lt;head&gt;
+&lt;title&gt;this is where the page title would go!&lt;/title&gt;
+&lt;link rel="stylesheet" href="page.css" /&gt;
+&lt;/head&gt;
+</pre></code>
+<p><b>No style tag there</b>. Just that self-closing <b>link</b> tag which points to another file which holds all that CSS. That CSS file is just another plain text file called <b>page.css</b>, it could look like this:</p>
+<code><pre>
+body {
+  background-color: #000000;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+a:hover {
+  color: #cccccc;
+}
+</pre></code>
+<p>Just all the CSS instructions moved to another file. Nothing too crazy.</p>
+<p>Don't worry! All of those instructions will be read by the browser as if you had left them in the same file as the HTML.</p>
+<p>But again... this further reinforces the idea of <i>separating style from structure!</i> So much so that the style itself <i>lives in a different file</i>.</p>
+
+<h2>what "HTML5" is and why you shouldn't care</h2>
+<p>There's a lot of buzz going on in the web about HTML5... you've probably heard some of it. About video and <b>no more Flash</b> and so forth.</p>
+<p>It's all just hype. What's actually happening is the same thing that always happens: <i>there are new features in the HTML langauge</i>. No big deal.</p>
+<p>Nothing is really changing that much. Just now you also have a <b>&lt;video&gt;</b> tag you can use alongside your <b>&lt;div&gt;</b> tags. I mean, it's cool, but it's not earth-shattering.</p>
+<p>What they are <b>really talking about</b> when you hear HTML5 is the fact that over the past five years or so, developers are gaining more control over the web, and we're trying to make it a better place to work.</p>
+<p>Ten years ago, there were two major corporations controlling how the web looked: <b>Microsoft</b> and <b>Macromedia</b>. More specifically, <b>Internet Explorer</b> and <b>Flash</b>.</p>
+<p>Both are <i>proprietary</i>, closed, volatile systems that require you to make sacrifices just to use them. You will always hear designers and web developers complain about Internet Explorer because <i>it does not play by the rules</i>. Firefox, Chrome, and Safari are committed to playing by the rules so that you, as a web developer, don't have to worry about whether your CSS style will work across all browsers.</p>
+<p>The HTML5 revolution is mostly about <b>making sure everyone plays by the rules</b> so that we can have a better internet. It's about <i>enabling web developers to be more confident</i> about the way they develop.</p>
+<p>The reason you <b>should not care</b> is because you are entering a world that is this way. I can tell you war stories of how the web used to be, but that's not the way it is anymore. Enjoy the fact that you can write HTML and CSS and it'll work for 99% of users. Five years ago, it might've only worked for 50%.</p>
+<p>That having been said... many of the new features in HTML version 5, like the aforementioned video tag, don't work half the time depending on what browser you're using. But we're moving in the right direction at least. Internet Explorer and Flash aren't in control of it anymore; we are.</p>
+<p>So don't worry about HTML5. Here's a kitty, think about that:</p>
+<img src="kitty.gif" />
+
+<h2>conclusory</h2>
+<p>So that's the basic-basics. You might have to re-read this a couple times to really let it sink in. But more important than that, <b>you need to build something</b> in order to truly understand it.</p>
+<p>I'll keep repeating myself on this point, too: <i>learn how to read documentation and reference guides</i>. No web designer knows 100% of HTML and CSS, but what they do know is <b>how to look it up</b>. Learn that skill early.</p>
+<p>So please, make a webpage for yourself! Make it look cool! Go to a website you really like and look at it's HTML code and try to visualize how it all works. It takes time and practice.</p>
+
+</div>
+
+</body>
+</html>

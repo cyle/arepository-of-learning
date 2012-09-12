@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Web Dev: YOUR VERY OWN BLOG</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Web Dev: YOUR VERY OWN BLOG</h1>
+
+<h2>what is this i don't even</h2>
+<p>this is a big bad example that culminates all that you've learned so far. put your thinking caps on. we're going to cover HTML, CSS, PHP, MySQL, AJAX, etc. (actually i'm not sure about javascript.)</p>
+<p>we are going to make a blog ourselves. none of that wordpress crap. let's do this by hand. that's how cool we are.</p>
+
+<h2>what is blog? (baby don't hurt me)</h2>
+<p>A blog is just a place you write stuff on the web! I mean, that's mostly what it is, right?</p>
+<p>the first step to making a blog - or any project! - is to seriously consider <i>what it is</i></p>
+<p>I'd argue that one of the paramount reasons you have a developer around is to think about the <b>whole process</b> as opposed to segmenting pieces of it to different people. Yes, you can do this with a <i>project manager</i> or a <i>creative director</i>, but far too often those people don't actually <b>do anything</b>. As a developer, you should be able to see the whole thing through, and cry your own tears and pour your own sweat into it.</p>
+<p>(Not saying that it's the only way to do things - I'm just saying that it's what a good web developer should be capable of and why they're valuable.)</p>
+<p>so back to the question, or more specifically, <b>what makes up a blog?</b> well...</p>
+<ul>
+<li>blogs have posts, authors, comments</li>
+<li>they can also have categories and tags...</li>
+<li>a blog usually has a list of posts and an archive of posts</li>
+<li>each individual post usually has its own page, too</li>
+<li>there has to be a way to make new posts and edit old ones</li>
+<li>hopefully a method of protection so random people can't make blog posts</li>
+</ul>
+<p>So here we have some ideas about what makes up a blog. The pieces.</p>
+<p>Now, let's refine it more. What parts are <b>data</b> and what parts are <b>function</b> and what parts are <b>aesthetic</b>? And how do they mesh together?</p>
+<p>For example, a <b>post</b> is a piece of data. But it also will have a page for every post, so we need to consider what it'll look like. And how do we retrieve the post? That's a functional decision.</p>
+<p>So break each piece down even further: a post, as data, has a title, the body content, an author, a date, and maybe some tags associated with it.</p>
+<p>An author can have posts attributed to them, a name, a join date, maybe we hold onto their email address.</p>
+<p>The first page we see would probably have a list of the latest posts - what could that look like? what data would we like to be on that page?</p>
+<p>See how we need to break everything down? We haven't written any code, nor should we be thinking in those terms yet. The planning stage is merely conceptual.</p>
+<p>the skill here is to employ <b>critical thinking</b> to break down a series of <b>problems</b> (in the form of feature-requests and concepts) into smaller, manageable parts.</p>
+
+<h2>starting with data</h2>
+<p>I always find the <b>data</b> to be the easiest to start with. (Well, maybe not easiest, but it's a useful foundation.) What's the data needed for this to work well?</p>
+<p>A good exercise is to go onto your favorite blog (you have a favorite blog, right?) and see what data is available to you.</p>
+<p>Let's think on the per-post level: you'll probably see a <b>post title</b>, a <b>body of text</b>, an <b>author name</b>, a <b>date of publication</b>, some <b>tags</b>, and some <b>comments</b>.</p>
+<p>But how would we structure that in a database? Let's say we'll use a traditional MySQL database. What would that <b>model</b> or <b>schema</b> of information look like?</p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="7">posts_tbl</th></tr>
+<tr><th>id</th><th>title</th><th>content</th><th>pubdate</th><th>author</th><th>tags</th><th>comments</th></tr>
+</table>
+</fieldset>
+<p>Ok so that's a schema and it's fairly straightforward so far - but wait, that <b>comments</b> column doesn't really make sense. We'd make a separate table for those, right?</p>
+<p>Here in this conceptual stage is when we try to break down everything into what will be <b>discreet data models</b>. posts is one model, comments is a separate one. the two are related, but they are not the same.</p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="6">posts_tbl</th></tr>
+<tr><th>id</th><th>title</th><th>content</th><th>pubdate</th><th>author</th><th>tags</th></tr>
+</table>
+<table>
+<tr><th colspan="5">comments_tbl</th></tr>
+<tr><th>id</th><th>content</th><th>pubdate</th><th>author</th><th>post_id</th></tr>
+</table>
+</fieldset>
+<p>So there we've separated them and created a relation between the comments and the posts by using the post_id in the comments_tbl. This is the process of <b>normalizing</b> the data.</p>
+<p>We can already normalize it even more! Take out the author columns and replace them with an <b>author_id</b> and an <b>authors_tbl</b></p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="6">posts_tbl</th></tr>
+<tr><th>id</th><th>title</th><th>content</th><th>pubdate</th><th>author_id</th><th>tags</th></tr>
+</table>
+<table>
+<tr><th colspan="5">comments_tbl</th></tr>
+<tr><th>id</th><th>content</th><th>pubdate</th><th>author_id</th><th>post_id</th></tr>
+</table>
+<table>
+<tr><th colspan="4">authors_tbl</th></tr>
+<tr><th>id</th><th>name</th><th>joindate</th><th>email</th></tr>
+</table>
+</fieldset>
+<p>Okay, but the <b>tags</b> column would be better served if we normalized that, too. What would we have planned on putting in that column -- a comma-separated list? No way, we can normalize it better than that.</p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="5">posts_tbl</th></tr>
+<tr><th>id</th><th>title</th><th>content</th><th>pubdate</th><th>author_id</th></tr>
+</table>
+<table>
+<tr><th colspan="5">comments_tbl</th></tr>
+<tr><th>id</th><th>content</th><th>pubdate</th><th>author_id</th><th>post_id</th></tr>
+</table>
+<table>
+<tr><th colspan="4">authors_tbl</th></tr>
+<tr><th>id</th><th>name</th><th>joindate</th><th>email</th></tr>
+</table>
+<table>
+<tr><th colspan="3">tags_tbl</th></tr>
+<tr><th>id</th><th>tagtext</th><th>post_id</th></tr>
+</table>
+</fieldset>
+<p>Wow. Well, we just turned one table into four. Congrats. That's what normalization will do to you. So in terms of these tables, for every post, we'd expect one author, potentially multiple comments, and potentially multiple tags.</p>
+<p>You could draw that out if you wanted. Literally draw a web of possible information. It's helpful to do so when you need to manage large amounts of possible schemas. Draw boxes for tables, and arrows to illustrate how they are related by what columns.</p>
+<p>At this stage you can be even more picky about what data you want to include, but we'll just use this for now. This looks good.</p>
+<p>Well - wait a minute. We want some way to make sure that only authorized people can make posts. How would we do that? One possible way would be to <b>password protect</b> the ability to post.</p>
+<p>Go ahead an add one column to the authors_tbl called <b>password</b>. We'll talk about how to actually use this later. But for now, just know that we will treat an author as a <b>user account</b> on the site, and we'll store that information in the <b>authors_tbl</b></p>
+
+<h2>thinking with functions</h2>
+<p>after you have a good idea of what data you expect to have, it's useful to think about how you'll need to use that data. on a blog, you can usually do the following with this data:</p>
+<ul>
+<li>see a list of the latest blog posts</li>
+<li>see an individual blog post with its comments</li>
+<li>get a list of blog posts based on author</li>
+<li>get a list of blog posts based on tag</li>
+<li>add a blog post</li>
+<li>edit a blog post</li>
+<li>comment on a blog post</li>
+</ul>
+<p>these are merely functions - they're operations - they're actions. when you actually write the code for them, each will probably be made up of several functions.</p>
+<p>you could also refer to that list as a list of <b>features</b>. it's important that you never get too overburdened by a list of features. part of being a good web developer is being able to know what features are <b>functionally important</b> to demonstrate the site.</p>
+<p>for example, maybe four of those are critical to really see a blog in action: the list of latest posts, an individual post, adding a post, and commenting on a post. those would be the <b>core features</b> to be concerned about first.</p>
+<p>because when you think about it, once you've written how to <b>add a post</b>, the next step of <b>editing a post</b> will probably use the same form - just with pre-filled data.</p>
+<p>also, when you think about it, searching, whether it's by author or tag, would use the same kind of general searching function, so writing one (searching by author) would make the other (searching by tag) easier.</p>
+<p>that process - seeing what features are merely branches off of existing features - is key to narrowing down what you need to write first, and what's most important.</p>
+<p>You'll be writing these functions in scripts. In this case, I'll use PHP as the example language.</p>
+
+<h2>how it'll look</h2>
+<p>now that you have a good idea of what will need to be presented and the actions a user will take on the site, you can begin to effectively design some pages.</p>
+<p>and don't worry about making them super-pretty from the get-go, any good web developer will get the functionality done before really worrying about how fancy it looks.</p>
+<p>Again, a developer doesn't toil over anything! Well, we do, two things specifically:</p>
+<ol>
+<li>think about what it is you're doing</li>
+<li>get it done.</li>
+</ol>
+<p>ahahaha... anyway</p>
+<p>open up notepad (or whatever, you may have moved on to use something like <a href="http://macrabbit.com/espresso/" target="_blank">Espresso</a> or <a href="http://www.panic.com/coda/" target="_blank">Coda</a> or <a href="http://macromates.com/" target="_blank">TextMate</a> by now (i use coda religiously)) and work out some functional designs in HTML and CSS.</p>
+<p>Some pages will be <b>purely functional</b> so they'll just be PHP, but most will be <b>a mix of HTML and PHP</b> eventually. for now you can write your HTML/CSS and just inject the PHP later.</p>
+<p>so what kind of pages do you need? sometimes designers like to think about what <b>views</b> you need, and what <b>experiences</b> the user will have. this is neat and sometimes useful.</p>
+<p>for example, what's a page versus a view? a view can be a <b>piece of a page</b>, like an individual comment in a series of comments. how should individual comments look? that's a kind of view. or an individual blog post, which is both a view and a page, because while there will be an individual page per post, the post will also exist in a list of posts. it's important to realize this to keep consistency.</p>
+<p>and <b>experiences</b> is what it sounds like: what do you want the user to do when they go to your page? do you want them to click on your first post? how do you increase the chances of that? (make the first post's title bigger than the others? make its background-color slightly different?)</p>
+<p>anyway, think of the pages you need. they align kind of nicely with the list of functions:</p>
+<ul>
+<li>an index page, with a list of posts</li>
+<li>an individual post page, which should also allow commenting</li>
+<li>an add/edit post page</li>
+<li>a page for listing the results of a search (which'll probably look a lot like the index page)</li>
+</ul>
+<p>Sketching out (with paper and then, in the next section, with HTML/CSS) these pages and views is important. Take your time in doing so.</p>
+
+<h2>so where to start building things</h2>
+<p>By now you should have a good idea about the data you'll use, the functions you need to make happen, and the pages they will be used on. I'd say start actually building things by writing some HTML and CSS.</p>
+<p>Let's start with a basic list of posts. For now we should just use some dummy content that we'll replace later with actual data-retrieval. (Using "dummy data" or "filler data" is very common, just to sketch out an idea that looks real-world-ish.)</p>
+<p>Call this file <b>index.php</b> and put it in a new directory on your web server. (You should have some kind of web server from the PHP guide.)</p>
+<code><pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;our awesome blog&lt;/title&gt;
+&lt;link rel="stylesheet" href="main.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;our awesome blog!&lt;/h1&gt;
+&lt;div id="posts"&gt;
+
+&lt;div class="post"&gt;
+&lt;h2&gt;A post title!&lt;/h2&gt;
+&lt;p class="small"&gt;by cyle, posted on 6-13-2011&lt;/p&gt;
+&lt;p&gt;post content goes here!&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="post"&gt;
+&lt;h2&gt;Another post title!&lt;/h2&gt;
+&lt;p class="small"&gt;by cyle, posted on 6-12-2011&lt;/p&gt;
+&lt;p&gt;post content goes here!&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>Okay so there's our <b>index.php</b> file. We'll end it with a <b>.php</b> extension because we'll put some PHP in there soon. We need the <b>main.css</b> file we mentioned in that code.</p>
+<p>But first, notice the structure: we have an <b>h1</b> tag which holds our blog's title. we have a <b>div</b> with the id <b>posts</b> that'll hold our individual posts. and then inside there we have individual <b>divs</b> for each post, each with the class <b>post</b>. this'll make CSS rules easy to do.</p>
+<p>There's also a class called <b>small</b> for the attribution and date line under the individual post titles. here's what I'll do for CSS, but you could do anything you want:</p>
+<code><pre>
+* {
+  padding: 0;
+  margin: 0;
+}
+body, #posts {
+  margin: 50px;
+}
+body {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 14px;
+}
+#posts .post {
+  margin-bottom: 20px;
+}
+.small {
+  font-size: 0.75em;
+}
+</pre></code>
+<p>That's all I'll do... very simple. Notice some conventions you may not have known before:</p>
+<ul>
+<li>The asterisk in CSS is used to select <b>everything</b>, and I told everything that by default, it has no padding or margin. Why do this? Well, almost every browser has its own default CSS style, and they have their own margins and paddings. I like to clear the slate.</li>
+<li>you can lump more than one CSS selector into one set of instructions with <b>commas</b>. So in the second declaration, I'm setting <b>both</b> the body and the ID posts to have their margins at 50 pixels.</li>
+<li>you can re-use the same selector over and over again. I used <b>body</b> once with <b>#posts</b> and then I added some instructions specifically for just <b>body</b> afterwards. this is to reduce redundancy. why write that margin statement twice?</li>
+<li>the selector <b>#posts .post</b> will select only the things with class <b>post</b> within whatever is in ID <b>posts</b>... this is useful because maybe we'd want different CSS rules for when the post is <b>not</b> within a list of posts.</li>
+</ul>
+<p>Put those two files in the same directory if you haven't already. Awesome. If you load the page in your browser, it'll probably look pretty basic. That's fine. It looks good enough (I guess). </p>
+
+<h2>start that database</h2>
+<p>So now we need to set up MySQL with our databases as I described above. Can you do that? I hope so, but I'll show you some example queries anyway. Honestly, if you want to use <b>phpMyAdmin</b> to create the tables, I wouldn't blame you.</p>
+<p>But here are the raw SQL statements, because I want you to understand how they work. Make sure you replace the <b>password</b> with an actual password.</p>
+<code><pre>
+CREATE DATABASE theblog;
+
+CREATE USER 'blog_user'@'localhost' IDENTIFIED BY 'password';
+
+GRANT ALL ON theblog.* TO 'blog_user'@'localhost';
+
+USE theblog;
+
+CREATE TABLE posts_tbl (
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   title VARCHAR(255) NOT NULL,
+   content TEXT NOT NULL,
+   pubdate DATETIME NOT NULL,
+   author_id INT NOT NULL
+ );
+ 
+CREATE TABLE comments_tbl (
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   content TEXT NOT NULL,
+   pubdate DATETIME NOT NULL,
+   author_id INT NOT NULL,
+   post_id INT NOT NULL
+ );
+
+CREATE TABLE authors_tbl (
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   name VARCHAR(255) NOT NULL,
+   joindate DATETIME NOT NULL,
+   email VARCHAR(255) NOT NULL,
+   password VARCHAR(255) NOT NULL
+ );
+ 
+CREATE TABLE tags_tbl (
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   tagtext VARCHAR(255) NOT NULL,
+   post_id INT NOT NULL
+ );
+</pre></code>
+<p>So that sets up the tables for you. Basically there's no data that is allowed to be null, haha.</p>
+<p>From here you have two options... you can put some dummy data directly into the database, or you can build how you'll add posts as a page.</p>
+<p>Let's go the first way. It's easier, I think. Use dummy data so you can at least establish the bridge between PHP and MySQL. Here's how we'd insert some data, the same way we learned in the MySQL guide:</p>
+<code><pre>
+INSERT INTO authors_tbl 
+  (name, joindate, email, password) 
+ VALUES 
+  ('cool kid', NOW(), 'lol@whatever.com', SHA1('password'));
+</pre></code>
+<p>Ok so I'll stop right there and note that you're using the <b>SHA1</b> MySQL function to store the person's password <b>as a hash</b> instead of in plain text. I mean, <a href="http://arstechnica.com/tech-policy/news/2011/06/sony-hacked-yet-again-plaintext-passwords-posted.ars" target="_blank">who would store people's passwords as plain text</a>? haha. A hash is the least you can do to protect a person's password.</p>
+<p>A hash function simply <b>scrambles data</b> so that it can't be read anymore. However, if you scramble <b>the same string</b> again, it'll come out with the same hash. It's a consistent one-way encryption. This'll come in handy later.</p>
+<p>You're also using MySQL's <b>NOW()</b> function to get the current date and time. That's useful.</p>
+<p>Anyway, continuing. I'm breaking these up into multi-line stuff so you can read it easier, but MySQL doesn't care, it'll understand it as only one line until it reaches the semicolon.</p>
+<code><pre>
+INSERT INTO posts_tbl 
+  (title, content, pubdate, author_id) 
+ VALUES 
+  ('a really cool post!', 'soooo cooooooool!', NOW(), 1);
+  
+INSERT INTO posts_tbl 
+  (title, content, pubdate, author_id)
+ VALUES 
+  ('this blog', 'is the freshest blog around', NOW(), 1);
+  
+INSERT INTO posts_tbl 
+  (title, content, pubdate, author_id)
+ VALUES
+  ('welp', 'yet another tiny post', NOW(), 1);
+</pre></code>
+<p>That's it. We now have a database with one author and three posts in it. Now we need to use PHP to bridge the database into the page we've set up.</p>
+
+<h2>turn on the power</h2>
+<p>Let's put into <b>index.php</b> the means for it to get the latest posts from the database. This part of the process is us adding functionality to views or pages we've laid out.</p>
+<p>it looks a little somethin' like this...</p>
+<code><pre>
+&lt;div id="posts"&gt;
+
+&lt;?php
+
+
+?&gt;
+
+&lt;div class="post"&gt;
+&lt;h2&gt;A post title!&lt;/h2&gt;
+&lt;p class="small"&gt;by cyle, posted on 6-13-2011&lt;/p&gt;
+&lt;p&gt;post content goes here!&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="post"&gt;
+&lt;h2&gt;Another post title!&lt;/h2&gt;
+&lt;p class="small"&gt;by cyle, posted on 6-12-2011&lt;/p&gt;
+&lt;p&gt;post content goes here!&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+</pre></code>
+<p>Or at least that sets the stage. The rest of the code will go between those <b>&lt;?php ?&gt;</b> tags.</p>
+<code><pre>
+mysql_connect('localhost', 'blog_user', 'password');
+mysql_select_db('theblog');
+</pre></code>
+<p>So here you can see we're connecting to MySQL using the username and password we set up before. (Please tell me you didn't just use "password" as the password...) And then we select the blog's database.</p>
+<code><pre>
+$get_posts_query = mysql_query('SELECT posts_tbl.*, authors_tbl.name FROM posts_tbl, authors_tbl WHERE authors_tbl.id=posts_tbl.author_id ORDER BY posts_tbl.pubdate DESC');
+</pre></code>
+<p>That's the next line. It uses PHP's built-in <b>mysql_query()</b> function to make a query, which returns a <b>Resource</b>, which is a data type the same way Number or String is, which we capture within the <b>$get_posts_query</b> variable.</p>
+<code><pre>
+while ($post_row = mysql_fetch_assoc($get_posts_query)) {
+  
+}
+</pre></code>
+<p>Okay that's an empty <b>while</b> loop because I want to tell you about it first. What does this do? It'll keep doing the while loop until <b>$post_row</b> is false. And $post_row will be false when there's no rows left.</p>
+<p>The <b>mysql_fetch_assoc()</b> function will <i>get the next row and return it as an associative array</i>, which is very useful. We give that function the query we ran so it knows what rows to fetch!</p>
+<p>Okay, so inside the while loop:</p>
+<code><pre>
+while ($post_row = mysql_fetch_assoc($get_posts_query)) {
+  echo '&lt;div class="post"&gt;';
+  echo '&lt;h2&gt;'.$post_row['title'].'&lt;/h2&gt;';
+  echo '&lt;p class="small"&gt;by '.$post_row['name'].', posted on '.date('m-d-Y', strtotime($post_row['pubdate'])).'&lt;/p&gt;';
+  echo '&lt;p&gt;'.$post_row['content'].'&lt;/p&gt;';
+  echo '&lt;/div&gt;';
+}
+</pre></code>
+<p>Okay there are a few important things to digest here:</p>
+<ul>
+<li>We use the <b>echo</b> function to print out HTML. that's cool.</li>
+<li>The echo function just prints out a <b>string</b>, so whatever we want to print out has to be <b>within quotes</b></li>
+<li>You'll notice we suddenly end the string and we suddenly use the period <b>.</b> in places... the period means <b>concatenate</b> one string with another</li>
+<ul>
+<li>In this case: <span class="mono">'la la '.'la la'</span> will just join the two strings into one.</li>
+<li>In this case: <span class="mono">'la la '.$some_var</span> will just join the first string to the value of $some_var</li>
+<li>And finally, <span class="mono">'la la '.$some_var.' la la'</span> will just insert that variable into the middle of those two strings. simple. don't get overwhelmed by punctuation.</li>
+</ul>
+<li>So that's great, we're adding in values into the strings that'll be printed as HTML. makes sense.</li>
+<li>Holy sweentess, there's that <b>date()</b> function in there, doing all kinds of work.</li>
+<ul>
+<li>the date() function takes two arguments: first, a string representing <i>what you'd like the date to look like</i> and the second being <i>the date itself</i></li>
+<li>however, it wants the date itself, the second argument, as <i>the number of seconds since <b>January 1st, 1970</b></i>. Hahahaha... that's what is known as a <b><a href="http://www.unixtimestamp.com/index.php" target="_blank">unix timestamp</a></b></li>
+<li>So we need to use the <b>strtotime()</b> function to convert the <b>string</b> date from the database into the <b>number of seconds since Jan 1, 1970</b>. kinda silly, but whatever.</li>
+<li>ok so that first argument in the date() function is crazy looking, because <a target="_blank" href="http://www.php.net/manual/en/function.date.php">it has to be</a>.</li>
+<li>the date function will read that string and replace certain things with pieces of the current date. for example, it sees the lowercase <b>m</b> and it'll replace it with the number of the month. that's all.</li>
+</ul>
+<li>It'll keep doing that loop for every blog post until it runs out.</li>
+</ul>
+<p>yes, you can digest all that from that small code snippet. it amazes me, too. if you understood all of it, then awesome! you're learning fast. if you don't get it, that's fine, because it's a lot of information. read through it again, and try to follow along in the code with the bullet points.</p>
+<p>Once that's in <b>index.php</b>, upload the file, and go to in your browser.</p>
+<p>if you go to the <b>index.php</b> page and see the three posts from your database, go ahead and delete the entries you had manually written in your index.php files.</p>
+<p>So by the end, your php file should look something like this:</p>
+<code><pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;our awesome blog&lt;/title&gt;
+&lt;link rel="stylesheet" href="main.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;our awesome blog!&lt;/h1&gt;
+&lt;div id="posts"&gt;
+
+&lt;?php
+
+mysql_connect('localhost', 'blog_user', 'password');
+mysql_select_db('theblog');
+
+$get_posts_query = mysql_query('SELECT posts_tbl.*, authors_tbl.name FROM posts_tbl, authors_tbl WHERE authors_tbl.id=posts_tbl.author_id ORDER BY posts_tbl.pubdate DESC');
+
+while ($post_row = mysql_fetch_assoc($get_posts_query)) {
+  echo '&lt;div class="post"&gt;';
+  echo '&lt;h2&gt;'.$post_row['title'].'&lt;/h2&gt;';
+  echo '&lt;p class="small"&gt;by '.$post_row['name'].', posted on '.date('m-d-Y', strtotime($post_row['pubdate'])).'&lt;/p&gt;';
+  echo '&lt;p&gt;'.$post_row['content'].'&lt;/p&gt;';
+  echo '&lt;/div&gt;';
+}
+
+?&gt;
+
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>So we have PHP code inside an HTML structure. If you load that in your browser and look at the source, notice you'll never see the PHP code. Only the results of it! Magic.</p>
+
+<h2>reducing redundancy</h2>
+<p>I'll butt in right now with a quick tip: PHP makes it very easy to reduce redundancy, I think, simply by separating your most-used things (functions, etc) into separate files.</p>
+<p>For example, <b>mysql_connect()</b> and <b>mysql_select_db()</b> will be used anywhere we want to do something with the database. We have two choices:</p>
+<ol>
+<li>write those two functions whenever we connect</li>
+<li>put those two functions in another file and just <b>require()</b> that file whenever we need it</li>
+</ol>
+<p>The second option also has the advantage of keeping those functions in <i>only one place</i>. Imagine if we needed to change the name of the database. In the first scenario, we'd need to change every single place we put that function. In the second, we'd only need to change it in that one file.</p>
+<p>So to do this, just start another file, call it <b>dbconnection.php</b> and put it in the same directory. It'll look like this:</p>
+<code><pre>
+&lt;?php
+mysql_connect('localhost', 'blog_user', 'password');
+mysql_select_db('theblog');
+?&gt;
+</pre></code>
+<p>Now take out those two functions from where they were in the <b>index.php</b> file! Now you only need to require this new file, like so:</p>
+<code>require('dbconnection.php');</code>
+<p>Put that where the functions were, and use that line once in a file to gain access to the database (you don't need to add that more than once per file).</p>
+<p>The <b>require()</b> function is built in to PHP and will <b>make sure</b> that file is loaded, or else it'll throw an error. Very useful. It only takes one argument: a string of the path to the file. In this case, it's in the same directory, so we only need to put in its filename.</p>
+
+<h2>welp. step two done.</h2>
+<p>Now you have a super simple blog. All it does is fetch the latest posts from a database. Step one was the concept stage, step two was breaking ground. It gets easier from here, I think. It's time we figured out how to add posts.</p>
+<p>Let's make a new file called <b>add_post.php</b> (note that i'm really not going for any standardized file-naming convention here, usually somebody will come up with one. i really don't care.)</p>
+<code><pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;posting adding mechanism page&lt;/title&gt;
+&lt;link rel="stylesheet" href="main.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;add a post!&lt;/h1&gt;
+&lt;div id="add_post"&gt;
+
+&lt;form method="post" action="insert_post.php"&gt;
+&lt;div&gt;Title: &lt;input type="text" name="post_title" /&gt;&lt;/div&gt;
+&lt;div&gt;Content:&lt;br /&gt;&lt;textarea name="post_content"&gt;&lt;/textarea&gt;&lt;/div&gt;
+&lt;div&gt;&lt;input type="submit" value="add post" /&gt;&lt;/div&gt;
+&lt;/form&gt;
+
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>That's pretty simple. We won't put any PHP in here yet. Here will just be the <b>form</b>.</p>
+<p><b>Forms</b> are HTML, and when you hit the <b>submit</b> button, it'll send the form data to whatever you specify in the <b>form</b> tag's <b>action</b> attribute. In this case, we want the form data to go to <b>insert_post.php</b></p>
+<p>Notice the other attribute of the form tag: the <b>method</b> attribute. This determines whether the form should send the data as GET or POST variables. Remember those from PHP? You're on the right track. Use POST, because it's more secure.</p>
+<p>Using GET will put it in the next page's query string, which might not be compatible with your browser, and is just generally muddy unless you're doing it for a specific reason.</p>
+
+<h2>dealing with data</h2>
+<p>Now we have to actually insert this form data into the database. Let's start that <b>insert_post.php</b> file like so, just to demonstrate something:</p>
+<code><pre>
+&lt;?php
+print_r($_POST);
+?&gt;
+</pre></code>
+<p>Okay upload that and go back to the <b>add_post.php</b> page. Enter some stuff into the form and hit <b>add post</b>!</p>
+<p>Oh dear, we see our data! The <b>print_r()</b> function (and the <b>var_dump()</b> function) is very useful because it <i>shows you the contents of a variable</i>. In this case, we want to see the <b>$_POST</b> superglobal variable. That variable holds all of the POST data that is sent to the script.</p>
+<p>In this case, we've told the form in our add_post.php page to send its form data as POST data to the insert_post.php script. So in the insert_post.php script, we access that data through the <b>$_POST</b> variable. Get it? This just describes how data is handed between pages.</p>
+<p>Each form field has a <b>name</b> attribute. That <b>name</b> attribute will be the name of the key inside the <b>$_POST</b> associative array. See? In this case, we named one field <b>post_title</b> and the other one <b>post_content</b>. The print_r() function will show these two keys and their values.</p>
+<p>Cool cool cool. Let's actually handle the data. Delete that <b>print_r()</b> function call. First of all, we want to <b>make sure the right variables are set</b>. Let's start with making sure the post title is set:</p>
+<code><pre>
+if (!isset($_POST['post_title'])) {
+  die('you forgot to write a post title!');
+}
+</pre></code>
+<p>What did that do!? Let's break it down! First, it's just an <b>if</b> statement. The expression that it checks is whether the variable <b>$_POST['post_title']</b> exists, that's what the <b>isset()</b> function does. It sees if a variable has been set.</p>
+<p>But what about that exclamation mark before it? <b>This is a shortcut</b> that asks if the result is <b>false</b>. We could've written it this way:</p>
+<code>if (isset($whatever) == false) { }</code>
+<p>The ! before a variable or function does the same thing as that. It just checks to see if it <b>returns false</b>!</p>
+<p>The <b>die()</b> function is as dramatic as it sounds: it stops the script dead in its tracks and prints out whatever is within the first argument.</p>
+<p>So all we've done so far is <b>check to see if the post_title key exists</b>... but what if it's an empty string? It's still set, no matter what its value. So we should also make sure to check for that:</p>
+<code><pre>
+if (!isset($_POST['post_title']) || trim($_POST['post_title']) == '') {
+  die('you forgot to write a post title!');
+}
+</pre></code>
+<p>All we added is an <b>or</b> and <b>another expression</b> inside the <b>if statement</b>.</p>
+<p>The two pipe characters <b><span class="mono">||</span></b> mean <b>or</b>! (Likewise, two ampersand characters <b>&&</b> between expressions means <b>and</b>.) So in plain english this if statement is saying:</p>
+<p><i>If the $_POST['post_title'] variable is not set, or if the trimmed value of $_POST['post_title'] is an empty string, stop everything!</i></p>
+<p>We've successfully stopped someone from adding this blog post if it has no title.</p>
+<p>Okay so... I want you to do the same thing for <b>post_content</b>... I'll wait. Haha. Make sure you change the text inside the <b>die()</b> function, too.</p>
+<p>Moving right along: so now that we know the data is set, we want to add it to the database! But first there are a few things you should always do.</p>
+<ol>
+<li>make sure to require the database connection file! if you don't you'll get errors about PHP not even knowing what database to use.</li>
+<li>parse your data for viewing! this is subtle, but i'll elaborate. sometimes you won't have to do this.</li>
+<li>sanitize your data for the database! i'll tell you what this means. with MySQL and PHP, it's typically easy.</li>
+</ol>
+<p>Okay so first we need to <b>require()</b> the <b>dbconnection.php</b> file. Do so, and put it after the two <b>if</b> statements.</p>
+<p>Next we want to make sure the data is <b>parsed</b> if we need to parse it. In this case, I think we should, because right now you could write <b>any text</b> into those text input fields, and whatever comes out <b>will be rendered</b>.</p>
+<p>So imagine this: if we put some <b>&lt;script&gt;</b> tags in there and put in some malicious code, when we view the blog post, it'll just run that code! That's not good. For simplicity's sake, let's say we don't want <b>any HTML</b> coming through those fields.</p>
+<p>Luckily there's a PHP function to <b>wipe out HTML tags</b> and make them "inert". While we're at it, we can assign a variable the result, like so:</p>
+<code>$post_title = htmlspecialchars(trim($_POST['post_title']));</code>
+<p>All that did was first <b>trim()</b>, which gets rid of all accidental white space around the text, and then it <b>htmlspecialchars()</b> which replaces stuff like tag openings &lt; and closings &gt; with HTML entities. That way they won't render.</p>
+<p>Honestly, we could do this <b>on either end</b>... meaning we could strip out these characters <b>when you save the post</b> or we could do it every time you <b>display the post</b>. For our purposes, it doesn't matter. I'd rather do it now. We can always convert it back later.</p>
+<p>So now that that's done, we need to <b>sanitize the data for MySQL</b>, but what does that mean?</p>
+<p>Simply put, if you don't do this, <b>it becomes very easy to hack your website</b>. (I don't want to get into the specifics of how here.) Sanitizing your data whenever you make a SQL query is essential. Just do it. Don't even think about it. It's pretty easy, too.</p>
+<code>$post_title = mysql_real_escape_string($post_title);</code>
+<p>That's it... all we need to do is use that PHP function to properly make sure that everything that could be malicious is not! Remember, do this <b>before you enter data into a MySQL SQL query</b>, never to the whole query.</p>
+<p>Okay okay okay, we've now sanitized our post_title. <b>Do the same thing for post_content!</b> I'll wait.</p>
+<p>Now to build the MySQL query. We want to INSERT the data into the <b>posts_tbl</b>, right?</p>
+<code><pre>$insert_post = mysql_query("INSERT INTO posts_tbl (title, content, pubdate, author_id) VALUES ('$post_title', '$post_content', NOW(), $author_id)");</pre></code>
+<p>A couple things to note:</p>
+<ul>
+<li>We're running an INSERT statement via <b>mysql_query()</b> and we are capturing the result into <b>$insert_post</b></li>
+<li>The string argument inside the <b>mysql_query()</b> function uses <b>double quotes</b>... we covered the difference between using single and double quotes in the php guide.</li>
+<li>We're putting in our <b>$post_title</b> and <b>$post_content</b> variables as strings! that's why they have quotes around them.</li>
+<li>wait wait -- we haven't set any <b>$author_id</b> variable yet! where did that come from?</li>
+</ul>
+<p>yeah. so hold on a second, <b>we've got a problem</b>. how do we know <b>who is submitting the form?</b></p>
+<p>For now... put this above the query:</p>
+<code>$author_id = 1;</code>
+<p>We'll figure out how to track what user is doing things in a little bit.</p>
+<p>Let's make sure that INSERT query worked out okay, we can use an <b>if</b> statement to check. The <b>$insert_post</b> variable holds the result of the query. It simply returns true or false.</p>
+<code><pre>
+if (!$insert_post) {
+  die('something went wrong! '.mysql_error());
+}
+</pre></code>
+<p>So that checks to see if <b>$insert_post is false</b>, meaning it failed. Then it kills the script, and tacks onto the end of the string argument whatever the MySQL error is with the <b>mysql_error()</b> function.</p>
+<p>If the post inserted successfully, that if statement won't matter. And to finish it off, we want to take the user <b>somewhere else</b> when the process is done.</p>
+<p>For this, I like to use the <b>header()</b> function. It sets the low-level HTTP header that the PHP script will send to the browser. That's complex but trust me... it's magic.</p>
+<p>Just put this as the last line before the closing php tag:</p>
+<code>header('Location: index.php');</code>
+<p>That'll send the browser back to the index.php page when the script is done!</p>
+
+<h2>try adding some posts!</h2>
+<p>how magical is this!? it adds posts!</p>
+<p>but we have a few missing features...</p>
+<ul>
+<li>there's no login system to track users</li>
+<li>there's no link to add posts on the main page</li>
+<li>obviously we haven't made ways to edit/delete posts or show an individual post or add tags to posts</li>
+</ul>
+
+<h2>easy problem first: individual post pages</h2>
+<p>let's go back to our <b>index.php</b> and make it so our post titles are links to the individual post.</p>
+<p>so we're going to change this line:</p>
+<code>echo '&lt;h2&gt;'.$post_row['title'].'&lt;/h2&gt;';</code>
+<p>to this:</p>
+<code><pre>echo '&lt;h2&gt;&lt;a href="post.php?id='.$post_row['id'].'"&gt;'.$post_row['title'].'&lt;/a&gt;&lt;/h2&gt;';</pre></code>
+<p>what does this add? a link that goes to <b>post.php</b> with the query string <b>?id=#</b> with the # being the individual post ID.</p>
+<p>so individual posts will be accessed through <b>post.php</b> - let's make it now!</p>
+<p>the first thing we should write is kind of like what we wrong for the <b>insert_post.php</b> script, since we had to deal with incoming data. we need to make sure that data is correct.</p>
+<code><pre>
+&lt;?php
+
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+  die('no post ID to look up!');
+}
+
+?&gt;
+</pre></code>
+<p>That does the simple job of making sure <b>there is an ID to look up</b> and make sure that it's <b>a number</b>. now let's actually look it up. Add this:</p>
+<code><pre>
+require('dbconnection.php');
+
+$post_id = (int) $_GET['id'];
+
+$get_post_query = mysql_query("SELECT posts_tbl.*, authors_tbl.name FROM posts_tbl, authors_tbl WHERE posts_tbl.id=$post_id");
+</pre></code>
+<p>So first we <b>require()</b> our database connection. In the next line we set a variable to the ID we got from $_GET. You'll notice that we use a thing called <b>type casting</b> to convert the $_GET['id'] variable into an integer. Type casting is just putting the type name in parentheses before a value.</p>
+<p>And finally we query for the post which has that specific ID.</p>
+<p>What's important to do next is actually see if it returned anything! We can do this by using the <b>mysql_num_rows()</b> function to see if the query returned anything.</p>
+<code><pre>
+if (mysql_num_rows($get_post_query) != 1) {
+  die('there was no post with that ID');
+}
+</pre></code>
+<p>this checks to make sure a post was returned by the query! if no posts were returned, then there isn't a post for that ID. so quit, I guess.</p>
+<p>We know that there will be <b>one row</b> for this post. Let's fetch it into an associative array:</p>
+<code><pre>$post = mysql_fetch_assoc($get_post_query);</pre></code>
+<p>Now the <b>$post</b> variable holds our post information! If you want, you can use the <b>print_r()</b> function to see what's there for us to use:</p>
+<code>print_r($post);</code>
+<p>Try going to this page now and see what's there. you should see an array with a bunch of keys. that's good.</p>
+<p>Also take this time, and any time you can, to try to break your own script! For instance, try taking the post ID out of the URL and go see what happens. You should see your error! That's good! <b>Breaking things is just as productive as making things.</b> You need to know how your stuff will break before someone else (a user, or a hacker) finds out.</p>
+<p>But anyway, get rid of or comment out that print_r() function. We know what's in the <b>$post</b> variable.</p>
+<p>Now that we have the post info, we can make a page to display it! This goes after your closing php tag:</p>
+<code><pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;our awesome blog - &lt;?php echo $post['title']; ?&gt;&lt;/title&gt;
+&lt;link rel="stylesheet" href="main.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;&lt;?php echo $post['title']; ?&gt;&lt;/h1&gt;
+&lt;div id="post"&gt;
+
+&lt;?php
+
+echo '&lt;p class="small"&gt;by '.$post['name'].', posted on '.date('m-d-Y', strtotime($post['pubdate'])).'&lt;/p&gt;';
+echo '&lt;p&gt;'.$post['content'].'&lt;/p&gt;';
+
+?&gt;
+
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>So in the <b>post.php</b> file you should have a chunk of PHP on the top, a chunk of HTML on the bottom (with a chunk of PHP in the middle of that chunk).</p>
+<p>That's our basic post page. Pretty simple. But let's add comments and the ability to make them. This'll be a lot like the posts list on the index page!</p>
+
+<h2>commenting</h2>
+<p>Under the <b>#post</b> div, let's add another div, before the end body tag:</p>
+<code><pre>
+&lt;div id="comments"&gt;
+&lt;?php
+
+$get_comments_query = mysql_query("SELECT comments_tbl.*, authors_tbl.name FROM comments_tbl, authors_tbl WHERE post_id=$post_id ORDER BY pubdate DESC");
+if (mysql_num_rows($get_comments_query) == 0) {
+  echo 'No comments yet!';
+} else {
+  while ($comment = mysql_fetch_assoc($get_comments_query)) {
+    echo '&lt;div class="comment"&gt;';
+    echo '&lt;p&gt;'.$comment['content'].'&lt;/p&gt;';
+    echo '&lt;p class="small"&gt;by '.$comment['name'].' on '.date('m-d-Y', strtotime($comment['pubdate'])).'&lt;/p&gt;';
+    echo '&lt;/div&gt;';
+  }
+}
+
+?&gt;
+&lt;/div&gt;
+</pre></code>
+<p>You put that in and try it out, but there are no comments! (And we made sure to put in a little if statement to catch if there's no comments.) Also, we should style this a little... but I'll leave that up to you. Style the <b>#comments</b> and <b>.comment</b> elements somehow in your <b>main.css</b> file.</p>
+<p>Even though there are no comments, we should be reasonably assured that the above code will work. Because you should be confident in your code! (We'll find out soon enough if it's broken.)</p>
+<p>That's just showing comments - let's include a mechanism to add comments. Let's start by adding the form in a div after the <b>#comments</b> div.</p>
+<code><pre>
+&lt;div id="addcomment"&gt;
+&lt;form action="insert_comment.php" method="post"&gt;
+&lt;div&gt;&lt;textarea name="comment_content"&gt;&lt;/textarea&gt;&lt;/div&gt;
+&lt;div&gt;&lt;input type="submit" value="add comment!" /&lt;/div&gt;
+&lt;/form&gt;
+&lt;/div&gt;
+</pre></code>
+<p>Really that's all there needs to be to adding a comment, right?<p>
+<p>Well - not so fast. We also need to transmit to the script <b>what post we're commenting on</b>. To do this we can use a <b>hidden input field</b> that isn't editable. So put this after the opening <b>form</b> tag:</p>
+<code><pre>
+&lt;input type="hidden" name="post_id" value="&lt;?php echo $post_id; ?&gt;" /&gt;
+</pre></code>
+<p>That way when we submit this little form to insert_comment.php, it'll be given the <b>comment_content</b> and the <b>post_id</b> to associate it with!</p>
+<p>Okay let's make the <b>insert_comment.php</b> page - it'll look remarkably like our <b>insert_post.php</b> page.</p>
+<code><pre>
+&lt;?php
+
+if (!isset($_POST['comment_content']) || trim($_POST['comment_content']) == '') {
+  die('you forgot to write the comment!');
+}
+
+if (!isset($_POST['post_id']) || !is_numeric($_POST['post_id'])) {
+  die('there is no post ID!');
+}
+
+require('dbconnection.php');
+
+$post_id = (int) $_POST['post_id'];
+
+$comment_content = htmlspecialchars(trim($_POST['comment_content']));
+$comment_content = mysql_real_escape_string($comment_content);
+
+$author_id = 1;
+
+$insert_comment = mysql_query("INSERT INTO comments_tbl (post_id, content, pubdate, author_id) VALUES ($post_id, '$comment_content', NOW(), $author_id)");
+
+if (!$insert_comment) {
+  die('something went wrong! '.mysql_error());
+}
+
+header("Location: post.php?id=$post_id");
+
+?&gt;
+</pre></code>
+<p>That's mostly like the <b>insert_post.php</b> script, with a few small differences. Read over it just to be sure, check out what's different. And add some comments! See how well it works.</p>
+<p>But we still have a problem. The one of <b>who's logged in</b>. I think we should tackle that now.</p>
+
+<h2>basic user sessions</h2>
+<p>there's a lot of ways of doing user authentication. lots. but PHP's built in <b>$_SESSION</b> superglobal is one easy way; it keeps data available in the server-side on a per-user basis. we could do the same thing with browser cookies, but for security and this small scale I'd prefer to start with sessions.</p>
+<p>The $_SESSION superglobal is just another associative array. You can set the keys and values of it to whatever you want, and the server will store it for you for the length of your browser session (hence: session). Close the browser window, lose your session.</p>
+<p>Inside this session array we'll store things about the user, like their ID and their name.</p>
+<p>Sessions in PHP requires starting the session on every PHP page you need it on, which is a simple function call:</p>
+<code>session_start();</code>
+<p>Put that on top of every page that'll need session data. Put it right after the opening php tag. In this case, we only need it in <b>insert_post.php</b> and <b>insert_comment.php</b></p>
+<p>But we need a login form! And we need a mechanism to log a user in! Once they're logged in and we've set up their session data, we need to go in and make sure that only things that logged-in users can do are protected.</p>
+
+<h2>setting up a login process</h2>
+<p>First we need the login form. Simple enough. Let's do this on the index page. Why not! Open up <b>index.php</b> and let's add a form at the bottom, in a new div under the <b>#posts</b> div.</p>
+<code><pre>
+&lt;div id="loginform"&gt;
+&lt;form action="login.php" method="post"&gt;
+&lt;input type="text" name="u" /&gt; &lt;input type="password" name="p" /&gt; &lt;input type="submit" value="log in" /&gt;
+&lt;/form&gt;
+&lt;/div&gt;
+</pre></code>
+<p>ok so that's the form. easy easy easy. this should be like walking on cake. (is that right?)</p>
+<p>next we need to actually handle the login. what does that mean? well, first it has to make sure you submitted data, then it has to validate it against what's in the database, and then fill out your session data correctly. step by step, now.</p>
+<p><b>login.php</b> might look a little something like this:</p>
+<code><pre>
+&lt;?php
+
+session_start();
+
+if (!isset($_POST['u']) || trim($_POST['u']) == '') {
+  die('no username supplied');
+}
+
+if (!isset($_POST['u']) || trim($_POST['u']) == '') {
+  die('no password supplied');
+}
+
+require('dbconnection.php');
+
+$username = mysql_real_escape_string(trim($_POST['u']));
+$password = sha1(trim($_POST['p']));
+
+$get_user_query = mysql_query("SELECT * FROM authors_tbl WHERE name='$username' AND password='$password'");
+
+if (mysql_num_rows($get_user_query) != 1) {
+  die('no user with that name, or invalid password');
+} else {
+  $user = mysql_fetch_assoc($get_user_query);
+  $_SESSION['user_id'] = $user['id'];
+  $_SESSION['user_name'] = $user['name'];
+}
+
+header('Location: index.php');
+
+?&gt;
+</pre></code>
+<p>Please look over that example and make sure you understand it. Especially the part where we use the <b>sha1()</b> function to <b>convert the password to an encrypted hash</b> before we ask the database about it.</p>
+<p>You should <b>never ever</b> be handing around passwords in plain text if you don't need to. Not even between PHP and the database.</p>
+<p>We use these one-way hashes so that we can compare text without using that text. The <b>sha1()</b> function creates a one-way hash. Every time you use the same text string with it, it'll produce the same end-result hash. But the hash is not human-readable, so your password is protected. If a hacker were to get your database, they would not have anyone's password, just the hashes! And you can't go backwards with a hash. It's not like you can unencrypt it. (Well, at least with the SHA1 algorithm.)</p>
+<p>So now that we have a login process, we can start using that login process to determine what's visible on certain pages. We can protect things!</p>
+<p>Let's start by taking out the login form on the index page if the user is logged in.</p>
+<p>To do this, we simply need to wrap it in an <b>if</b> statement, like so:</p>
+<code><pre>
+if (isset($_SESSION['user_id'])) {
+  // ok do whatever you want to be visible only to users who are logged in
+}
+</pre></code>
+<p>Also be sure that wherever you use session data, you have to add <b>session_start()</b> to the top of the page! Or else it won't know there even is session data!</p>
+<p>So the bottom of the <b>index.php</b> page could look like this:</p>
+<code><pre>
+&lt;?php
+if (!isset($_SESSION['user_id'])) {
+?&gt;
+&lt;div id="loginform"&gt;
+&lt;form action="login.php" method="post"&gt;
+&lt;input type="text" name="u" /&gt; &lt;input type="password" name="p" /&gt; &lt;input type="submit" value="log in" /&gt;
+&lt;/form&gt;
+&lt;/div&gt;
+&lt;?php
+} // end login check
+?&gt;
+</pre></code>
+<p>We've wrapped an if statement around that block of HTML! It won't show up if you're logged in. Maybe we should make a way to log out! Add an else statement to that, like this, and add a link to a logout script. While we're add it, let's also add a link to the New Post form:</p>
+<code><pre>
+&lt;?php
+if (!isset($_SESSION['user_id'])) {
+?&gt;
+&lt;div id="loginform"&gt;
+&lt;form action="login.php" method="post"&gt;
+&lt;input type="text" name="u" /&gt; &lt;input type="password" name="p" /&gt; &lt;input type="submit" value="log in" /&gt;
+&lt;/form&gt;
+&lt;/div&gt;
+&lt;?php
+} else {
+?&gt;
+&lt;div&gt;&lt;a href="logout.php"&gt;logout!&lt;/a&gt;&lt;/div&gt;
+&lt;div&gt;&lt;a href="add_post.php"&gt;add a new post!&lt;/a&gt;&lt;/div&gt;
+&lt;?php
+}
+?&gt;
+</pre></code>
+<p>So now if you go to the index page and log in with the author you set up way back when in the first SQL queries, you should be able to get in and see a <b>logout!</b> link.</p>
+<p>The only thing we'd have to do on that <b>logout.php</b> page is destroy the session and send them back. It'd look like this:</p>
+<code><pre>
+&lt;?php
+session_start(); // start the session
+$_SESSION = array(); // make the session a blank array
+session_destroy(); // DESTROY THE SESSION!
+header('Location: index.php'); // send em packin
+?&gt;
+</pre></code>
+<p>awesome! now let's start applying this session neatness across the whole site.</p>
+<p>first of all, let's protect our scripts that insert information into the database, and also the forms that are for submitting data. so you should have added <b>session_start()</b> to <b>insert_post.php</b> and <b>insert_comment.php</b> but let's add some logic:</p>
+<p>put this at the top of after the session_start()</p>
+<code><pre>
+if (!isset($_SESSION['user_id']) || !is_numeric($_SESSION['user_id'])) {
+  die('you are not logged in!');
+}
+</pre></code>
+<p>add the same thing to the top of <b>add_post.php</b> along with a <b>session_start()</b> function call. so the top of those pages should look like this:</p>
+<code><pre>
+&lt;?php
+
+session_start();
+
+if (!isset($_SESSION['user_id']) || !is_numeric($_SESSION['user_id'])) {
+  die('you are not logged in!');
+}
+
+</pre></code>
+<p>That'll protect <b>insert_post.php</b> and <b>insert_comment.php</b> and <b>add_post.php</b>... now we need to protect the <b>add comment form</b> inside <b>post.php</b></p>
+<p>Again, just wrap it in an if statement which checks for the session variable! You could even add an <b>else clause</b> which tells the user they have to log in to leave a comment. I'll let you do this one all on your own. Come back when you've done it!</p>
+<p>And now also we can replace that pre-set <span class="mono">$author_id = 1;</span> inside the two <b>insert_</b> scripts.</p>
+<p>You can replace it with the following:</p>
+<code><pre>$author_id = $_SESSION['user_id'];</pre></code>
+<p>And that'll make sure that the author ID we put in the database is the current user's ID.</p>
+
+<h2>oh dear oh dear we've come so far</h2>
+<p>wow, let's take a break for a second. here's what we've done so far:</p>
+<ul>
+<li>created a database and tables for the blog's content</li>
+<li>set up an index page of latest posts</li>
+<li>set up an individual page for a single post</li>
+<li>ability to add new posts and comment on posts</li>
+<li>login system to protect certain areas and identify who's logged in</li>
+</ul>
+<p>that's pretty awesome! that's the framework for many simple web apps. let's abstract it a little more. all we've done is this:</p>
+<ul>
+<li>set up a database</li>
+<li>set up pages for displaying data</li>
+<li>set up pages for inputting data</li>
+<li>protected the input of data</li>
+</ul>
+<p>right now you could use the same skills to create your own Twitter. because what's twitter, really?</p>
+<ul>
+<li>set up a database of tweets</li>
+<li>set up pages for displaying a list of tweets</li>
+<li>set up a page for a single tweet (and replies to that tweet)</li>
+<li>protect tweeting with a user login system</li>
+</ul>
+<p>replace "tweet" with "post" and you've got most of what you've done so far.</p>
+<p>okay anyway, what do we have left to add to this super awesome blog?</p>
+<ul>
+<li>tags for posts</li>
+<li>search by author</li>
+<li>search by tag</li>
+<li>a way for new users to be created</li>
+</ul>
+<p>that last one wasn't really planned for in the beginning - but that's what happens. as you build out your project, you may find new features are needed. this is fine as long as they don't get too overwhelming!</p>
+
+<h2>searching by author</h2>
+<p>let's begin again by working on how to <b>get all posts by a specific author</b>. this isn't as hard as it may seem; it'll look a lot like our index page, just with an additional WHERE clause!</p>
+<p>so, literally, take your <b>index.php</b> and copy the contents of it into <b>search.php</b></p>
+<p>What are we going to change? First, we need to send the search a query string with what we want to search for. So we'll need to check and make sure they exist.</p>
+<p>Then we'll need to modify the MySQL query to use that variable. Here's what we can add at the top after the <b>session_start()</b>:</p>
+<code><pre>
+// check if there's an author ID provided
+if (isset($_GET['author_id']) && is_numeric($_GET['author_id'])) {
+	$author_id = (int) $_GET['author_id'];
+	$search_clause = ' AND posts_tbl.author_id=' . $author_id;
+}
+
+// make sure there's something to search for
+if (!isset($search_clause)) {
+	die('nothing to search for!');
+}
+</pre></code>
+<p>That checks to see if there's an author_id GET variable set! And then we use it if so, and build a WHERE SQL query to look for it.</p>
+<p>After that, we make sure that the <b>$search_clause</b> is set... or else there's nothing to search for! This provides us with some <b>expandability</b> later on, when we search based on tags.</p>
+<p>And we can replace the query with this:</p>
+<code><pre>
+$get_posts_query = mysql_query('SELECT posts_tbl.*, authors_tbl.name FROM posts_tbl, authors_tbl WHERE authors_tbl.id=posts_tbl.author_id '.$search_clause.' ORDER BY posts_tbl.pubdate DESC');
+</pre></code>
+<p>Notice that there's a variable interjected into the middle of the query string which will stand for an additional WHERE clause!</p>
+<p>So right now when we provide an <b>author_id</b> in the URL, it'll add that WHERE clause to the query and run it!</p>
+<p>Everywhere we put the <b>username of the author</b>, we can now surround it with a link to search for their posts, like so:</p>
+<code><pre>
+'&lt;a href="search.php?author_id='.$post['author_id'].'"&gt;'.$post['name'].'&lt;/a&gt;'
+</pre></code>
+<p>That'll make it so you can click on the user's name in their post and it'll go to the search page with <i>all their posts</i>. That's searching by user! Of course, you'd need more than one user to really see the effect of this...</p>
+
+<h2>tags!</h2>
+<p>doing tags on a blog is fairly straightforward. there are a number of ways to do it, i'll show you my favorite way. it's rather simple. it involves simply adding tags as a comma-separated list, and relying on PHP to parse the tags.</p>
+<p>so what do we actually need to do to get that information into the database? we already have the table itself, if you'd recall, it looks like this:</p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="3">tags_tbl</th></tr>
+<tr><th>id</th><th>tagtext</th><th>post_id</th></tr>
+</table>
+</fieldset>
+<p>pretty simple! we need to get the individual tags and save them as strings in the database and associate them with a post. so first, let's add a field to our form in <b>add_post.php</b></p>
+<code><pre>
+&lt;form method="post" action="insert_post.php"&gt;
+&lt;div&gt;Title: &lt;input type="text" name="post_title" /&gt;&lt;/div&gt;
+&lt;div&gt;Content:&lt;br /&gt;&lt;textarea name="post_content"&gt;&lt;/textarea&gt;&lt;/div&gt;
+&lt;div&gt;Tags: &lt;input type="text" name="post_tags" /&gt;&lt;/div&gt;
+&lt;div&gt;&lt;input type="submit" value="add post" /&gt;&lt;/div&gt;
+&lt;/form&gt;
+</pre></code>
+<p>All we did there was add another div with an input field for tags. In this you'll write a list of tags, separated by commas, like so: <i>fun, awesome, stupid, whatever</i>. each one of those being a tag.</p>
+<p>but that logic - separating the input by comma - hasn't been written yet! we need to add that to <b>insert_post.php</b></p>
+<p>let's insert this code right <b>before the header() function</b> in <b>insert_post.php</b> so that it's the last thing we do after adding a post:</p>
+<code><pre>
+$post_id = mysql_insert_id();
+
+if (isset($_POST['post_tags']) && trim($_POST['post_tags']) != '') {
+  // parse tags!
+  $tags = trim($_POST['post_tags']);
+  $tags_array = explode(',', $tags);
+  foreach ($tags_array as $tag) {
+    $tag_db = mysql_real_escape_string(htmlspecialchars(trim($tag)));
+    $insert_tag = mysql_query("INSERT INTO tags_tbl (tagtext, post_id) VALUES ('$tag_db', $post_id)");
+  }
+}
+</pre></code>
+<p>So first of all, we're calling a very important function: <b>mysql_insert_id()</b>, which returns the Primary Key ID of the last inserted query. And the last inserted query was our insertion of the post! So that'll give us the unique ID of the post we just inserted. Cool.</p>
+<p>The next thing we do is check if the person submitting the new post even provided any tags for us to add! If they didn't, we can just move on.</p>
+<p>But if they <i>did</i> give us tags, then we need to parse them. This is the process, like we did with cleaning the data, of transforming <i>user input</i> to <i>normalized data</i>. A part of your job as a developer is to make the process easy for the user, and let the computer do all the hard work. (Isn't that what all computers should be doing?)</p>
+<p>So in this case, we ask the user merely to separate their tags with commas. So then we use the <b>explode()</b> function to transform that string into an array! It does this by using a <b>specific string</b> to delineate the pieces of the array. In this case, we chose a comma.</p>
+<p>The <b>explode()</b> function will look at the string, and for every comma it finds, it'll split that piece into a new segment of the array! Awesome stuff. Very useful.</p>
+<p>After we've split it by comma, we then go through each tag it found with a <b>foreach</b> loop. <b>foreach</b> works very simply: <i>for each value inside an array, do something</i>... it's just a simpler way of writing a <b>for</b> loop, specifically for arrays.</p>
+<p>For each tag inside the tags array we created, first sanitize it for the database like we did with the other strings (post title and content) and then put it in the <b>tags_tbl</b>! Simple, right?</p>
+<p>Wait here and take a moment to realize that really, I had to write out six or seven paragraphs to describe what's going on within those seven or so lines of code. If you digested all of it and know what I was talking about, then the hard part is over. You're a developer.</p>
+<p>Anyway, so now we can have tags in the database for posts! So cool. Now you need to do two things:</p>
+<ol>
+<li>show the tags on the post page (and, if you want, on the index page)</li>
+<li>search by tag</li>
+</ol>
+<p>I'll let you figure out how to show the tags on the post page. Really, it's simple, I'll at least give you an idea how to do it:</p>
+<ul>
+<li>On the <b>post.php</b> page, make a call to the <b>tags_tbl</b>, similar to the one already there to the <b>comments_tbl</b>.</li>
+<li>For each row, just make each tag a member of a list. Separate them by commas. Or make them <b>li</b> items in a <b>ul</b> HTML element.</li>
+<li>make it so you can click on a tag name and it goes to <b>search.php?tag=tagstring</b>... replace <b>tagstring</b> with the tag itself. you'll probably have to use <b>urlencode()</b> to make it URL-friendly. I'll explain this in a second.</li>
+</ul>
+<p>Okay, so do that for me. Really, I want you to be able to walk on your own a bit more as this guide goes on. Apply your knowledge!</p>
+
+<h2>searching by tag</h2>
+<p>I asked you to make the tags point to <b>search.php</b> and utilize the <b>urlencode()</b> method. Here's exactly what I mean, or rather, what it could look like:</p>
+<code><pre>
+echo '&lt;a href="search.php?tag='.urlencode($tag_row['tagtext']).'"&gt;'.$tag_row['tagtext'].'&lt;/a&gt;';
+</pre></code>
+<p>That simply prints out the text of the tag and makes a link to the search.php script with the tag text as its argument. So why do we need the <b>urlencode()</b> function?</p>
+<p>Imagine if this was our list of tags:</p>
+<ul>
+<li>fancy</li>
+<li>so cool</li>
+<li>i'm awesome</li>
+</ul>
+<p>The second two strings, on their own, can't be in a URL. You can't have spaces in a URL. It just won't work! Most web browsers will just cut off anything after a space. So we need to <b>encode them for a URL</b>... hence, <b>urlencode()</b></p>
+<p>What it does, specifically, is <i>replace anything that can't be in a URL with a character-code that can</i>. Remember how we need to <b>escape certain characters</b> inside PHP strings, or else the string will break? Same idea.</p>
+<p>So <b>urlencode()</b>-ing the string <b>so cool</b> and putting it in the query string for <b>search.php</b> looks like this:</p>
+<code><pre>search.php?tag=so+cool</pre></code>
+<p>The plus sign there is a standard way of replacing a space. When the script gets that GET variable, it'll automatically translate those URL encodings back into a string.</p>
+<p>Ok, cool, so now you know how that'll work. Now let's search by tag! It's a lot like searching by author, we just use a different WHERE clause. The current <b>search.php</b> has this chunk at the top:</p>
+<code><pre>
+// check if there's an author ID provided
+if (isset($_GET['author_id']) && is_numeric($_GET['author_id'])) {
+  $author_id = (int) $_GET['author_id'];
+  $search_clause = ' AND posts_tbl.author_id=' . $author_id;
+}
+
+// make sure there's something to search for
+if (!isset($author_id)) {
+  die('nothing to search for!');
+}
+</pre></code>
+<p>That's cool. Let's add another chunk for tags. Put it <b>between</b> the two if statements. So it should look like this:</p>
+<code><pre>
+// check if there's an author ID provided
+if (isset($_GET['author_id']) && is_numeric($_GET['author_id'])) {
+  $author_id = (int) $_GET['author_id'];
+  $search_clause = ' AND posts_tbl.author_id=' . $author_id;
+}
+
+// check if there's a tag name provided
+if (isset($_GET['tag']) && trim($_GET['tag']) != '') {
+  $tag = trim($_GET['tag']);
+  $tag_db = mysql_real_escape_string($tag);
+  $search_clause = " AND posts_tbl.id IN (SELECT post_id FROM tags_tbl WHERE tagtext = '$tag_db')";
+}
+
+// make sure there's something to search for
+if (!isset($search_clause)) {
+  die('nothing to search for!');
+}
+</pre></code>
+<p>Note that if the <b>require('dbconnection.php');</b> is not above those clauses, it'll throw an error. So move that line above these chunks.</p>
+<p>What did we just add? It looks a lot like the first <b>if</b> statement -- if there's a tag, search for it! However, we needed to use the <b>mysql_real_escape_string()</b> function to sanitize the tag first, to prevent any potentially malicious activity. Don't forget to do this!</p>
+<p>It creates a WHERE clause for the search query, one that uses a <b>subquery</b> to ask the <b>tags_tbl</b> for any post_ids that use the tag we're searching for!</p>
+<p>So the subquery says, <i>find all post IDs using the tag text we supply</i>, and with those IDs, the main query says, <i>retrieve those posts with the supplied IDs</i>. That's what the <b>IN</b> SQL keyword means. Find all rows where they meet any of the conditions within the specified array. In this case, the specified array is our tag rows.</p>
+<p>This is a great example of how you build <b>relational models</b> and <b>normalized data</b> and how you end up displaying that data. The user has no idea about the models or anything - they simply see a list of tags! Wonderful. The user should never have to know how your data is structured.</p>
+
+<h2>creating new users</h2>
+<p>Creating new users is pretty easy - make a signup form! In fact, it's a perfect way to demonstrate pretty much everything I've taught you here. To make a signup form, you'd need at least two pages:</p>
+<ul>
+<li>one page for the actual sign up form in HTML</li>
+<li>one page for the processing of the form in PHP</li>
+</ul>
+<p>Things to think about while making it:</p>
+<ul>
+<li>do you want to generate a password for them and then email it to them?</li>
+<li>if you let them put in a password, make sure you <b>sha1()</b> encrypt it</li>
+<li>do you want it to send an email when it's done?</li>
+<li>do you want to approve users (which would have to be another script)?</li>
+</ul>
+<p>So keep those ideas in mind. Using just what you've learned so far, the easiest thing for you to do would be to make a page that simply adds a new user and lets them choose their own password.</p>
+<p>Build it!</p>
+
+<h2>editing posts and deleting posts</h2>
+<p>Again, these are two things that simply build upon things we've already done, so I'll leave them for you to do.</p>
+<p>Think of making the <b>editing posts</b> page a combination of the <b>post.php</b> page and the <b>add_post.php</b> page... because you are retrieving the post and filling it into a form to edit! Then you just need to update the existing database row.</p>
+<p>Deleting a post is as simple as making a tiny script that just runs a DELETE SQL query. You just need to make sure to protect that link so only the <b>post author</b> can see it.</p>
+
+<h2>how far we've come</h2>
+<p>Here are the important lessons I want you to walk away with, neatly presented as bullet points:</p>
+<ul>
+<li>every line of code is yours. take pride in that. we started with nothing and we ended up with a blog.</li>
+<li>we didn't use javascript at all in this example, because really you don't need to, but there are definitely things you could use it for.</li>
+<li>the key piece of knowledge here is how to manipulate and use a database with a programming language and present that information to a user.</li>
+<li>at any point in the process, the scope of your work can change. you need to be able to roll with that; don't be afraid of it.</li>
+<li>understand the differences between the data and the functions and the views.</li>
+<li>come up with projects to try out whatever knowledge you wish to learn!</li>
+<li>break things! have fun! ask questions! copy people! copy ideas! (as long as it's for the sake of learning.)</li>
+</ul>
+<p>Now that you've learned about Web Development, maybe you want to learn about Systems... and maybe more advanced architecture type stuff. Expand your knowledge!</p>
+<p>If you have any questions, comments, whatever, please feel free to email me at cyle_gage@emerson.edu</p>
+
+
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Systems Stuff: Ruby is pretty cool</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Systems Stuff: Ruby is pretty cool</h1>
+
+<h2>fyi</h2>
+<p>If you're looking for a Ruby <i>on Rails</i> guide, turn around now. I'm not gonna get into RoR.</p>
+<p>What I am going to get into is object-oriented programming, how neat Ruby is, and using Ruby as a systems language.</p>
+
+<h2>ruby is pretty neat</h2>
+<p>yeah, I said that already, but really it's true. I came upon Ruby one snowy evening, trying to find a way to quickly burn through huge LDAP structures very quickly without consuming large amounts of memory. Ruby is pretty good for that, it turns out.</p>
+<p>Ruby is a deeply object-oriented language, but it's dynamic and interpreted just like Perl and PHP and Python. You can use it very functionally like PHP or Python, but you'd be missing out on a lot of its power. Not only that, but it's a language designed to be simple and even <i>colloquial</i>. Here, let me show you.</p>
+<p>You're hopefully at least a little familiar with what this means in Javascript:</p>
+<code><pre>
+var cats = 30;
+</pre></code>
+<p>This is pretty straightforward. The variable <b>cats</b> equals the number 30. Here's the same thing in Ruby:</p>
+<code><pre>
+cats = 30
+</pre></code>
+<p>Seems pretty simple, because it is. No need for semicolons. You don't even need to declare it as a variable, because everything is an Object by default. (And a variable is a kind of Object, so to speak.) But here's something neat you could then do with that variable:</p>
+<code><pre>
+cats.class
+</pre></code>
+<p>That would spit out "Fixnum"... because the cats variable is of class <b>Fixnum</b>, which is Ruby's basic number class. Why is this crazy?</p>
+<p><i>Everything in Ruby is an Object.</i> I capitalized "Object" because that, in itself, is an Object. CRAZY. Not only that, but Ruby is <b>reflective</b>, which means every Object <i>knows it's an Object!</i></p>
+<p>And most importantly, every class in Ruby is a child of the Object class... even <b>nil</b> (Ruby's NULL). So you can use any method that the Object class has. So whether it's a number or a string or whatever, it'll have access to the <b>.class</b> method.</p>
+<p>That's why you can ask the <b>cats</b> variable what its class is by using the <b>.class</b> method on it! If you wanted, you could pick any number, like so:</p>
+<code><pre>
+138.class
+</pre></code>
+<p>And it would return "Fixnum", because the number doesn't even have to be contained in a variable, it's still an Object. Likewise:</p>
+<code><pre>
+"hello".class
+</pre></code>
+<p>would spit back "String", because that's a String! It doesn't even need to be a variable, it's already an Object just because you typed it out.</p>
+
+<h2>Interactive Ruby</h2>
+<p>So this is all neat and cool to tell you about, but you should definitely play with it, too. The easiest way to do it is to use <b>irb</b>, or the Interactive Ruby Interpreter.</p>
+<p>irb and Ruby itself come installed on Macs, so you can open a Terminal window, type <b>irb</b>, and start using it. On Linux, you'll have to install Ruby and irb. On Debian you'd just do this:</p>
+<code><pre>
+&gt; apt-get install ruby irb
+</pre></code>
+<p>If you're on Windows, you can try using the <a href="http://rubyinstaller.org/" target="_blank">RubyInstaller</a>.</p>
+<p>Anyway, once you have that loaded, you can play with the above examples.</p>
+
+<h2>Learning Ruby</h2>
+<p>I found Ruby ridiculously easy to learn, mostly because there's a very great (albeit nerd-hipstery) community surrounding it. Here are a few really good ones:</p>
+<ul>
+<li><a href="http://mislav.uniqpath.com/poignant-guide/" target="_blank">why's poignant guide to ruby</a></li>
+<li><a href="http://humblelittlerubybook.com/book/html/index.html" target="_blank">the Humble Little Ruby Book</a></li>
+<li><a href="http://en.wikibooks.org/wiki/Ruby_Programming" target="_blank">Ruby Programming</a> on WikiBooks</li>
+</ul>
+<p>why's guide alone makes me not want to bother making a how-to guide for Ruby, because it has already been done so beautifully. the <a href="http://ruby-doc.org/">full documentation</a> for Ruby, like PHP's docs, are also very well made and thorough, as any API reference should be.</p>
+<p>which is why I don't really want to make a "Learning Ruby" guide here. it's been done way better than I can do it. but... I can provide a few tips.</p>
+
+<h2>Ruby tips and thoughts</h2>
+<p>Here are a few of my useful thoughts on Ruby:</p>
+<p>Ruby is written to be <i>way more colloquial</i> than most languages, as I've said. For this reason above all others, it's a charm to work with. Stuff like not needing to care about semicolons, and the fact that methods use punctuation that's indicative of their purpose, like the <b>.eql?</b> method.</p>
+<p>Normally in other languages like PHP you run a conditional like this:</p>
+<code><pre>
+if ($rofl == 10) {
+  echo "lol!";
+}
+</pre></code>
+<p>But in Ruby, you could write it like this:</p>
+<code><pre>
+puts "lol!" if rofl.eql?(10)
+</pre></code>
+<p>You can pretty much <b>read that line out loud</b>, that's how easy it is. And almost all of Ruby is like that. And it's pretty awesome that you can add the <b>if</b> <i>after</i> the statement. Similarly, but importantly, there's an <b>unless</b> keyword!</p>
+<code><pre>
+puts "lol!" unless rofl.eql?(10)
+</pre></code>
+<p>So. Cool.</p>
+<p>That having been said, the reason you use .eql? and not == is because everything is an object! Testing for equality requires you to make sure you're also testing by class, and each class tests equality differently. Using the <b>.eql?</b> method makes sure that you're using the right way each class wants to check for equality.</p>
+<p>Therefore, Ruby doesn't want to assume much for you; so if you want to add a number to the end of a string, you need to use the <b>.to_s</b> method to convert the number to a string in the same operation, like so:</p>
+<code><pre>
+somenumber = 10
+whatever = "whatever" + somenumber.to_s
+</pre></code>
+<p>Otherwise it'll actually try to do math with the <b>somenumber</b> variable! You have to convert the number to a string using <b>.to_s</b> before it can be added to the end of the string.</p>
+<p>Ruby's Array and Hash methods are divine in their simplicity. Learn them well. The mere fact that there are <b>.each</b> and <b>.include?</b> methods is wonderful. In fact, Ruby's block functionality is pretty neat. Here's an example:</p>
+<code><pre>
+[ "lol", "rofl", "lmao" ].each do |wut| puts wut end
+</pre></code>
+<p>That takes the array with the three strings in it, and for each, uses <b>puts</b> to print them out one at a time. The <b>do</b> and <b>end</b> keywords denote the beginning and end of a block. You could use curly braces if you wanted:</p>
+<code><pre>
+[ "lol", "rofl", "lmao" ].each { |wut| puts wut }
+</pre></code>
+<p>If that makes it easier for you to read, then great. It's wonderful to have the option to go either way! The object contained within the <b>|</b> characters represents whatever iteration the loop is currently on.</p>
+<p>When you're building things that interface with other systems, there's probably a module for it. Kinda like node.js, except Ruby has been around a lot longer. If you need something special done, Ruby probably has a library for it somewhere. It's like how PHP has extensions, but they're not very friendly usually.</p>
+<p>With Ruby, you just need to install <a href="http://rubygems.org/" target="_blank">RubyGems</a> and let that take care of 99% of the work for you! It's a lot like npm is for node and apt is for Debian; it will install the packages and libraries for you.</p>
+<p>A neat idea: make your own damn classes. Everything is an Object in Ruby, so use that to your advantage by making your own types of Objects to streamline things for you. Here's a fun example:</p>
+<code><pre>
+class Cat
+  def initialize(name)
+    @name = name
+  end
+  
+  def meow
+    puts "MEOW!"
+  end
+end
+
+kitty = Cat.new("Muffy")
+kitty.meow
+</pre></code>
+<p>You can save that as <b>cat.rb</b>, run it in the command line using ruby (<span class="mono">ruby cat.rb</span>) and it'll print out "MEOW!" See what we did there?</p>
+
+<h2>Ruby for Systems</h2>
+<p>Ruby can be used as a web development language, sure, it already is. But I use it primarily as a system backend language, for automation and interoperability, because of its memory management and its objectivity (lol).</p>
+<p>Honestly, I tried Ruby on Rails, and I didn't like it. Too much sass, not enough substance. Plus, when people leave Ruby on Rails and "upgrade" to Java because it's more scalable, you know something is wrong. But that's all I'll say about Ruby on Rails.</p>
+<p>Ruby, like Python, (... and like Perl, I'm sure) is a very robust language for automation. It has a lot of great, easy <a href="http://ruby-doc.org/core-1.8.7/classes/File.html" target="_blank">File handling classes</a>. But it's just a tool in the utility belt.</p>
+<p>I think I could've swung either way... Python or Ruby. I decided not to learn Python and instead learn Ruby. I'm not sure if it matters which one I picked; I would've written a similar little guide for Python.</p>
+
+<h2>the end</h2>
+<p>honestly I don't know what else to write, other than "try out Ruby". I wrote about half of a text adventure game in Ruby, and then node.js came out, and I ported the game to that. no regrets. I don't have any crazy tricks for Ruby, because I think Ruby <i>in itself</i> is a crazy trick.</p>
+<p>however, Ruby continues to power some of my more "heavy" scripts. I use it less frequently than say PHP, but when I do use it, it's with a purpose. learn Ruby, appreciate it within the context of your experience, and use it sometime.</p>
+
+</div>
+
+</body>
+</html>

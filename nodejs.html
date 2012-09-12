@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Systems Stuff: node.js is totally boss</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Systems Stuff: node.js is totally boss</h1>
+
+<h2>the boss</h2>
+<p>bruce springsteen is actually The Boss. this is irrefutable. but node.js is catching up.</p>
+<p>I'm kind of infatuated with node.js right now, honestly. i've made some cool projects with it.</p>
+<p>I've been toying with node.js for about three months, I think. before I even talk about it and how excited I am about it, you need to be comfortable with the following:</p>
+<ul>
+<li>making a linux server to play with node.js on</li>
+<li>the command line should be familiar to you</li>
+<li>have an understanding of Javascript</li>
+</ul>
+<p>if you feel good about those things, we're in business. otherwise, you need to read <a href="linux.html">the linux guide</a>. developing stuff with node.js is command line work. it's low-level. it's fun!</p>
+
+<h2>node.js & systems development</h2>
+<p>first of all, what the hell is node.js to begin with? put simply, it's a server-side Javascript highly-scalable platform, used primarily to build asynchronous programs.</p>
+<p>that's crazy. let me explain each piece a little better.</p>
+<p>it's <b>server-side javascript</b>! that means instead of javascript running in your browser, it's running on the server. that may seem strange - and it is - but remember, javascript is just a programming language, there isn't anything saying that it can only run in a browser!</p>
+<p>specifically, the javascript in node.js is run by Google's super-powerful <b>V8 Javascript Engine</b>. V8 is so cool, it basically <b>compiles the javascript to machine code</b> to make it obscenely fast. if you don't understand what that means, that's okay. just understand that it's fast.</p>
+<p>(javascript is typically run by being interpreted by a browser, the same way a server would interpret PHP before handing it off to you. instead, the V8 engine <b>compiles</b> the javascript down to lower-level code. it's goddamn magic!)</p>
+<p>and node.js is merely a <b>platform</b>; javascript is the actual language you use to write scripts for it. node.js is just the bundling and customizing of the V8 engine to run Javascript on the server-side.</p>
+<p>like Ruby, or Perl, or Bash, or Java, node.js can be a tool for <b>systems development</b> as well as for <b>web development</b>... the difference being: who or what is going to use what you write? If a person in a browser will use it, then it's web development, no matter what the language. but if you're writing something for <b>a computer to talk to</b>, then you're developing systems. node.js can kind of do both - but it's mostly for systems development. i'll explain this more in a systems architecture guide.</p>
+<p>and what does <b>asynchronous</b> mean? well, i'd like to dedicate an entire section to it. because it's a big deal.</p>
+
+<h2>the asynchronous world</h2>
+<p> hopefully you know a programming language or two by now, namely stuff like PHP and Javascript and Ruby and maybe Python or Perl or whatever. In common practice, these are all <b>procedural</b>, interpreted languages.</p>
+<p><b>procedural</b> means that you write the program like a step-by-step guide. from line 1 to line 100, the computer goes step by step until it reaches the end, and takes as long as it has to.</p>
+<p>if we were to write a script in PHP that connects to a database, grabs some rows, and displays them, the computer would execute that script the following way:</p>
+<ol>
+<li>initialize database connection. wait til that's ready.</li>
+<li>run a query for some rows. wait til it actually comes back with some.</li>
+<li>with each row, show it. wait til each is done before moving on to the next.</li>
+<li>end of script, spit out the result to the user!</li>
+</ol>
+<p>this typically happens so damn fast that we don't really notice that the computer is just reading a list of steps and executing them. but for every step, it waits for every function in the line to be done before going to the next one.</p>
+<p>this is good! because it means we can write something on line 2 that depends on line 1 working. easy! simple! effective!</p>
+<p>but <b>slow</b>.</p>
+<p>slow in terms of a computer, anyway. a PHP script may take 100 milliseconds, but during that 100 milliseconds, <i>the script and the PHP process it's using can't be doing anything else</i>. all that waiting around for the database to get back, for it to display the rows, for it to hand the result off to the user at the end, is all time effectively wasted!</p>
+<p>that's known as the <b>synchronous</b> or <b>blocking</b> world. and it's great for total integrity, but <i>it doesn't scale well</i>. 100 millisecond requests may seem fine when you have a powerful server and maybe 100 visitors. but what if you suddenly get 1,000,000 visitors? the server will drown itself in all the requests while waiting around for the database to do this or that.</p>
+<p>this is where <b>asynchronous</b> or <b>non-blocking</b> platforms come in. they are inherently <b>event-driven</b> as opposed to <b>procedural</b>. in an async world, line 2 cannot depend on line 1, because line 1 might be taking awhile. and all the program wants to do is get to the end of the file!</p>
+<p>so in an async script, the program would <b>idle</b> most of the time, waiting for things to happen, before <b>receiving an event</b> and continuing what it needs to do.</p>
+<p>it's a strange idea, but it's one i'll illustrate, and hopefully you'll understand. we need to actually install it, first.</p>
+
+<h2>download + compile it!</h2>
+<p>node.js is something you should download and compile to get it to run the best way possible. i hinted about this kind of stuff in the <b>linux guide</b> but now we get to do this for real if you never have! luckily, it's very easy to compile.</p>
+<p>so have your linux server ready! we need to install the following <b>dependencies</b> via apt-get:</p>
+<code><pre>&gt; apt-get install build-essential libssl-dev python</pre></code>
+<p>what are we installing?</p>
+<p><b>build-essential</b> allows you to run <b>make</b> to compile programs. <b>libssl-dev</b> allows SSL connections, should we need them. <b>python</b> just makes sure you have python installed, because node.js uses it a lot. (even though we won't.)</p>
+<p>so once that's all done, change directory to <b>/usr/src</b> which is where we'll download the source files.</p>
+<code><pre>&gt; cd /usr/src</pre></code>
+<p>now we download the node.js source files. go to <a href="http://nodejs.org/#download" target="_blank">the nodejs website</a> and get the link for the Source Code download, it'll probably end in <b>.tar.gz</b></p>
+<p>now use <b>wget</b> in the linux shell to download it, like so:</p>
+<code><pre>&gt; wget http://nodejs.org/dist/v0.6.10/node-v0.6.10.tar.gz</pre></code>
+<p>(Obviously replace the URL with whatever the latest download link is. In the following instructions, replace the .tar.gz filename accordingly.)</p>
+<p>that might take a minute. it's using the <b>wget</b> client to get the stable-version source code of node.js. when it's done, we'll need to unpack it.</p>
+<code><pre>&gt; tar -zxf node-v0.6.10.tar.gz</pre></code>
+<p>when it's done, it'll have created a <b>node-v0.6.10</b> directory within /usr/src, so let's go there.</p>
+<code><pre>&gt; cd node-v0.6.10/</pre></code>
+<p>ok, now we need to allow the proper configuration. luckily this is a simple command:</p>
+<code><pre>&gt; ./configure</pre></code>
+<p>the dot-slash before the word "configure" means <i>run the program in this directory named "configure"</i>... instead of any possible program named <b>configure</b> that might be on our linux box.</p>
+<p>that'll take just a few seconds. next, if the configure program checks out, we'll make the program.</p>
+<code><pre>&gt; make</pre></code>
+<p>oh lawds, this'll take awhile. make yourself some tea. welcome to compiling programs. you'll have to feel this pain if you ever get into <b>C</b> or <b>C++</b> or <b>Objective-C</b></p>
+<p>when it's done, run the following:</p>
+<code><pre>&gt; make install</pre></code>
+<p>AND BAM WE GOT OURSELVES SOME NODE.</p>
+<p>test it by doing this:</p>
+<code><pre>&gt; node -v</pre></code>
+<p>that should print out the version number of node.js that you just installed. (at the time of this writing, it should be 0.6.10.) so fresh. that's it, you have node installed.</p>
+<p>it'll also have installed <b>npm</b>, the node package manager, which works a lot like apt. we'll get to that later.</p>
+
+<h2>better than a hello world</h2>
+<p>so let's flex some muscles. i can't wait to show you! node.js is actually quite simple because <i>it's just javascript!</i> object-oriented, fast, with lots of capabilities.</p>
+<p>to make a node.js program, all you need to do is start a blank text file, like most any programming language. i use the <b>.js</b> extension, because it's javascript!</p>
+<p>so let's make <b>omg.js</b> -- because it'll blow your mind. the contents are as follows:</p>
+<code><pre>
+var http = require('http');
+
+var server = http.createServer(function (request, response) {
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  response.end('Hello World\n');
+});
+
+server.listen(1337);
+
+console.log('Server running at http://127.0.0.1:1337/');
+</pre></code>
+<p>So write that in nano or vi or whatever, save it in a folder somewhere, go to that folder, and then type this:</p>
+<code><pre>&gt; node omg.js</pre></code>
+<p>You should see the line <span class="mono">Server running at http://127.0.0.1:1337/</span> and nothing else. There is no prompt because <b>node.js is running the file</b>...</p>
+<p>If you replace 127.0.0.1 with the server's IP, and open it in a browser, you'll see "Hello world" in the browser!</p>
+<p>That's because <i>you just built your own web server</i>. Yeah. Like Apache. Or lighttpd. <b>YOUR OWN WEB SERVER FROM SCRATCH.</b></p>
+<p>Anyway, that's pretty awesome, but maybe i'm just easily impressed. Nevertheless, let's break down what you just did.</p>
+<p>First of all, you <b>require()</b> the module named <b>http</b> into the variable <b>http</b>... useful, right? Modules are a huge part of node.js, and I'll get into them more specifically in the next section. Needless to say, they act a lot like frameworks do in javascript. You're importing a bunch of helpful functions by requiring a module.</p>
+<p>The next thing it does is run the <b>createServer()</b> function on the <b>http</b> object, which is then assigned to the <b>server</b> variable.</p>
+<p>What's inside that call to <b>createServer()</b>? Well, that's where things get crazy. We put as the method's only argument an <b>anonymous function</b>. That is, a function <i>without a name</i>, to be used only when needed and then discarded. Within the async world, we call this a <b>callback function</b>. That means that the program will use this function whenever a specific event happens. It'll <b>call back</b> to that function using whatever you provide here. (It doesn't have to be an anonymous function, but why not?)</p>
+<p>So the only argument is that function: in this case, the function takes two arguments, the first being an incoming request, and the second being the server's response. The event will be <b>when the server gets an incoming request</b>. It'll then call back on the provided function.</p>
+<p>Within the function, we use the <b>writeHead()</b> method of our response to write in the <b>response header</b> that it has a status code of 200 (which, within HTTP, means "Okay! Got it!") and that it has the content-type of "text/html".</p>
+<p>(The second argument to writeHead() is an object containing whatever headers you want. Personally, I always include a "lol" header, like so: <span class="mono">{ 'content-type': 'text/html', 'lol': 'wut' }</span> And only about 0.00001% of internet users would ever notice. If you don't know what this means, forget I said anything.)</p>
+<p>Then we <b>end()</b> the response with the text we want it to contain. (A simple way of explaining it.) The end() method also tells the server to send this response back to whoever asked, which would be you in your browser.</p>
+<p>After we define that variable <b>server</b> successfully, we use the <b>listen()</b> method to tell it to listen on a specific port, in this case <b>1337</b>.</p>
+<p>And then we tell it to write a string to the console using the <b>log()</b> method, which just accepts a string to print out. That's it!</p>
+<p>So here's how the process works, as we just set it up:</p>
+<ol>
+<li>listen on port 1337 for HTTP requests (those typically come from web browsers, notice the <b>http://</b> before the URL)</li>
+<li>when the server gets a request, accept it and start writing a response!</li>
+<li>in the <b>header</b> of the HTTP response, put the status code 200, and some other custom header options</li>
+<li>in the <b>body</b> of the HTTP response, put the text <b>Hello world</b>, by adding it to the <b>end()</b> method</li>
+<li>with the <b>end()</b> method, send the server's response to whoever asked!</li>
+</ol>
+<p>the program will keep running because it'll keep listening on that port. node.js will only stop if it runs out of things to do or it errors out. hit CTRL+C to force-quit the program.</p>
+<p>even cooler is that it's not like it can only do <b>one request at a time</b>... no, it can do as many as the computer's CPU is capable of doing. again, this is <b>non-blocking</b>, so it'll try to do as many requests as possible! it doesn't do one, and if another shows up in the middle of that, wait til the first one is gone before moving on to the new one. it just does as many as it can concurrently as quickly as it can.</p>
+<p>Now.... it's important to note the following: even though the console.log() call is the last thing in the script, it's not really what is run last. technically it's probably run second. remember, node.js will try to scream through whatever is there. in the next example, you'll see what i mean.</p>
+<p>and yes, I just pulled a page worth of notes from less than 10 lines of code. that's how cool this is. it's very, very powerful.</p>
+
+<h2>a simpler example</h2>
+<p>the above example was very powerful and probably overwhelming. that's okay; but it should also be exciting! that kind of power, with that kind of simplicity? Amazing! that above example is a version of the basic example the guy who made node.js commonly uses to demonstrate how simple and yet very powerful node.js can be. if you were to run benchmarks on that simple web server against a service like Apache, node.js beats it every time.</p>
+<p>but let's try something easier. something simpler. call this <b>funtimes.js</b></p>
+<code><pre>
+console.log('welp. line one.');
+
+setTimeout(function() {
+  console.log('line two?');
+}, 1000);
+
+console.log('line three!');
+</pre></code>
+<p>okay, run that. you'll notice that it will print line one and three immediately, then in a second, you'll see line two. and then it'll quit. WHAT IS GOING ON HERE.</p>
+<p>really, this is a lot like javascript already works -- because even in the browser, javascript is already capable of asynchronous-ness. put that on the server-side and things get interesting.</p>
+<p>So what is the script really doing? It's trying to get to the end of the file as fast as possible! It prints the first string, then it sees the <b>setTimeout()</b> and acknowledges it, and then it prints the third string.</p>
+<p>Then it just hangs out. Does nothing. The program <b>idles</b>. CPU usage goes to 0%. For one second, then it prints out the second line. The script exits, having nothing left to do.</p>
+<p>If you change the <b>setTimeout</b> to <b>setInterval</b>, the second line will repeat every second. (1000 milliseconds.) and the program won't quit til you tell it to.</p>
+<p>What is important about this is that <b>nothing was blocked</b> and <b>no CPU cycles were wasted</b>. There wasn't a second-long pause between the first and third printed lines. That's pretty awesome.</p>
+<p>but, as I said, it means sometimes you can't count on whatever line 1 is doing before you do something on line 2. instead we have to use <b>callback functions</b> to make sure things go according to a certain sequence, as I'll explain in another example later.</p>
+
+<h2>modules</h2>
+<p>node.js has a lot of optional modules out there, the same way PHP has libraries and javascript has frameworks. (notice a theme? really every programming language has modules and libraries and frameworks.)</p>
+<p>it comes with a lot already, <a href="http://nodejs.org/docs/latest/api/index.html" target="_blank">read about them here</a>. we used the HTTP module in the first example. node.js does a lot of good stuff already, but it can do even more.</p>
+<p>to install new modules made by other people, there's a really awesome program called <b>npm</b> that was built. it stands for Node.js Package Manager. since version 0.6 (i think), node.js comes with npm by default.</p>
+<p>so you should already have the <b>npm</b> program installed, check it by running this in the shell:</p>
+<code><pre>&gt; npm -v</pre></code>
+<p>now if we want to install a node.js module, we'd just run it like this (don't actually do this, just look):</p>
+<code><pre>&gt; npm install mongolian</pre></code>
+<p>that'll install the <b>mongolian</b> module into the current directory for node.js to use.</p>
+<p>(just so you know, <b>mongolian</b> is a MongoDB interface for node.js)</p>
+
+<h2>what to do, what to do</h2>
+<p>node.js has <i>a lot of potential</i> because it's a tasty mix of low-level possibilities with high-level concepts built on top of an easy programming language.</p>
+<p>that having been said, what can you do with it? here's some things i've done with it. not to boast, but to give you some ideas:</p>
+<ul>
+<li>a simple blog</li>
+<li>a web server with simple php support</li>
+<li>an automated video transcoding system</li>
+<li>the server interface for a streaming file uploader</li>
+<li>an IRC chat bot</li>
+<li>a MongoDB and IRC driven RPG</li>
+</ul>
+<p>and i'm prototyping more cool stuff all the time. and that's with only about two or three months experience. really, node.js is great for anything that is <b>event driven</b> and/or <b>heavy on I/O</b>. (I/O is input/output, or the inputting of data and the outputting of data. Usually a blocking language will take awhile because it verifies every action before proceeding; non-blocking languages do not.)</p>
+<p>for example, an IRC server or client made with node.js is perfect, because it'll idle while nothing is going on, and it'll respond when something actually happens, and it can handle lots of simultaneous messages at once if need be.</p>
+<p>likewise, anything dealing with real-time data that needs to scale quickly, like webpage analytic data, is great with node.js because it's non-blocking I/O. what that means is, it'll quickly hand off info to a database without waiting for an "OK" in return. and it'll keep going indefinitely, only limited by CPU and memory, and if the database runs out of disk space.</p>
+<p>but due to popular demand, i'll use the rest of this guide to show you <b>an IRC bot</b> as an example.</p>
+
+<h2>an IRC bot!?</h2>
+<p>yeah, every cool kid has written their own IRC bot. well, maybe just me and a few others. but never has it been easier than with node.js. and yeah, for this example to really work, you need an IRC server to test it on. <a href="http://www.mirc.co.uk/servers.html" target="_blank">but there are lots.</a></p>
+<p>what will our bot do? we'll start off pretty simple</p>
+<ul>
+<li>connects to a server</li>
+<li>joins a channel</li>
+<li>responds to certain phrases said by people in the chat</li>
+</ul>
+<p>first, we'll be using the <a href="https://github.com/gf3/Jerk" target="_blank"><b>jerk</b></a> module to power the actual IRC-ness of it.</p>
+<p>jerk will handle pretty much all of the heavy lifting for you. it'll connect to the server, join a channel, and let you set up autoresponders.</p>
+<p>first, go to whatever directory will hold our script. i like to use /root or i make a directory in the root of the filesystem called <b>node</b>, so the directory would be /node</p>
+<p>once you're in here, use npm to install jerk:</p>
+<code><pre>
+&gt; npm install jerk
+</pre></code>
+<p>that'll install the jerk module to whatever directory you're in. let's start the actual program file. use whatever text editor you want to start <b>bot.js</b></p>
+<p>first thing in this script should be loading the jerk module:</p>
+<code><pre>var jerk = require('jerk');</pre></code>
+<p>next, let's set up the options that jerk will need to connect to whatever you want:</p>
+<code><pre>
+var options = { 
+  server: 'irc.whatever.net', 
+  nick: 'SuperAwesomeBot', 
+  channels: [ '#acoolchan90210' ] 
+}
+</pre></code>
+<p>So the <b>options</b> variable is an object with three keys: <i>server</i>, <i>nick</i>, and <i>channels</i>. <b>server</b> is the IRC server it'll connect to. <b>nick</b> is the name of the bot! So name it something good. Finally, the <b>channels</b> key lets you assign an array of channels the bot will join once it's connected to the server. For our purposes, we only need one. Name it whatever, just remember it. (And in case you've never been on IRC before, channel names need a # at the beginning.)</p>
+<p>Now, the same way we'd use <b>setInterval()</b> or whatever, we're going to use the <b>jerk()</b> function to set up some <b>responders</b> (also known as watchers or listeners).</p>
+<code><pre>
+var bot = jerk( function(j) {
+  // the listeners will go in here
+});
+</pre></code>
+<p>That's great. We'll come back to this in a minute. Now add this below that chunk:</p>
+<code><pre>
+bot.connect(options);
+</pre></code>
+<p>That's it! Now if you run that, like so:</p>
+<code><pre>&gt; node bot.js</pre></code>
+<p>You'll see it connect to the server and join the channel. If you go in to the server and join the channel yourself using an <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat_client#Clients" target="_blank">IRC client</a>, you'll see your bot sitting there, idling. You haven't taught it what to listen for yet, but at least it made it into the channel!</p>
+<p>So CTRL+C the bot (it'll leave the channel) and let's go back to that <b>jerk()</b> function and define some listeners within it.</p>
+<code><pre>
+var bot = jerk( function(j) {
+  
+  j.watch_for('hello', function(message) {
+    message.say('WHY HELLO THERE!');
+  });
+  
+});
+</pre></code>
+<p>If you restart the bot and enter the chatroom with it, say hello! It'll respond automatically! Magic.</p>
+<p>We just attached a listener to the jerk object using the <b>watch_for()</b> method. The first argument of this method is <b>what to listen for</b>, the second argument is <b>a function containing what to do</b>.</p>
+<p>In this case, we want to use the message object's <b>say()</b> method to respond in the chatroom! We pass that method a string. Specifically, "WHY HELLO THERE!" Very loud and obnoxious, I love it.</p>
+<p>What else can we do with this? Well, the <b>message</b> object also has a <b>user</b> property. With it, we can print out <i>who sent the message</i>, like so:</p>
+<code><pre>
+var bot = jerk( function(j) {
+  
+  j.watch_for('hello', function(message) {
+    message.say('WHY HELLO THERE ' + message.user + '!');
+  });
+  
+});
+</pre></code>
+<p>See what that does? It inserts the message's user name in the middle of the string. So if a user named <b>frankie</b> said "hello", the bot would respond</p>
+<code>WHY HELLO THERE frankie!</code>
+<p>That's the basics of an IRC bot. They can be very simple and annoying. You can just keep adding more responders:</p>
+<code><pre>
+var bot = jerk( function(j) {
+  
+  j.watch_for('hello', function(message) {
+    message.say('WHY HELLO THERE ' + message.user + '!');
+  });
+  
+  j.watch_for('goodbye', function(message) {
+    message.say('lol bye');
+  });
+  
+});
+</pre></code>
+<p>Now... you can get a lot crazier with it. Instead of a string as the first argument of <b>watch_for()</b>, you could use a <b>regular expression</b>... which makes it 1000 times more powerful. You can also <b>capture data with your regex</b> and use it in the returning message! I hadn't planned on writing a guide on regular expressions, but maybe I will.</p>
+<p>You can easily build in <i>logic conditions</i> with <b>if</b> statements, so that the bot responds differently to different people. Most everything you can do with regular Javascript, as well as <b>any node.js module</b>, you can combine with this! You could add a <b>MongoDB</b> database to log every line in chat, or keep track of a certain person, or whatever.</p>
+<p>For example...</p>
+<code><pre>
+var bot = jerk( function(j) {
+  
+  j.watch_for(/(.*)/, function(message) {
+    if (message.user.toLowerCase() == 'cyle') {
+      var what_cyle_said = message.match_data[0];
+      chatlog.insert( { 'username': 'cyle', 'when': new Date, 'message': what_cyle_said } );
+    }
+    
+  });
+  
+});
+</pre></code>
+<p>That tracks anything that is said in chat (thanks to the <span class="mono">/(.*)/</span> regular expression) and does a little <b>MongoDB</b> insert (via the <a href="https://github.com/marcello3d/node-mongolian" target="_blank">Mongolian node.js module</a>, which I won't show you how to set up (you should figure that out!)) to store whatever the user named "cyle" says.</p>
+<p>But that's just a taste... my chat bot, affectionately known as <b>cylebot</b>, can do a lot of neat tricks... someday I may release the source code for him.</p>
+
+<h2>life gets nested inside life</h2>
+<p>you can't really tell very much in these examples, but coding can start to get kind of tedious when you need to start making programs that act halfway between procedurally and asynchronously.</p>
+<p>for example, what if you actually do need to make sure that a row gets into a database before you move on? it's simple, <b>add a callback function</b> to wait until the database tells you it's cool.</p>
+<p>but then you need to move whatever you want to do when that happens to the inside of that callback! here's a simple example you can try out.</p>
+<p>here we want our program to print something, wait a second, print something else, and then wait another two seconds, print something out, and then wait again.</p>
+<code><pre>
+console.log('this is the first line!');
+setTimeout(function() {
+  console.log('this is the second line!');
+  setTimeout(function() {
+    console.log('this is the third line!');
+    setTimeout(function() {
+      console.log('here is another line!');
+      // now whatever else we want to do before the program exits would go here.
+    }, 1000);
+  }, 2000);
+}, 1000);
+</pre></code>
+<p>See how we now have a weird stack of callbacks, one after another? this is called <b>nested</b> programming. it's kind of an eyesore. but we could also do it this way:</p>
+<code><pre>
+console.log('this is the first line!');
+
+function lineTwo() {
+  console.log('this is the second line!');
+  setTimeout(lineThree, 2000);
+}
+
+function lineThree() {
+  console.log('this is the third line');
+  setTimeout(lineFour, 1000);
+}
+
+function lineFour() {
+  console.log('here is another line!');
+  // now whatever else we want to do before the program exits would go here.
+}
+
+setTimeout(lineTwo, 1000);
+</pre></code>
+<p>But that's kind of just as messy... we now have a breadcrumb trail of functions and setTimeout() calls. Really, there is no solution to this, because it's just the way asynchronous callback-based programming works!</p>
+<p>So yeah... it takes some getting used to. Honestly I don't know how to do it differently yet.</p>
+
+<h2>what else can you do?</h2>
+<p>My second project I did after a simple chat bot was to make a video transcoding farm. I won't show you how to make one here, but I'll describe it to you, and tell you why node.js was so useful for it.</p>
+<p>First, node.js can handle <b>other processes on a computer</b> really well. It can monitor a process easily with very little overhead. This is very useful when opening a process like the <a href="http://handbrake.fr/downloads2.php" target="_blank">HandBrake CLI</a> and having to monitor every line it outputs while it transcodes a file. (There are even node.js solutions already that can <a href="http://transloadit.com/" target="_blank">transcode a file as you're uploading it</a>. That's so goddamn neat.)</p>
+<p>For that reason, node.js can automate processes on a linux box quite easily. It has great modules for <a href="http://nodejs.org/docs/v0.4.8/api/process.html" target="_blank">Processes</a> and <a href="http://nodejs.org/docs/v0.4.8/api/fs.html" target="_blank">the File System</a>. The most important part is that they're non-blocking, so one single node.js program can be handling lots of simultaneous jobs discreetly and efficiently. And when it has nothing to do, it'll idle completely, waiting in silence.</p>
+<p>Admittedly, I needed to make a <b>mothership server</b> to act as the actual queueing system, but node.js handles all the actual heavy lifting of transcoding files on the farmers. (I could've written every single piece in node.js, though.) I'll get into that more in a later guide, specifically how to make <i>individual systems talk to each other</i> and <i>interoperate efficiently</i>.</p>
+<p>But really, honestly, the possibilities for node.js are wide open, as <a href="http://www.youtube.com/watch?v=jo_B4LTHi3I" target="_blank">the creator of node.js describes</a>. Node.js is pretty young, but already <a href="https://github.com/joyent/node/wiki/modules" target="_blank">there are so many modules for it</a>. Honestly, I looked through that list of modules one day and picked out two or three to base projects on, just for kicks. You should do the same.</p>
+<p>Possible projects:</p>
+<ul>
+<li>roll your own web server from scratch or with something like <a href="https://github.com/visionmedia/express" target="_blank">Express</a></li>
+<li>make a more complicated chat bot with jerk or with <a href="https://github.com/gf3/IRC-js" target="_blank">IRC-JS</a></li>
+<li>a chatroom on a webpage with <a href="http://nowjs.com/" target="_blank">nowjs</a></li>
+</ul>
+<p>there's much more you can do. just remember, it's <b>just Javascript!</b></p>
+
+<h2>one last note</h2>
+<p>use the <b>forever</b> node.js module. it's priceless. what does it do? it makes sure your node script runs forever!</p>
+<p>really though, you probably noticed that when you run a node.js script, it hangs up your prompt. you can't do anything else until you CTRL+C your node program. forever fixes this very elegantly.</p>
+<p>read the installation and usage instructions <a href="https://github.com/nodejitsu/forever" target="_blank">right here</a></p>
+<p>what it does, put very simply, is turn this:</p>
+<code><pre>&gt; node bot.js</pre></code>
+<p>which you'd need to either leave running or CTRL+C to quit out of, into this:</p>
+<code><pre>&gt; forever bot.js</pre></code>
+<p>which then makes bot.js run in the background forever, and keeps a log of it, and gives you back your prompt. amazing!</p>
+<p>have fun!</p>
+
+</div>
+
+</body>
+</html>

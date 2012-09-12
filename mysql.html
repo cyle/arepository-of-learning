@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Web Dev: Relational Databases (MySQL)</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Web Dev: Relational Databases (MySQL)</h1>
+
+<h2>intro</h2>
+<p>Oh lawds, databases! There are so many to choose from, but the most obvious choice is MySQL. It's pretty much a defacto standard for a lot of web platforms. More than I can name here.</p>
+<p>This will cover the very basics of SQL-like databases and then get into more advanced topics like what the hell <b>relational</b> means, what is <b>normalization</b>, and how best to <b>architect a schema</b>!</p>
+
+<h2>what you need!</h2>
+<p>MySQL installed on a server. I'm going to throw things out mostly as mysql command-line stuff, so it helps to know how to get into the mysql command line program. Many of the concepts are easily transferrable to GUIs like <b>phpmyadmin</b>, but I don't want to teach you through a GUI. I want to teach you how it actually works.</p>
+
+<h2>a database is what</h2>
+<p>a traditional database service is pretty simple. you have the following components:</p>
+<ul>
+<li>databases!</li>
+<ul>
+<li>tables! these are inside a database!</li>
+<ul>
+<li>columns! these are inside tables! which are inside databases!</li>
+<li>rows! these are inside tables! which are inside databases!</li>
+<li>keys/indexes! this is a bit more complicated.</li>
+</ul>
+</ul>
+<li>users! or, who can access a database, or a table inside a database</li>
+</ul>
+
+<h2>here's a simple database</h2>
+<fieldset>
+<legend>lol_db</legend>
+<table>
+<tr><th colspan="3">lol_tbl</th></tr>
+<tr><th>id</th><th>name</th><th>job_title</th></tr>
+<tr><td>1</td><td>cyle</td><td>awesome</td></tr>
+<tr><td>2</td><td>frankie</td><td>not as awesome</td></tr>
+</table>
+</fieldset>
+<p><b>lol_db</b> is the database name and it contains the table <b>lol_tbl</b>. that table has columns <b>id</b>, <b>name</b>, and <b>job_title</b>. It has two rows of information.</p>
+<p>what I can't easily illustrate in that little mockup is that:</p>
+<ul>
+<li>the <b>id</b> column is of type <span class="mono">int</span> and is the <i>primary key</i> or <i>index</i></li>
+<li>the <b>name</b> column is of type <span class="mono">varchar(255)</span></li>
+<li>the <b>job_title</b> column is of type <span class="mono">varchar(255)</span></li>
+</ul>
+<p>So simply put: a database is a container of tables. A table is a container of rows. Those rows contain information. The <i>kind of information</i> in those rows is dictated by the columns.</p>
+<p>For example, the <b>id</b> column only accepts numbers, specifically integers. The <b>name</b> column only allows up to 255 characters of text.</p>
+<p>This is called the <b>model</b> or <b>schema</b> of the database. Those two terms mean <i>how the data is structured</i>, rather than being concerned about <i>the content of the data</i>. It's like designing a building: you need to be conscious of what the building will be used for, but it's not so much about <b>who</b> is going to fill the offices, rather just that it will be offices inside the building so we need to structure it for that.</p>
+<p>Databases can contain as many tables as you want. MySQL can contain however many databases you want.</p>
+<p>A real world example: a blog would probably only need one database. What does a blog contain? Let's say posts, authors, and comments. So we'd need a table for posts, a table for comments, right? The posts table would have columns for post ID number, the post title, the post content, the date, and the author. Comments would be similar.</p>
+
+<h2>Column/Data Types</h2>
+<p>Most every traditional database has strict data types for use with a column. Every column has to know what kind of data to accept into it. Here are the most common:</p>
+<ul>
+<li>number (int, bigint, smallint, float) - numbers! no text. int is the most basic, it just stores a solid number. float stores a floating-point number like 1.3. int is useful for auto-incrementing unique ID numbers.</li>
+<li>text (varchar, text) - text! varchar means <i>variable character</i> (between 0 and 65,535 characters, you specify the limit) and text means just a big huge mass of text.</li>
+<li>date (datetime, timestamp) - stores dates in a server-friendly format. useful if you have to sort things by date.</li>
+</ul>
+<p>that list is not exhaustive. there are lots of in-betweens and specificities. <a href="http://dev.mysql.com/doc/refman/5.1/en/data-types.html" target="_blank">read the mysql docs</a> for more detailed information.</p>
+
+<h2>Keys and Indexes</h2>
+<p>Keys/Indexes (sometimes they're interchangeable terms) are important for the performance of a table. They basically give a simple way for the table to be organized. You do this through one or many <b>primary</b>, <b>unique</b>, and <b>foreign</b> keys. They are what they sound like, mostly.</p>
+<p>Keys apply to columns! So every row has an entry in that index.</p>
+<p>A <b>primary key</b> is the first index the table will use. Most often, this'll be an auto-incrementing number, starting at 1. Every record has one, and each is unique.</p>
+<p>A <b>unique key</b> means there will only one of each, obviously. Again, useful for a unique auto-incrementing number. Or a unique username.</p>
+<p>A <b>foreign key</b> is a reference to a primary key <i>in another table</i>. We'll get into this later.</p>
+<p>These are used so that the table can <b>quickly move through the rows</b> to find what you're looking for. It's basically just something the table can be assured of. Traditional databases need this kind of hand-holding because they're very nervous.</p>
+
+<h2>SOOO setting up a table</h2>
+<p>... is as simple as doing the following:</p>
+<ol>
+<li>what does this table need to hold?</li>
+<li>what will be the primary means of sorting it?</li>
+<li>what piece could be used as a key/index?</li>
+</ol>
+<p>Normally when you think of a blog, you don't think of ID numbers. But think of this: there needs to be some way to uniquely pick out a blog post. You could certainly use the post's title, but what if you use it again? You can't look it up that way.</p>
+<p>So you <b>abstract the data</b> by adding an immutable ID number which will be unique for every post. Now you don't need to worry about those title-collisions.</p>
+
+<h2>SQL</h2>
+<p>Structured Query Language is the most common means by accessing a traditional database. You write <b>queries</b> for the data you want from a table in a database. (Note: in these examples I end each statement with a semicolon, which you need to do when using mysql via command line, but usually not if you're going through PHP or other langauge.)</p>
+<p>A query for the above table example could look like this:</p>
+<code>SELECT * FROM lol_tbl;</code>
+<p>What does that do? It <b>select</b>s all columns (the <b>asterisk</b>) <b>from</b> the table lol_tbl. Let's be more specific.</p>
+<code>SELECT name FROM lol_tbl ORDER BY name ASC;</code>
+<p>Can you guess what that does? It <b>select</b>s all the <b>name</b>s from <b>lol_tbl</b> and <b>order</b>s them by the <b>name</b> column alphabetically (since the name column is text) in <b>asc</b>ending order (A to Z). Here's another one:</p>
+<code>SELECT title FROM lol_tbl WHERE name='cyle';</code>
+<p>That <b>select</b>s the <b>title</b> from <b>lol_tbl</b> for the row where the <b>name</b> is <b>'cyle'</b>. Notice the quotation marks. When looking for text, you need to use them.</p>
+<p>So what did you just learn? How to get everything from a table, how to sort it, how to get individual pieces, and how to select a specific row. Inserting things is just as easy.</p>
+<code>INSERT INTO lol_tbl (name, title) VALUES ('monty', 'pretty cool');</code>
+<p>Again, it's pretty straightforward. (At least I think, but I've been doing this for awhile.) You are <b>insert</b>ing <b>into</b> <b>lol_tbl</b>, specifically into the columns <b>name</b> and <b>title</b>, the <b>values</b> <b>'monty'</b> and <b>'pretty cool'</b>. So that the "name" will be "monty" and the "title" will be "pretty cool". See how they correspond in order like that?</p>
+<p>Similarly, there are statements for <b>UPDATE</b> and <b>DELETE</b>ing content from the table. These four commands are typically referred to as basic <b>CRUD</b> functions, or <i>Create, Read, Update, Delete</i>. In MySQL's case, these are represented as <i>INSERT, SELECT, UPDATE, and DELETE</i>.</p>
+<p>SQL statements are made up of <b>clauses</b> that make up the parameters for a statement. For example, the above statements have ORDER BY clauses, WHERE clauses, etc.</p>
+<p>There are lots of other commands to do everything from <span class="mono">CREATE TABLE</span> to <span class="mono">DROP DATABASE</span>, but most of your work will be done with the four CRUD statements and their idiosyncrasies.</p>
+
+<h2>Users and Building Things with SQL</h2>
+<p>In order to connect to your database, you need to establish users with passwords and access settings to specific databases or tables.</p>
+<p>You can log in as root in the command line using the <span class="mono">mysql</span> command, like so:</p>
+<code>&gt; mysql -u root -p</code>
+<p>(If you don't know how to do this stuff via command line, you should probably read about <a href="linux.html">linux servers</a>.)</p>
+<p>When you do that command, you'll need to input the root password, and then you'll get a mysql prompt. This is a lot like the shell prompt, except now instead of living in a file system, you're living in a database service. Here you can directly run SQL commands.</p>
+<p>Type <b>exit</b> at any time to leave and go back to the shell.</p>
+<code>mysql&gt; SHOW DATABASES;</code>
+<p>That'll show you all the databases currently in the service. Note that you don't need to use all-caps, I just like to. Make sure you remember the semicolon!</p>
+<code>mysql&gt; CREATE DATABASE lol_wut;</code>
+<p>that'll make a database. super simple. but how do we access it? we need a user.</p>
+<code>mysql&gt; CREATE USER 'lol_user'@'localhost' IDENTIFIED BY 'password';</code>
+<p>What are you seeing here? The <b>'lol_user'@'localhost'</b> means the username will be <b>lol_user</b> and it will only be able to connect if it's on the same server (hence <b>localhost</b>). This is very secure if your MySQL database is on the same machine as your application (PHP, whatever) files.</p>
+<p>And of course it has to have a password... ok so you've made a user. But how do you set permissions on the database you just made?</p>
+<code>mysql&gt; GRANT ALL ON lol_wut.* TO 'lol_user'@'localhost';</code>
+<p>This <b>grants all permissions</b> on the lol_wut database (and all its tables, that's what the <b>.*</b> signifies) to the user we just made. So now you can access this database from another programming language and use it.</p>
+<p>But let's go further: how do we actually make a table without having to go into phpmyadmin? First of all, make sure you're using the new database:</p>
+<code>mysql&gt; USE lol_wut;</code>
+<p>And now check this out:</p>
+<code>mysql&gt; CREATE TABLE <b>test_table</b> ( <b>id</b> INT NOT NULL AUTO_INCREMENT PRIMARY KEY, <b>name</b> VARCHAR(255) NULL, <b>wut</b> VARCHAR(255) NULL );</code>
+<p>Can you figure out how the table was created? I'll break it down into pieces.</p>
+<ul>
+<li><span class="mono">CREATE TABLE test_table</span> just lets you name the table.</li>
+<li><span class="mono">( )</span> whatever is inside the parentheses following the <span class="mono">CREATE TABLE [name]</span> part will be the table's columns, in a comma-separated list.</li>
+<li><span class="mono">id INT NOT NULL AUTO_INCREMENT PRIMARY KEY</span> means make a column, call it <b>id</b>, of type <b>INT</b>, don't let it be <b>NULL</b> (basically this means "throw an error if it doesn't get a value"), the database should <b>auto-increment it</b>, and it's the <b>primary key</b> for the table. Most tables should have something like this.</li>
+<li>The two columns after that are similar but simpler: <span class="mono">name VARCHAR(255) NULL</span> means make a column called <b>name</b> of type <b>varchar</b> (with a maximum of <b>255</b> characters) and allow it to be <b>null</b> if need be.</li>
+</ul>
+<p>Now the table is created! We can start INSERTing data into it, and then SELECT data out of it.</p>
+<p>I won't go into how to ALTER TABLE or stuff like that, I'll let the language reference tell you about that: <a href="http://dev.mysql.com/doc/refman/5.1/en/sql-syntax.html" target="_blank">http://dev.mysql.com/doc/refman/5.1/en/sql-syntax.html</a> (specifically the first two sections)</p>
+
+<h2>Relational Architecture</h2>
+<p>Once you can think in terms of structuring data, you need to start thinking in terms of <i>relational data</i> and how to <i>normalize data</i>. What does this mean? We'll start with relationships.</p>
+<p>Relational data is pretty simple. I'll go back to the blog schema I described earlier: a table for posts, a table for comments. But wait - how does the database know which comments go with which blog posts?</p>
+<p>You could do this all on the application side, whether it's PHP or Ruby or Python or whatever. Alternatively, you could do it on the database side. Here's how the two tables look:</p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="4">posts_tbl</th></tr>
+<tr><th>id</th><th>title</th><th>content</th><th>author</th></tr>
+<tr><td>1</td><td>coolest post ever</td><td>this is the best blog post ever!</td><td>cyle</td></tr>
+<tr><td>2</td><td>second coolest</td><td>not as awesome, but still awesome!</td><td>cyle</td></tr>
+</table>
+<table>
+<tr><th colspan="3">comments_tbl</th></tr>
+<tr><th>id</th><th>comment</th><th>author</th></tr>
+<tr><td>1</td><td>wow, so cool!</td><td>frankie</td></tr>
+<tr><td>2</td><td>that's pretty cool!</td><td>monty</td></tr>
+</table>
+</fieldset>
+<p>Okay so right now we have no way of knowing what comment goes to what post. How do we fix that? We add a relationship. Not like a love interest, but just a mutual understanding.</p>
+<p>Let's add a column to the comments_tbl called <b>post_id</b> which contains the ID (in this case a <i>foreign ID</i>) of the post that the comment was for. Holy shit! We've just done something <i>relational!</i> The new comments table:</p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="4">comments_tbl</th></tr>
+<tr><th>id</th><th>comment</th><th>author</th><th>post_id</th></tr>
+<tr><td>1</td><td>wow, so cool!</td><td>frankie</td><td>1</td></tr>
+<tr><td>2</td><td>that's pretty cool!</td><td>monty</td><td>1</td></tr>
+</table>
+</fieldset>
+<p>That's awesome. So we could easily use this query to get the latest blog posts:</p>
+<code>SELECT * FROM posts_tbl ORDER BY id DESC;</code>
+<p>We use <b>desc</b>ending to get latest first. We could use this query to get the latest comments for a blog post:</p>
+<code>SELECT * FROM comments_tbl WHERE post_id=# ORDER BY id DESC;</code>
+<p>Replace the # with the post ID, of course. That's all there really is to relational database architecture on the concept side, but <i>how far you go with it</i> is determined by how you normalize the data.</p>
+
+<h2>Normalized Architecture</h2>
+<p><b>Normalization</b> is the process of creating a kind of standard for how the data relates across tables to minimize redundancy. Here's a good example.</p>
+<p>Again using our blog. You see <b>cyle</b> used repeatedly as the author of both posts. But what if I decide to change my username? I'd have to do an UPDATE query for all instances in every table! That's kind of heavy if our blog gets really big.</p>
+<p>How do we fix that problem? Normalize! Let's add an <b>authors</b> table!</p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="2">authors_tbl</th></tr>
+<tr><th>id</th><th>name</th></tr>
+<tr><td>1</td><td>cyle</td></tr>
+<tr><td>2</td><td>frankie</td></tr>
+<tr><td>3</td><td>monty</td></tr>
+</table>
+</fieldset>
+<p>Now let's change how the other tables store their information, in a relational and normalized way!</p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="4">posts_tbl</th></tr>
+<tr><th>id</th><th>title</th><th>content</th><th>author_id</th></tr>
+<tr><td>1</td><td>coolest post ever</td><td>this is the best blog post ever!</td><td>1</td></tr>
+<tr><td>2</td><td>second coolest</td><td>not as awesome, but still awesome!</td><td>1</td></tr>
+</table>
+<table>
+<tr><th colspan="4">comments_tbl</th></tr>
+<tr><th>id</th><th>comment</th><th>post_id</th><th>author_id</th></tr>
+<tr><td>1</td><td>wow, so cool!</td><td>1</td><td>2</td></tr>
+<tr><td>2</td><td>that's pretty cool!</td><td>1</td><td>3</td></tr>
+</table>
+</fieldset>
+<p>So the same way we could get comments for a certain post ID, we can get the author's name for each post ID like so:</p>
+<code>SELECT name FROM authors_tbl WHERE id=#;</code>
+<p>With # being the author_id from another table.</p>
+<p>But wait... this is terribly inefficient. Think about this: there is only <i>one possible name per author ID</i>, so why run <i>two queries</i> to get this data? Surely we can do it in one!</p>
+
+<h2>Multi-table queries, JOINs, subqueries, oh my!</h2>
+<p>We can do a lot across tables or by subqueries of tables. I'm just going to shove this in your face and see if you understand it:</p>
+<code>SELECT posts_tbl.*, authors_tbl.name FROM posts_tbl, authors_tbl WHERE authors_tbl.id = posts_tbl.author_id ORDER BY posts_tbl.id DESC;</code>
+<p>OH JEEZ that's a big query! What is it getting? Well, read it slowly: it's getting all the information from the posts_tbl, as well as the author's name from authors_tbl, and it's saying in the WHERE clause that <i>for every author_id in the posts table there is a corresponding ID in the authors_tbl</i>. And sort it by the post's ID number in descending order.</p>
+<p>We could also do this with a JOIN clause:</p>
+<code>SELECT posts_tbl.*, authors_tbl.name FROM posts_tbl JOIN authors_tbl ON authors_tbl.id = posts_tbl.author_id ORDER BY posts_tbl.id DESC;</code>
+<p>That does the same thing as the above statement. I always find JOINs to be a bit more confusing, but it's personal preference. JOIN used to be the most efficient way of doing things, but now subqueries are just as effective.</p>
+<p>The JOIN version is technically better because the first example <b>will fail</b> if there is no corresponding ID row in the authors_tbl. The JOIN wouldn't fail; it would simply not have a name, and continue on.</p>
+<p>So what would a subquery look like? Well let's say we wanted all of cyle's latest posts:</p>
+<code>SELECT * FROM posts_tbl WHERE author_id IN (SELECT id FROM authors_tbl WHERE name='cyle') ORDER BY id DESC;</code>
+<p>You can see there is a statement <i>within a statement</i>, hence <b>subquery</b>. (You can go even deeper, Inception-style, if you want.)</p>
+<p>The subquery will return the ID # for the user named 'cyle' and give that to the WHERE clause in the parent query! Wow that sounds fun. I hope you're following along.</p>
+<p><b>So what is normalization?</b> It's making sure all your data fits this kind of model. It's replacing redundancies in data with foreign keys. It's turning what seemed like it could be two tables into four or five.</p>
+
+<h2>Other ways of normalizing and relating!</h2>
+<p>You could make a table that exists <i>between two tables, linking them together!</i> Like so:</p>
+<fieldset>
+<legend>blog_db</legend>
+<table>
+<tr><th colspan="4">posts_tbl</th></tr>
+<tr><th>id</th><th>title</th><th>content</th></tr>
+<tr><td>1</td><td>coolest post ever</td><td>this is the best blog post ever!</td></tr>
+<tr><td>2</td><td>second coolest</td><td>not as awesome, but still awesome!</td></tr>
+</table>
+<table>
+<tr><th colspan="3">comments_tbl</th></tr>
+<tr><th>id</th><th>comment</th></tr>
+<tr><td>1</td><td>wow, so cool!</td></tr>
+<tr><td>2</td><td>that's pretty cool!</td></tr>
+</table>
+<table>
+<tr><th colspan="3">comments_to_posts_tbl</th></tr>
+<tr><th>id</th><th>post_id</th><th>comment_id</th></tr>
+<tr><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>2</td><td>1</td><td>2</td></tr>
+</table>
+</fieldset>
+<p>You understand that? There is a third table which simply describes which comment IDs go to which post IDs. That's a totally valid way of doing it. It's especially useful for a system in which <b>one thing may go to many things</b> or <b>many things may go to many other things</b>.</p>
+<p>With the previous schema, a single comment could only relate to <i>one post</i>. With this setup, one comment could relate to <i>as many posts as you want</i> because the relationship is outside the comment itself. Get the difference? It's all about architecting how the data will flow together.</p>
+<p>How would you write the SQL query to get the latest comments for a given blog post? Maybe like so:</p>
+<code>SELECT * FROM comments_tbl WHERE id IN (SELECT comment_id FROM comments_to_posts_tbl WHERE post_id=#) ORDER BY id DESC;</code>
+<p>Again, replace the # in there with the current post ID.</p>
+
+<h2>How to Get Here from There</h2>
+<p>The process of architecting these databases is not easy. Some of it, like making authors based on ID rather than by name, seems simple in hindsight, but it's tough to forecast what data needs to be normalized until you have a ton of it.</p>
+<p>I find <b>drawing out a web</b> of what data is needed to be the most effective means of figuring it out. As I did before with the blog, ask yourself: what pieces of data makes up a blog? How do they relate? What can be normalized?</p>
+<p>Literally sitting down with a piece of blank paper and a pen is often the easiest way of figuring it out.</p>
+
+<h2>A Practical Example: PHP/MySQL</h2>
+<p>Oh boy oh boy. Here's a sample of how the blog would work when accessed in MySQL via PHP using the lol_db example from above. This example gets the latest blog posts, the author name, and their comments.</p>
+<code><pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;lol blog&lt;title&gt;
+&lt;head&gt;
+&lt;body&gt;
+&lt;?php
+
+mysql_connect('localhost', 'db_username', 'db_password');
+mysql_select_db('lol_db');
+
+$posts_query = mysql_query('SELECT posts_tbl.*, authors_tbl.name FROM posts_tbl, authors_tbl WHERE authors_tbl.id=posts_tbl.author_id ORDER BY id DESC');
+while ($post = mysql_fetch_assoc($posts_query)) {
+	echo '&lt;div class="post"&gt;';
+	echo '&lt;h1&gt;'.$post['title'].'&lt;/h1&gt;';
+	echo '&lt;p class="post_author"&gt;by '.$post['name'].'&lt;/p&gt;';
+	echo '&lt;p class="post_content"&gt;'.$post['content'].'&lt;/p&gt;';
+	echo '&lt;div class="comments"&gt;';
+	$comments_query = mysql_query('SELECT comments_tbl.*, authors_tbl.name FROM comments_tbl, authors_tbl WHERE authors_tbl.id=comments_tbl.author_id AND post_id='.$post['id']);
+	while ($comment = mysql_fetch_assoc($comments_query)) {
+		echo '&lt;p class="comment"&gt;'.$comment['comment'].' (by '.$comment['name']).'&lt;/p&gt;';
+	}
+	echo '&lt;/div&gt;';
+	echo '&lt;/div&gt;';
+}
+
+?&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></code>
+<p>Important concepts to notice:</p>
+<ul>
+<li>Connecting to the database service and selecting the database are two discreet steps.</li>
+<li>Executing the query is literally a SQL statement passed to a PHP function.</li>
+<li>You have to iterate with a loop (in this case, a <b>while</b> loop) all the rows returned by the query.</li>
+<li>In PHP, the easiest way to use a row is as if it were an associative array, via the <b>mysql_fetch_assoc()</b> function.</li>
+</ul>
+
+<h2>in conclusiooo</h2>
+<p>Traditional databases are great for a lot of stuff. A lot of simple (relatively simple) things that have very definable needs and data structures. But there are better solutions for other problems. Traditional databases don't scale up well; they're not very fast when a huge amount of people need to use them. <a href="mongodb.html">Read the next guide for an alternative approach.</a></p>
+
+</div>
+
+</body>
+</html>

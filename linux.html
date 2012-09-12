@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Systems Stuff: Linux Servers, OMG</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Systems Stuff: Linux Servers, OMG</h1>
+
+<h2>intro</h2>
+<p>this tutorial/whatever is primarily about using a linux server via the command line</p>
+<p>specifically it is about <a href="http://www.debian.org/" target="_blank">debian</a> servers, but the majority of these concepts relate to all linux distros. ubuntu is based on debian, so many of the concepts will be directly applicable.</p>
+<p>this is a <b>long</b> tutorial, haha</p>
+<p>why should you even read this? well, if you want to learn how to use linux <i>properly</i>, and maybe set up your own web server or development box, or a file server, or who knows...</p>
+
+<h2>why use linux? why command line?</h2>
+<p>linux is built to be free, open source, stable, and expandable.</p>
+<p>linux has drastically less overhead than any other operating system. so if performance is key, as it always is on a server, then linux is almost always the best option.</p>
+<p>real players use the command line, and only the command line</p>
+<p><abbr title="Graphical User Interface">GUI</abbr>s are for babies</p>
+<p>really though, when you use a GUI, the computer is just wasting CPU cycles and memory to render the GUI to "make life easier for you". why do this?</p>
+<p>you are too cool for this now. if you have a mouse, disconnect it. you don't need it anymore once you've entered a <abbr title="Command Line Interface">CLI</abbr>.</p>
+<p>in this tutorial, when you see this:</p>
+<code>&gt; pwd</code>
+<p>that means you're doing something at the command prompt! specifically, that means type <b>pwd</b> at the prompt and hit enter. wow, omg, amazing...</p>
+
+<h2>before anything, you need a server</h2>
+<p><b>follow this if you don't have a server to play on</b>. if you do, skip to the next section.</p>
+<p>ok so we'll make one, both of us together, check this out.</p>
+<p>download <a href="http://www.virtualbox.org/" target="_blank">VirtualBox</a> and <a href="http://debian.org/" target="_blank">debian</a>, specifically the latest CD Image for i386. you can download via bittorrent if you want. just <a href="http://www.debian.org/CD/http-ftp/#stable" target="_blank">click here to go to the debian CD download page</a>, click on <b>i386</b>, and download CD-1.</p>
+<p>it's 700MB so it might take a little while to download. alternatively, you could use the netinst version, but I always prefer to have a full CD image.</p>
+<p><b>ANYWAY...</b> when you have those two things downloaded, install Virtual Box if you haven't already. VB is pretty great; it's a free desktop virtualization package. what does that mean? basically, instead of having another physical computer sitting at your desk, you can create a virtual one on your current computer. it's goddamn magic.</p>
+<p>HIT THE "NEW" BUTTON... type in a name for the machine... set the OS to LINUX, set the version to Debian. Hit continue.</p>
+<p>give it 512MB of RAM, that should be plenty. it'll probably have a default hard disk of 8GB in size. that's fine. go through that second DISK WIZARD thing, just keep hitting next, the defaults are fine.</p>
+<p>when that's done, you'll have a new virtual machine sitting there. you'll see its stats on the right side of the window. magical.</p>
+<p>now to install debian on it. right-click on the machine name and click SETTINGS, then STORAGE, then under IDE Controller there should be a little CD icon with "Empty" next to it. Click on "Empty". Click on the little disc icon on the right side, next to the dropdown, and then click on "Choose a virtual blah blah". Go to wherever you saved that debian disk image and select it.</p>
+<p>hit ok to get out of settings and now you're ready to boot up! CLICK ON START!</p>
+<p>you should see the debian installer boot up. use it. love it. most of the steps are obvious. steps you need to care about:</p>
+<ol>
+<li>host name: choose whatever name you want, I guess</li>
+<li>root password: again, whatever you want, but don't forget it</li>
+<li>first user: irrelevant, you won't be using it, so do whatever</li>
+<li>as for what debian wants to do with its disk, just use the defaults</li>
+<li>if you want a network mirror, hit yes. and choose one. doesn't matter. I recommend the mit.edu one.</li>
+<li>when you get to SOFTWARE SELECTION, select only <b>SSH Server</b> and Standard System Utilities. DESELECT all others. use the space bar to do so.</li>
+<li>use the default option for everything else. it'll reboot when it's done.</li>
+</ol>
+<p>when it's done, you'll see a login prompt! congrats! now we need to find out it's IP so you can remotely connect to it. or you can just log in from here and continue.</p>
+<p><i>to find out it's IP</i> log in using the root username and password. then type</p>
+<code>&gt; ifconfig</code>
+<p>which will show you the current internet interfaces on the machine. look to the right of <b>eth0</b> at its <b>inet addr</b> field. that's the IP!</p>
+<p>(NOTE: If you get an IP address that starts with <b>10.whatever</b> then you will probably have to change the VM's settings from <i>NAT</i> to <i>Bridged</i> under the <b>Network</b> options, and then make sure you get an IP that starts with <b>192.168.whatever</b>. To do this, just type <span class="mono">poweroff</span> into the prompt, then edit the VM's settings as I just said, then power it back on and check its IP.)</p>
+<p>you're all set with your virtual server. keep that IP address handy. logout by typing</p>
+<code>&gt; exit</code>
+<p>and now we can move on!</p>
+
+<h2>ok so you have a server, cool</h2>
+<p>I'm assuming you have its IP or hostname or whatever.</p>
+<p>ok so now you need to control it. you have a few options.</p>
+<p><b>if SSH is installed on the server...</b> you can connect to it remotely! this is how you'd normally connect to a server. the server is in a datacenter somewhere and you need to get to it from your desk or at home. if you just made a virtual server, pretend it's not there, pretend it's 1000 miles away.</p>
+<p><b>if you do NOT have ssh installed</b>, then you'll have to use the server's command line. with a keyboard in front of the machine. gross. regardless, the commands are the same.</p>
+<p>SSH means Secure Shell, and it's the most common way to connect to a linux server. it's very secure and very simple.</p>
+<p>if you are on Mac, open up Terminal.app</p>
+<p>if you are on PC, download <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/" target="_blank">PuTTY</a> (gross)</p>
+<p>for putty, put in the IP address or hostname into the "Host Name" field and then hit enter. Login as root. Put in the password. You're in.</p>
+<p>for Terminal, type in this, and replace [server/IP] with either the hostname or the IP of the server.</p>
+<code>&gt; ssh root@[server/IP]</code>
+<p>(for example, me connecting to my own machine would be <span class="mono">ssh root@127.0.0.1</span> or <span class="mono">ssh root@localhost</span>)</p>
+<p>after connecting via ssh, you should be in! you might need to hit "YES" to some security warning.</p>
+<p><i>a note about <b>root</b>...</i> "root" is the super awesome admin alpha omega user. it's the most powerful. it has access to everything. it can do anything. you are basically god to this linux machine. that's what root means. if you logged in as another user, you'd probably not have permission to do a lot of things. that's fine sometimes, but root can do anything.</p>
+
+<h2>you're totally in</h2>
+<p>now to learn about what this even is! it's crazy!</p>
+<p>omg look at <i>the prompt!</i> it probably looks like this:</p>
+<code>debianbox:~#</code>
+<p>what is that craziness!? what is that <b>:~#</b> ???</p>
+<p>well, the first part, <b>debianbox</b>, will be the hostname of the machine you are logged in to. it should be the same as whatever you named the debian install.</p>
+<p>the colon after it just separates that from the rest of the prompt</p>
+<p>the squiggly line <b>~</b> is your current working directory. in this case, you usually start at your user's home, which is represented by that character.</p>
+<p>if i change my directory to /usr/src, the prompt would look like this all of a sudden:</p>
+<code>debianbox:/usr/src#</code>
+<p>the <b>#</b> signifies that you are the root user right now. usually it'll show a <b>$</b> there if you are not root.</p>
+
+<h2>the file system: this is where you live now</h2>
+<p>in a GUI, you as a user "live" inside the GUI... you see windows and applications and menu bars and stuff.</p>
+<p>there is no such stuff in a CLI. instead, you live inside the file system of the machine. you always exist inside a directory or a running application.</p>
+<p>on windows, the file system looks like this: <b>C:\Windows\whatevs</b> with "Windows" being a directory on the "C:\" drive and "whatevs" being a subdirectory of "Windows"</p>
+<p>on linux, the file system looks like this: <b>/usr/bin/whatevs</b> with <b>/</b> being the lowest-level of the file system, "usr" being a directory inside "/", and "whatevs" being a subdirectory of "usr"</p>
+<p>the / directory, the lowest level of the file system, is commonly referred to as <i>the root directory</i>... so you are the root user and there's a root directory. common theme.</p>
+<p>basically, Windows bases a lot on disks. Linux bases itself on a file system. it's much more abstract and beneficial in the long run.</p>
+
+<h2>running commands!</h2>
+<p>so now you should have a grasp of what you're in and where you are.</p>
+<p>you run commands <b>simply by typing them in the prompt</b>... let's try it!</p>
+<code>&gt; pwd</code>
+<p>Do it! type that and hit enter. the whole thing should look like this:</p>
+<code>debianbox:~# pwd<br />/root<br />debianbox:~#</code>
+<p>so what just happened? well, first of all, pwd is a command that <i><b>p</b>rints the <b>w</b>orking <b>d</b>irectory</i> and it returned /root, which is the home folder of the root user. that is where you are right now!</p>
+<p>if you set up your own virtual box server, you ran the <b>ifconfig</b> command successfully to get the machine's IP.</p>
+<p>every linux install has hundreds of commands built into it. these commands are merely programs living on the machine somewhere. want to know where the pwd program lives?</p>
+<code>&gt; which pwd</code>
+<p>that should return something like <b>/bin/pwd</b>, which is where the pwd program lives. it's in the /bin folder! let's go there and see what other programs are stored there!</p>
+<code>&gt; cd /bin</code>
+<p>the <b>cd</b> command <i><b>c</b>hanges the working <b>d</b>irectory</i> to whatever you put after it. in this case, we want to go to /bin</p>
+<p>so now your prompt should reflect that we're in /bin by looking like this:</p>
+<code>debianbox:/bin#</code>
+<p>magic. now let's see what is in this directory! to do so, we use the <b>ls</b> command</p>
+<code>&gt; ls</code>
+<p>that'll give us a multicolumn list of the files in this directory, including subdirectories. but it's not really that great to look at... so let's try adding some options to the command to change what it outputs. try this:</p>
+<code>&gt; ls -l</code>
+<p>that should give you a big detailed list, a lot of information is here. but let's not worry about that yet. what you just did was add a <b>command switch</b>, specifically the -l, to the ls command. there are even more you can add!</p>
+<code>&gt; ls -lah</code>
+<p>don't think of that -lah as a word... each letter signifies a different switch. in this case, the <b>l</b> means list, the <b>a</b> means all, and the <b>h</b> means human-readable. if you look at the output of that command, you'll see that some of the numbers now have Ks next to them (this means Kilobytes), which shows you the size of the individual files. The "all" option shows you hidden files.</p>
+<p>the first character, the minus sign before them, signifies that the following is a switch. conversely, you could have written the same command this way:</p>
+<code>&gt; ls -l -a -h</code>
+<p>and it'll do the same thing! but you could easily bundle them all together after one minus sign.</p>
+<p>just for kicks, let's say you want to get the list of files in <i>another directory</i> than the one you're currently in. try this:</p>
+<code>&gt; ls -lah /root</code>
+<p>you added an <b>input</b> at the end of it, being the directory /root... so this command does what you should expect: list all the files in human-readable format for the directory /root. MAGIC.</p>
+<p>that last piece, in this case <b>/root</b>, is sometimes referred to as an argument or parameter or input</p>
+
+<h2>how to learn about how to learn commands</h2>
+<p>on debian, and most linux distros, there's a wonderful command called <b>man</b> and it will teach you all about commands! try this:</p>
+<code>&gt; man pwd</code>
+<p>you will now be on the <b>man page</b> (manual page) for the pwd command! This will show you what it is, how to use it, what switches and arguments you can throw at it, etc.</p>
+<p>press <b>q</b> to get out of it and go back to the prompt.</p>
+<p>I will always argue that <i>knowing how to find out</i> is more powerful than <i>memorizing commands</i>. now you know how to find out. if you ever encounter a command you are unsure about, try reading its man page first.</p>
+<p>most commands go like this: <b>command [switches] [input] [output]</b> as I've described before. here's a quick example that shows all of this. don't do this, but read it:</p>
+<code>&gt; cp -r /root /lol</code>
+<p>so what's going on here?</p>
+<ul>
+<li><b>cp</b> is the command, and it means <b>copy</b></li>
+<li><b>-r</b> is a switch or option, and it means <b>recursive</b>, or "everything"</li>
+<li><b>/root</b> is the input, or what you are copying FROM</li>
+<li><b>/lol</b> is the output, or what you are copying TO</li>
+</ul>
+<p>so that command copies all the files (recursively, so every subdirectory, too) of the /root directory to the /lol directory.</p>
+<p>if you actually tried to run that, it would probably error out because there is no /lol directory.</p>
+
+<h2>the coolest things about the shell</h2>
+<p>so what you're in right now, the prompt, the file system, is also known as <b>a shell</b>. just so you know.</p>
+<p>here are some AWESOME, INSANE tips on using the shell:</p>
+<ul>
+<li>the <b>tab</b> key is your best friend</li>
+<ul>
+<li>it acts as an autocompleter for commands and directories!</li>
+<li>try this:</li>
+<code>&gt; nets (NOW HIT TAB) -> it autofills it to <b>netstat</b></code>
+<code>&gt; cd /usr/sr (NOW HIT TAB) -> it autofills it to <b>/usr/src</b></code>
+<li>also, if you hit tab TWICE, it'll show you a list of possibilities!</li>
+<code>&gt; ne (hit tab twice) -> spits out a list of commands that start with "ne"</code>
+<code>&gt; cd /usr/ (hit tab twice) -> spits out a list of directories inside /usr</code>
+</ul>
+<li><b>up</b> and <b>down</b> keys go back and forth through your command history. hit the up key to see what you've run so far.</li>
+<li><b>CTRL+C</b> allows you to force-quit (kill) whatever process is currently happening on your shell. this is useful if you're stuck waiting for something to happen and it's obviously broken.</li>
+<li><b>CTRL+R</b> allows you to type and search through your previous commands</li>
+</ul>
+
+<h2>now for some useful commands!</h2>
+<p><b>the basics</b></p>
+<ul>
+<li><span class="mono">ls -lah</span> (shows you a detailed list of all files in a directory with human-readable file sizes)</li>
+<li><span class="mono">cd [where]</span> (changes the current directory you're in)</li>
+<li><span class="mono">mkdir [new directory name]</span> (makes directories)</li>
+<li><span class="mono">rm</span> or <span class="mono">rmdir [file or directory]</span> (deletes files and/or directories. be careful with rm -r because it deletes things RECURSIVELY (meaning an entire directory tree! gone!))</li>
+<li><span class="mono">ln -s [target file] [new file]</span> (ln alone makes hard links, ln -s makes symbolic links, which is like a shortcut... "links" are something I might explain to you later)</li>
+<li><span class="mono">mv [target file] [new file location]</span> (moves and/or renames a file)</li>
+<li><span class="mono">cp [target file] [new file location]</span> (copies and/or renames a file)</li>
+<li><span class="mono">less [filename here]</span> (opens text file for viewing; there's also one called "more", and "cat", which do similar)</li>
+<li><span class="mono">exit</span> (logs you out)</li>
+<li><span class="mono">shutdown -h now</span> (shuts down NOW! warning: you won't be able to log back in until you physically power it back on!)</li>
+<li><span class="mono">reboot</span> (reboots.)</li>
+</ul>
+<p><b>a little more than basic</b></p>
+<ul>
+<li><span class="mono">top</span> (like the task manager in windows, press 'h' while open to see commands)</li>
+<li><span class="mono">ps</span> (prints a list of stuff that's running, like top, but not as pretty)</li>
+<li><span class="mono">man [command name here]</span> (described above)</li>
+<li><span class="mono">chmod [lots of options here]</span> (changes ownership/permissions on files)</li>
+<li><span class="mono">apt-get</span> and <span class="mono">apt-cache</span> (apt-get is the primary means of installing stuff... apt-cache lets you search for things to install)</li>
+<li><span class="mono">wget [http://wherever.com/lol.jpg]</span> (get a file from the web)</li>
+<li><span class="mono">scp [lots of options here]</span> (get or send files to and from other servers via SSH)</li>
+<li><span class="mono">vi</span> or <span class="mono">vim</span> or <span class="mono">nano [filename here]</span> (text editors, I prefer nano, but most hardcore people prefer vi/vim)</li>
+<li><span class="mono">ifconfig</span> (shows current network interfaces, like ipconfig)</li>
+<li><span class="mono">ping [hostname/IP]</span> and <span class="mono">tracert [hostname/IP]</span> (network connection diagnostics)</li>
+</ul>
+<p><b>even further above basic</b></p>
+<ul>
+<li><span class="mono">find</span> (finds shit, though the syntax for using it might be confusing)</li>
+<li><span class="mono">grep</span> (finds strings inside files, you'll need to learn regular expressions to really get the power)</li>
+<li><span class="mono">tail</span> (lets you view a text file as it's updated in near real-time, useful for logs)</li>
+<li><span class="mono">telnet</span> (useful for testing ports)</li>
+<li><span class="mono">netstat</span> (shows you network connections currently on this machine)</li>
+<li><span class="mono">df -h</span> (shows you current disk space available to different partitions of the filesystem)</li>
+</ul>
+<p>There are a lot more I'm probably forgetting... I won't get into the really advanced ones.</p>
+<p>I'm not really going to get into the nitty-gritty stuff like <b>piping</b> and <b>stdout/stderr</b></p>
+<p>But be aware: the most powerful single-line command sequences involve piping and redirecting the "flow" of data. A simple example:</p>
+<code>&gt; ps -e | grep apache</code>
+<p>That'll return all the instances of "apache" currently running, and it does so by <i>piping</i> (the | character) the output of <span class="mono">ps -e</span> into the input of the <span class="mono">grep apache</span> command.</p>
+<p>Combine this shit with regular expressions and bash scripting and shit gets crazy!</p>
+
+<h2>some cool places to be in the filesystem</h2>
+<p>here are some useful locations:</p>
+<ul>
+<li><b>/var/log</b> - has a lot of logs in it! very useful.</li>
+<li><b>/etc</b> - holds the configuration files for many programs and services</li>
+<li><b>/home</b> - a lot like the "Documents and Settings" folder on Windows, or the "Users" folder on a Mac</li>
+<li><b>/root</b> - the root user's home (~) directory</li>
+<li><b>/bin</b>, <b>/sbin</b>, ... - these are a few locations where shell command programs are stored</li>
+<li><b>/tmp</b> - temporary files, deleted regularly by the system</li>
+<li><b>/var/www</b> - the common place for a web server to keep its files</li>
+<li><b>/usr/src</b> - a good place to put source files whenever you need to manually compile a program</li>
+<li>the rest of the directories in / are pretty much like whatever, they're ok i guess</li>
+</ul>
+
+<h2>daemons, aka services</h2>
+<p>There are many "background services" in linux, usually installed as packages, or they come with the system. These are frequently called "daemons".</p>
+<p>you can see them when you run <span class="mono">top</span>, and there's always a lot of stuff running in the background.</p>
+<p>a lot of these services are controlled by scripts inside of the /etc/init.d/ directory</p>
+<p>for example, <a href="http://httpd.apache.org/" target="_blank">Apache</a> is an extremely popular web server daemon. It is controlled on a server by the /etc/init.d/apache2 script. If you were to type...</p>
+<code>&gt; /etc/init.d/apache2 restart</code>
+<p>The service would be restarted! Magic! The server goes down, and for a brief second nobody can access the website, and then it comes back up! (Hopefully.)</p>
+<p>Every single script inside /etc/init.d/ must conform to the standard of having the start/stop/restart options.</p>
+<p>Most scripts also have the very valuable <b>reload</b> option, which means you don't actually have to stop the service to make a configuration change.</p>
+<p>So, for example, let's say we make a change to apache's config files and we need to roll it out immediately. If we were to do a <b>restart</b>, it would cut off everyone currently on the site from trying to access anything. (Nobody might notice since it could only take a second to restart, but it's not good policy.) Instead, we would simply use the <b>reload</b> command instead to commit the config changes, and it would then quietly recycle the current connections when appropriate.</p>
+<p>Services like DNS, DHCP, etc, all run like this. A lot of linux server maintenance is restarting/reloading services when needed. For example, apache's main configuration file is /etc/apache2/apache2.conf, which is just a text file.</p>
+
+<h2>logs</h2>
+<p>As a brief note, logs are very important in a linux system. In a GUI, you'd normally get a pop-up or other kind of alert when something goes wrong. Most of the time in the command line, you'd similarly get an immediate error when running a command, which is great. But what if a service goes down? It's running in the background and won't interrupt you. So it'll usually have an error log to explain what happened.</p>
+<p>To continue with the apache example, apache has an error log in the /var/log/apache2 folder. That's one of the few ways you'll figure out what went wrong.</p>
+<p><b>syslog</b> and <b>messages</b> are system-wide logs that have a lot of information. individual services will typically have log files inside /var/log.</p>
+<p>they're all just text files, except if they end in .gz (those are old, archived logs), so you can open them with the <span class="mono">less</span> command and look through them. try it!</p>
+<code>&gt; less /var/log/syslog</code>
+<p>Look at all that info! Each line should begin with the time the event happened. Press <b>q</b> to quit out and return to the prompt.</p>
+
+<h2>packages! installing stuff!</h2>
+<p>On Windows and Mac, installing things is typically pretty straightforward. It's also pretty straightforward for the most part on linux. You're going to use two tools: <span class="mono">apt-get</span> and <span class="mono">apt-cache</span>.</p>
+<p><span class="mono">apt-get</span> installs, removes, and upgrades packages. It keeps track of what is installed on your system. For example, let's say you want to install the Apache web server:</p>
+<code>&gt; apt-get install apache2</code>
+<p>That command will find the "apache2" package, figure out its dependencies, install all of the necessary files (from CD or the internet), and start the service. That simple. You'll probably need to press <b>y</b> when it asks you whether it's okay to use whatever disk space it needs.</p>
+<p>Note: every once in awhile you should run <span class="mono">apt-get update</span>, which fetches the latest list of packages from the internet. (If you have a network mirror for apt-get set up, which you should.)</p>
+<p>But what do you do if you don't know what package to install? That's where <span class="mono">apt-cache</span> comes into play. Try this:</p>
+<code>&gt; apt-cache search apache2</code>
+<p>That'll print off a whole long list of packages associated with apache2. Now try this:</p>
+<code>&gt; apt-cache show apache2</code>
+<p>That'll show you the specific information for the package called "apache2". What it does, what it requires, what you might want to install with it, etc.</p>
+<p><span class="mono">apt-get upgrade</span> will upgrade any existing packages to their latest versions. While this might seem like a great idea, keep in mind that you need to make sure you back up configuration files in case the upgrade breaks things.</p>
+
+<h2>compiling from source, or, the coolest of the cool</h2>
+<p>One of the coolest things about linux is that you may need to <b>compile a program from its source files</b> in order to get it working. What does this mean, exactly?</p>
+<p>The vast majority of programs on a computer are <i>binary files</i> that are written in <i>machine code</i> so a computer can understand how to execute them. However, rarely do people write the programs in machine code! That'd be crazy! Instead they write them in languages like <b>C</b> or <b>C++</b>, and then they have to <i>compile those source files</i> into a binary program the machine will understand.</p>
+<p>So why would you need to do this yourself? Well, a pillar of linux is that it's adaptable, but in order to be adaptable to different environments it usually needs you to do extra work as a user.</p>
+<p>On Windows, you never need to compile from source because the platform of Windows is <b>built on standards that cannot be deviated from</b>, like having an x86 processor. Linux, on the other hand, <i>assumes very little</i>, so that it can try to get the maximum amount of performance out of whatever hardware it's on. Windows would rather stack layers upon layers of APIs and services to do the work for you, which just bogs down the system.</p>
+<p>Therefore most linux programs won't have one binary which will work universally everywhere on every platform! Instead, you need to do the work of compiling it yourself so that it works correctly and efficiently.</p>
+<p>Please note that if the program you're compiling is available on apt-get, it's always better to install it that way. Compiling from source is kind of a last resort. Apt-get will install a binary that it already knows will work on your platform.</p>
+<p>Before compiling, make sure your linux install has the necessary files to do so. Usually this means you need to install the <b>build-essential</b> package, like this:</p>
+<code>&gt; apt-get install build-essential</code>
+<p>That'll make sure you have all the programs necessary to compile from source.</p>
+<p>Anyway, basically you get the source files from the web, and you usually have to run these three commands, one after another:</p>
+<code>&gt; ./configure<br />&gt; make<br />&gt; make install</code>
+<p>The first command runs a script that is typically bundled with the source code. This "configure" script gets all the information about your platform and writes this info to a file.</p>
+<p>The <span class="mono">make</span> command takes that file and actually builds the binary files from the source files. This usually takes awhile! You'll probably see massive amounts of crazy text go by as it does this. Make yourself some tea while it does.</p>
+<p>The last command simply takes those finished binary files and moves them to a common place where they can be used in the shell alongside all the other commands you use.</p>
+<p>Some things that are fun to compile from source: ffmpeg, node.js, php. Another benefit gained by compiling from source is you can typically get the most bleeding-edge version of these programs. However, <b>they are not tracked by apt-get</b>, so if you compile php from source and then try to <span class="mono">apt-get install php</span>, it'll override your compiled version! So keep this in mind.</p>
+<p>node.js, for example, simply isn't available as a package, so you have to compile from source if you want to use it.</p>
+
+<h2>in conclusion</h2>
+<p>There is so much to do with a linux system, so little time to do it all! Really, learning is best achieved through fucking up. Breaking things. That's the beauty of having a virtual server, you can break it and start fresh anytime. Take chances!</p>
+<p>I suggest trying the following:</p>
+<ul>
+<li>Set up a simple LAMP web server. That's Linux, Apache, MySQL, and PHP.</li>
+<li>Build a node.js development box.</li>
+<li>Start a simple FTP or Samba file server.</li>
+<li>Learn Ruby or Python via the command line.</li>
+</ul>
+<p>if you have any questions, email me! if you think there's anything i've critically missed, email me! cyle_gage@emerson.edu</p>
+
+</div>
+</body>
+</html>

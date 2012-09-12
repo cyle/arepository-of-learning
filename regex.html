@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Systems Stuff: regular expressions</title>
+<link rel="stylesheet" href="lol.css" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29174462-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+<div id="back"><a href="index.html">back to contents</a></div>
+
+<div id="learning">
+<h1>Systems Stuff: regular expressions, or: <i>how I learned to stop worrying and love our near-future robot overlords</i></h1>
+
+<h2>the stuff of magic</h2>
+<p>regular expressions have always amazed me. if there's one thing that's magical about programming, it's regular expressions. they can literally pull apart the written language of humans in elegant ways.</p>
+<p>you may have heard of them, but maybe not. put simply, a <b>regular expression</b> (aka regex or regexp) is a way of taking apart a string of text and finding and/or extracting exactly what you want. it's very, very powerful, and they can be very intimidating to look at.</p>
+<p>a regular expression is technically its own programming language, or better put, it's a <b>parsing language</b>. it goes through the text you provide to it and it parses out whatever you specify.</p>
+<p>across the board, the core functionality of regular expressions are the same from language to language, but there are a few idiosyncrasies here and there. for the purposes of this guide, everything I show you should work similarly in PHP, Perl, Javascript, Ruby, and Python. However, I'm going to use Javascript as the primary example language, since it treats regex as its own object.</p>
+<p>regular expressions are built into most every programming language in one way or another, so learning it once will help you most anywhere you are.</p>
+
+<h2>what for</h2>
+<p>regular expressions have a huge range of uses. it's one of the most powerful tools in the ol' nerd utility belt. but what are some practical uses?</p>
+<ul>
+<li>searching through text for a specific string</li>
+<li>replacing a specific string with another string</li>
+<li>counting the number of times a string is within a block of text</li>
+<li>making sure a person submitted an actual email address into a form</li>
+<li>normalizing a phone number whether it was written as 555.555.5555 or (555) 555-5555 or 555-555-5555</li>
+</ul>
+<p>pretty much anytime you need to do something <b>specific</b> with text, you'll probably need a regular expression. regular expressions can turn complex convoluted functions into one single regular expression clause.</p>
+<p>here's a very simple regular expression. remember, this is javascript, as an example.</p>
+<code><pre>
+var sometext = "Hello there!";
+var regex = /there/;
+if (regex.test(sometext)) {
+  alert('oh boy!');
+} else {
+  alert('nope.');
+}
+</pre></code>
+<p>so what are you seeing? first, we make a variable with just a string. that's fine. but then after that we have another variable -- and it's surrounded by <b>/</b>s?</p>
+<p>traditionally a regular expression is contained within <b>/</b> characters. they denote the beginning and end of the expression. in other languages (like PHP) the regex is contained within a string, but it'll still have the starting / and the ending /</p>
+<p>right now, the regular expression is simply the word <b>there</b>. that's it. nothing special about it.</p>
+<p>the <b>if</b> statement uses the RegExp object's <b>test()</b> method, which <b>tests the regular expression on the provided string</b>. So we gave it the first variable and said "does the regular expression return anything?"</p>
+<p>Of course, the word <b>there</b> is indeed inside the string <b>Hello there!</b> so if you ran this in a browser, you'd see the <i>Oh boy!</i> alert box.</p>
+
+<h2>let's go deeper</h2>
+<p>so yeah, using just text inside a regular expression is fine, but that's not very interesting. you begin to unlock the true power of regex when you start using <b>metacharacters</b>, <b>quantifiers</b>, <b>modifiers</b>, and <b>brackets</b>.</p>
+<p>we'll look at them one at a time! they're so exciting. let's start with something easy: <b>modifiers</b>. these affect <b>the whole expression</b>. let's try a different example than above:</p>
+<code><pre>
+var sometext = "Hello there!";
+var regex = /hello/;
+if (regex.test(sometext)) {
+  alert('oh boy!');
+} else {
+  alert('nope.');
+}
+</pre></code>
+<p>ok so all we changed was the regex from <b>there</b> to <b>hello</b>... if you run it, it won't work! Why? well, there is no <b>hello</b> in that string. There's a <b>Hello</b>... which has a capitalized H. so it's not the same. haha.</p>
+<p>but say we don't care about case-sensitivity (case-sensitive means every character needs to be exactly-so) and we just want it to match either hello or Hello or even heLLO...</p>
+<p>all you need to do is add the <b>case insensitive</b> modifier to the end of the expression:</p>
+<code><pre>
+var sometext = "Hello there!";
+var regex = /hello/i;
+if (regex.test(sometext)) {
+  alert('oh boy!');
+} else {
+  alert('nope.');
+}
+</pre></code>
+<p>haha, now it'll work. all we added, if you noticed, was the <b>i</b> to the end of the regular expression, outside of the expression's final /. that's where modifiers go!</p>
+<p>the two other popular ones are <b>g</b> and <b>m</b>... <b>g</b> means <b>global</b>, meaning it'll match <b>all of them</b> as opposed to stopping at the first. i'll show you what i mean in a minute. <b>m</b> means <b>multiline</b>, so one expression can go across multiple lines of text if there are line-breaks.</p>
+<p>here's another very basic regular expression example:</p>
+<code><pre>
+var sometext = "Haha well aren't we happy.";
+var regex = /ha/ig;
+var newtext = sometext.replace(regex, "lo");
+alert(newtext);
+</pre></code>
+<p>so you can see, we have a string of text, then a regular expression, which simply looks for the text <b>ha</b> and it's <b>case-insensitive</b> and <b>global</b>, meaning it'll look for every instance of <b>ha</b> and it won't care about the case.</p>
+<p>if you run that, you'll get back the text <b>lolo well aren't we loppy.</b> haha... good example. it used the regular expression to find what parts of the text it should replace with the new text "lo", get it?</p>
+<p>so those are modifiers.</p>
+
+<h2>metacharacters</h2>
+<p>this are where things get crazy. if you read the <a href="php.html" target="_blank">PHP guide</a>, you might remember me talking about <b>escape characters</b>, so that you can have a newline <b>\n</b> character inside a string (instead of having an actual new line). a metacharacter works much the same way.</p>
+<p>metacharacters simply <b>show what cannot be shown</b>, or act as <b>shortcuts</b> to larger sets of text. for example, the <b>\d</b> metacharacter represents <b>all digits</b>. so if you just want to select all of the numbers in a string, you could easily use that to match them all.</p>
+<p>every metacharacter starts with that slash and then another character. here are some popular ones:</p>
+<ul>
+<li><b>\w</b> and <b>\W</b> represent any word character and any non-word character, respectively.</li>
+<li><b>\d</b> and <b>\D</b> represent any digit character and any non-digit character, respectively</li>
+<li><b>\b</b> represents the beginning or end of a word</li>
+<li><b>\n</b> represents a new line</li>
+<li><b>\s</b> and <b>\S</b> represent any whitespace character and any non-whitespace character, respectively</li>
+<li>^ means the very beginning of the string</li>
+<li>$ means the very end of the string!</li>
+</ul>
+<p>so, for example, let's say we want to find the text "cat" inside a string:</p>
+<code><pre>
+var test_string_one = "cats cat caterpillar";
+var regex_one = /cat/gi;
+</pre></code>
+<p>that regex, for that string, would match every instance of the text <b>cat</b>, no matter where it is. what if we wanted just the <b>word</b> "cat"?</p>
+<code><pre>
+var test_string_one = "cats cat caterpillar";
+var regex_one = /\bcat\b/gi;
+</pre></code>
+<p>if we surround the text with the <b>\b</b> metacharacter, it'll make sure that it only matches the text if "cat" is its own word!</p>
+<p>something that always scared me (haha, yes) was that the <b>\b</b> and the <b>cat</b> were touching... that sounds strange, but it seemed weird to me. i always read it like <b>bcat</b>? uhhh...</p>
+<p>but take a moment to remember that this isn't for your eyes, this is for <b>a machine to understand</b>, and the parser will read the regular expression <i>one character at a time</i>. so don't be afraid of how strange the regular expression looks! it all looks comprehensible to our robot overlords...</p>
+<p>another metacharacter example:</p>
+<code><pre>
+var sometext = " this has   a       lot of    whitespace     ";
+var regex = /\s/g;
+var newtext = sometext.replace(regex, "");
+</pre></code>
+<p>that string has a lot of blank whitespace. kinda ugly. how about we just kill all the whitespace! the regex, you'll notice, just has a single metacharacter, the <b>whitespace</b> one, and it's gonna look for it globally. with the <b>replace()</b> method we find all instances of whitespace and then replace them with nothingness!</p>
+<p>kinda weird thing to do, but I haven't taught you quantifiers yet, so that's as basic as it can be. what if we want to replace those long sections of spaces with just a single space?</p>
+
+<h2>quantifiers</h2>
+<p>say we wanted to match not just text or a metacharacter, but a series of characters. let's use the above example again.</p>
+<p><b>quantifiers</b> simply specify <b>how many times to look for the previous character</b>... let me show you!</p>
+<code><pre>
+var sometext = " this has   a       lot of    whitespace     ";
+var regex = /\s+/g;
+var newtext = sometext.replace(regex, " ");
+</pre></code>
+<p>I changed two things: I added a <b>+</b> after the <b>\s</b> metacharacter, and I put a single space as the replacement string. what will this do? it'll find blocks of whitespace <i>at least one character in length</i> and replace them with a single space. CRAZY AWESOME.</p>
+<p>as I said, the quantifier acts on whatever <b>token</b> (another word for character or set of characters) came before it. in this case, the <b>\s</b> token came before the plus sign, so the plus sign quantifier acts on that. it'll match one and then however many follow it.</p>
+<p>here are the basic quantifiers:</p>
+<ul>
+<li>+ finds <b>at least one</b> of the preceding token</li>
+<li>* finds <b>zero or more</b> of the preceding token</li>
+<li>? finds <b>one or none</b> of the preceding token</li>
+<li>{x} finds <b>x amount</b> of the preceding token</li>
+<li>{x,y} finds <b>between x and y</b> amount of the preceding token</li>
+</ul>
+<p>here are some examples!</p>
+<code><pre>
+/hello+/i
+
+will match:
+hello
+Hello
+heLLo
+HELLOOOOOOOO
+</pre></code>
+<p>because the + means <i>at least one</i> of the preceding token (which was just the character <b>o</b>), you can have as many as you want and it'll still match</p>
+<code><pre>
+/colou?r/i
+
+will match:
+color
+colour
+</pre></code>
+<p>because we put a <b>?</b> before the u, it'll match the string, whether the <b>u</b> is there or not! wow.</p>
+<code><pre>
+/hel{2,3}o/i
+
+will match:
+hello
+helllo
+
+but will not match:
+helo
+hellllo
+</pre></code>
+<p>because we asked it to match <b>exactly two or three <span class="mono">l</span>s</b> between the e and the o.</p>
+
+<h2>groups and brackets</h2>
+<p>so you may be asking, what if I want to use a quantifier on a group of characters? right now all you know is that it works on the preceding token!</p>
+<p>that's where <b>groups</b> and <b>brackets</b> come in, because they act as their own as a <b>singular tokens</b> the same as an individual character would.</p>
+<p>so for an easy example, let's just show a group:</p>
+<code><pre>
+/l(ol)+/i
+
+will match:
+lol
+lololololol
+LOLOL
+</pre></code>
+<p>magical! so we enclose part of the text in parentheses and it'll act like a single token! so when you use the + quantifier, it's checking for everything within the group to be repeated.</p>
+<p>brackets are similar, but a bit more abstract. I'll show you one:</p>
+<code><pre>
+/i feel [a-z]+/i
+
+will match:
+i feel good
+i feed bad
+i feel great
+</pre></code>
+<p>brackets are used to contain a <b>range of possible characters</b>. so in this example, it fits anything between <b>a and z</b> and the <b>+ quantifier</b> after it says there can be one or more!</p>
+<p>I should tell you now that groups inside parentheses also can act as <b>sub matches</b> in certain situations... for example:</p>
+<code><pre>
+/^i feel ([a-z]+)$/i
+</pre></code>
+<p>notice I denoted the beginning and end of the string with the ^ and $ metacharacters, just to make this airtight. that means that the string <b>must start with i</b> and must end after whatever the captured group is. I grouped the a to z range and its quantifier. when using certain functions, like PHP's <b>preg_match()</b> function or Javascript's <b>match()</b> method, this'll allow you to select not just the whole expression, but those sub-groups.</p>
+<p>So if you ran PHP's <b>preg_match()</b> with that regex and gave it the string <b>I feel great</b>, it would capture the whole thing, but it would also capture just the word <b>great</b>. Very useful!</p>
+<p>and you can put even more stuff within brackets together. for instance:</p>
+<code><pre>
+/i feel [a-z0-9_!]+/i
+</pre></code>
+<p>that'll match anything between <b>a and z</b> as well as anything between <b>0 and 9</b> and also any underscores or exclamation points!</p>
+<p>you should remember also that you could shorten what's in the brackets by replacing the need for the a-z and 0-9 ranges with just the <b>\w</b> metacharacter, like so:</p>
+<code><pre>
+/i feel [\w_!]+/i
+
+will match:
+i feel great!
+i feel fine
+i feel __okay__
+</pre></code>
+<p>that does the same thing! remember, most metacharacters are <b>shortcuts</b>. the \w represents anything a-z, A-Z, and 0-9. magical!</p>
+<p>within groups you can also use the <b>| pipe character</b> to separate possibilities. so if you want to match one of three colors, you'd do it like this:</p>
+<code><pre>
+/i like (red|green|blue)/i
+
+will match:
+i like red
+i like blue
+
+will NOT match:
+i like yellow
+</pre></code>
+<p>haha, so if you're looking for something within a specific group of possible values, you can do it that way within the regex itself.</p>
+
+<h2>a much more complicated (but very practical) example</h2>
+<p>how I usually think of regular expressions requires me to think like a computer. it really makes you need to break down language itself into its smallest parts.</p>
+<p>here's a common regex:</p>
+<code><pre>
+/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
+</pre></code>
+<p>Oh jeez look at how complicated it is! What does that do? I'll just tell you: it matches any email address! Let's break it apart...</p>
+<p>obviously the first and last characters, ^ and $, signify the beginning and end of the string. And it has the <b>i</b> case-insensitive modifier for the whole thing.</p>
+<p>so let's take those out. now let's focus on the first part:</p>
+<code><pre>
+<b>[A-Z0-9._%+-]+</b>@[A-Z0-9.-]+\.[A-Z]{2,4}
+</pre></code>
+<p>that's not so bad: it's just a range of possible characters, specifically A-Z and 0-9, and then periods and underscores and whatnot. Notice that the plus sign is in there but it <b>does not</b> act as a quantifier, because it's within brackets. However, if you were searching for a + sign in the text, you'd need to <b>escape it</b>... but we'll get back to that later.</p>
+<code><pre>
+[A-Z0-9._%+-]+<b>@</b>[A-Z0-9.-]+\.[A-Z]{2,4}
+</pre></code>
+<p>next we have just the @ symbol, because every email address has that!</p>
+<code><pre>
+[A-Z0-9._%+-]+@<b>[A-Z0-9.-]+</b>\.[A-Z]{2,4}
+</pre></code>
+<p>and after the @ an email address always has a domain name! And that domain name can only contain alphanumeric text, a period, or a hyphen. Nothing too special here. But this only covers <b>the beginning</b> of the domain name, so if it was google.com, this part would only cover the <b>google</b> part.</p>
+<code><pre>
+[A-Z0-9._%+-]+@[A-Z0-9.-]+<b>\.</b>[A-Z]{2,4}
+</pre></code>
+<p>this may seem a little puzzling. in a regular expression, the period <b>.</b> is a metacharacter which represents <b>any character</b>, so in order to use a period as just a period, we need to escape it by putting a <b>\</b> before it! okay so now we got the period in the domain name, moving on.</p>
+<code><pre>
+[A-Z0-9._%+-]+@[A-Z0-9.-]+\.<b>[A-Z]{2,4}</b>
+</pre></code>
+<p>so what's between two and four characters and can only be letters? com, net, org, edu... the end of the domain name!</p>
+<p>here's the full regex again:</p>
+<code><pre>
+/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
+</pre></code>
+<p>now take your own email address and try to follow along to see how they match. it's magical.</p>
+<p>here's the whole thing matched out more obviously:</p>
+<code>/^<span style="color:#bb99ff;">[A-Z0-9._%+-]+</span>@<span style="color:green;">[A-Z0-9.-]+</span><span style="color:#ffbb99;">\.[A-Z]{2,4}</span>$/i</code>
+<code><span style="color:#bb99ff;">cyle_gage</span>@<span style="color:green;">emerson</span><span style="color:#ffbb99;">.edu</span></code>
+
+<h2>the conclusions, the secrets</h2>
+<p>there are two main challenges to writing good regular expressions:</p>
+<ul>
+<li>being specific in knowing what you want</li>
+<li>allowing possibilities</li>
+</ul>
+<p>you have to be as specific as the results you're expecting, yet you have to be broad enough to allow a range of possibilities. once you get the hang of it, though, it's pretty simple.</p>
+<p>I highly recommend <a href="http://gskinner.com/RegExr/" target="_blank">this online tool</a> to test out your regular expressions. It's flash-based so it has a couple quirks, but it's very thorough, and shows you results as you type.</p>
+<p>there's a lot more you can do with regular expressions, but these are the most useful basics. I don't really stray from what I've taught you here very often, and they've gotten me some great results.</p>
+<p>and now you can wear <a href="http://www.thinkgeek.com/tshirts-apparel/xkcd/dad3/" target="_blank">this shirt</a> and really nerd yourself out!</p>
+
+
+
+</div>
+
+</body>
+</html>
